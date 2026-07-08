@@ -1,0 +1,80 @@
+name: "🐛 Bug Report"
+description: "Something in an existing recipe is broken or behaving unexpectedly."
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+        Please be as specific as possible so we can reproduce and fix the issue quickly.
+
+  - type: input
+    id: recipe
+    attributes:
+      label: "Affected Recipe"
+      description: "Which recipe is this bug in?"
+      placeholder: "e.g. lead-qualification"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Bug Description"
+      description: "A clear and concise description of what the bug is."
+      placeholder: "When I run main.py with X inputs, I get Y error instead of Z output."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Steps to Reproduce"
+      description: "How can we reproduce the issue?"
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected Behaviour"
+      description: "What did you expect to happen?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: "Actual Behaviour / Error"
+      description: "Paste the full error message or unexpected output here."
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: python-version
+    attributes:
+      label: "Python Version"
+      placeholder: "e.g. 3.11.4"
+    validations:
+      required: true
+
+  - type: input
+    id: crewai-version
+    attributes:
+      label: "CrewAI Version"
+      placeholder: "e.g. 0.28.0"
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: "Additional Context"
+      description: "Any other context, screenshots, or logs."
+    validations:
+      required: false

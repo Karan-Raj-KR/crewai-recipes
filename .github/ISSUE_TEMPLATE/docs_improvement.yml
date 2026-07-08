@@ -1,0 +1,32 @@
+name: "📚 Documentation Improvement"
+description: "Report missing, unclear, or incorrect documentation."
+labels: ["docs"]
+body:
+  - type: markdown
+    attributes:
+      value: "Help us make the docs better! Please describe what's wrong or missing."
+
+  - type: input
+    id: location
+    attributes:
+      label: "Document / File"
+      description: "Which file or section needs improvement?"
+      placeholder: "e.g. README.md > Quickstart, or recipes/faq-bot/README.md"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "What's wrong or missing?"
+      description: "Describe the issue clearly."
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: "Suggested Improvement"
+      description: "If you have a specific wording or fix in mind, share it here."
+    validations:
+      required: false

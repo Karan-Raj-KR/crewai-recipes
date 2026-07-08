@@ -1,0 +1,55 @@
+name: "💡 Recipe Proposal"
+description: "Propose a brand-new recipe for the library."
+labels: ["new-recipe", "help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got an idea for a new CrewAI recipe? Awesome! Please describe it below so we can align before you start building.
+
+  - type: input
+    id: recipe-name
+    attributes:
+      label: "Proposed Recipe Name"
+      description: "A short, hyphenated name (matches the directory name)."
+      placeholder: "e.g. customer-onboarding"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Problem This Recipe Solves"
+      description: "What real-world automation does this cover? Who is it for?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: agent-design
+    attributes:
+      label: "Proposed Agent Design"
+      description: "List the agents and their roles (rough sketch is fine)."
+      placeholder: |
+        - Researcher Agent: gathers company info
+        - Scorer Agent: applies ICP scoring rules
+        - Notifier Agent: drafts a Slack / email summary
+    validations:
+      required: false
+
+  - type: textarea
+    id: inputs-outputs
+    attributes:
+      label: "Inputs / Outputs"
+      description: "What does the crew receive as input and produce as output?"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Before Submitting"
+      options:
+        - label: "I searched existing issues and this recipe has not been proposed before."
+          required: true
+        - label: "I plan to build this recipe myself (or am requesting community help)."
+          required: false
