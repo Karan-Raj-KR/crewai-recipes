@@ -1,0 +1,28 @@
+name: Welcome First-Time Contributors
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: >
+            👋 Thanks for opening your first issue in `crewai-recipes`! A maintainer will
+            triage this soon. If you'd like to work on it yourself, just say so in a comment
+            and we'll assign it to you — check [CONTRIBUTING.md](https://github.com/Karan-Raj-KR/crewai-recipes/blob/main/CONTRIBUTING.md)
+            for the workflow.
+          pr-message: >
+            🎉 Thanks for your first pull request to `crewai-recipes`! A maintainer will review
+            it soon (usually within 7 days). Make sure CI is green and the PR checklist is
+            filled in — that speeds up review a lot.

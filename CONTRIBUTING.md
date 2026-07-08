@@ -28,7 +28,7 @@ This project follows the [Contributor Covenant](./CODE_OF_CONDUCT.md). By partic
 
 ### 1. Open an issue first (for new recipes)
 
-Before building a brand-new recipe, [open a "Recipe Proposal" issue](https://github.com/karanrajkr/crewai-recipes/issues/new?template=recipe_proposal.yml) so maintainers can:
+Before building a brand-new recipe, [open a "Recipe Proposal" issue](https://github.com/Karan-Raj-KR/crewai-recipes/issues/new?template=recipe_proposal.yml) so maintainers can:
 
 - Confirm the idea fits the project scope
 - Prevent duplicate effort
@@ -177,13 +177,16 @@ CI will block PRs that fail Ruff checks.
 | Label | Meaning |
 |-------|---------|
 | `bug` | Something in an existing recipe is broken |
-| `enhancement` | Improvement to an existing recipe |
-| `new-recipe` | Proposal for a brand-new recipe |
-| `docs` | Documentation-only change |
+| `enhancement` | Improvement to the project in general |
+| `recipe: new` | Proposal for a brand-new recipe |
+| `recipe: improvement` | Enhancement to an existing recipe |
+| `documentation` | Documentation-only change |
+| `docs` | Documentation improvements tied to a specific recipe or guide |
 | `good first issue` | Great for first-time contributors |
 | `help wanted` | Maintainers need community help |
-| `wip` | Work in progress — not ready for review |
+| `question` | Further information is requested |
 | `duplicate` | Already reported / being tracked elsewhere |
+| `invalid` | This doesn't seem right |
 | `wontfix` | Out of scope for this project |
 
 ---
