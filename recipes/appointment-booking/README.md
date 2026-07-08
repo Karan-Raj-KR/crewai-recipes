@@ -34,7 +34,7 @@ Booking Request (name, email, type, preferences)
 cd recipes/appointment-booking
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # add your NVIDIA_API_KEY
+cp .env.example .env   # add your LLM_API_KEY
 ```
 
 ## Run
@@ -59,7 +59,7 @@ from googleapiclient.discovery import build
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `NVIDIA_API_KEY` | Your NVIDIA API key | ✅ Yes |
+| `LLM_API_KEY` | Your NVIDIA API key | ✅ Yes |
 
 ## Architecture
 

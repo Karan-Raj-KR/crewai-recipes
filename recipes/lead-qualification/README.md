@@ -1,6 +1,6 @@
 # 🎯 Recipe: Lead Qualification
 
-Score and profile inbound sales leads using a two-agent CrewAI crew powered by **NVIDIA NIM** (defaults to `meta/llama-3.1-8b-instruct`; set `NIM_MODEL` for 70B).
+Score and profile inbound sales leads using a two-agent CrewAI crew powered by **NVIDIA NIM** (defaults to `meta/llama-3.1-8b-instruct`; set `LLM_MODEL` for 70B).
 
 **Time to first run: ~5 minutes** — clone, install, set key, run.
 
@@ -28,7 +28,7 @@ Input: company name + short description
 Output: 0-100 score + HOT/WARM/COLD verdict + next action
 ```
 
-**Default model:** `meta/llama-3.1-8b-instruct` via NVIDIA NIM (set `NIM_MODEL=meta/llama-3.3-70b-instruct` for stronger reasoning)  
+**Default model:** `meta/llama-3.1-8b-instruct` via NVIDIA NIM (set `LLM_MODEL=meta/llama-3.3-70b-instruct` for stronger reasoning)  
 **LLM calls:** 2 (one per agent)  
 **Typical run time:** ~20-40 seconds
 
@@ -56,7 +56,7 @@ pip install -r requirements.txt
 
 # Configure your API key
 cp .env.example .env
-# Edit .env → add: NVIDIA_API_KEY=nvapi-...
+# Edit .env → add: LLM_API_KEY=nvapi-...
 ```
 
 ---
@@ -163,4 +163,4 @@ This recipe uses **NVIDIA NIM** — a free, OpenAI-compatible inference API for 
 - Upgrade model: `meta/llama-3.3-70b-instruct` (stronger reasoning; slower, may be rate-limited on the free tier)
 - Docs: [build.nvidia.com](https://build.nvidia.com/)
 
-To swap models, set `NIM_MODEL` in your `.env` (no code change needed), or edit `DEFAULT_MODEL` in `llm.py`.
+To swap models, set `LLM_MODEL` in your `.env` (no code change needed), or edit `DEFAULT_MODEL` in `llm.py`.

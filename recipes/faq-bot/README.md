@@ -52,7 +52,7 @@ pip install -r requirements.txt
 
 # Configure your API key
 cp .env.example .env
-# Edit .env → add: NVIDIA_API_KEY=nvapi-...
+# Edit .env → add: LLM_API_KEY=nvapi-...
 ```
 
 ---
@@ -165,7 +165,7 @@ from langchain_community.vectorstores import Chroma
 | `crew.py` | Single-agent crew assembly |
 | `run.py` | CLI entry point (`argparse`) |
 | `requirements.txt` | Python dependencies |
-| `.env.example` | Template for NVIDIA_API_KEY |
+| `.env.example` | Template for LLM_API_KEY |
 
 ---
 

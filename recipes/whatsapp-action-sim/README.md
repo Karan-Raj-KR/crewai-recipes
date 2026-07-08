@@ -51,7 +51,7 @@ Incoming WhatsApp Message
 cd recipes/whatsapp-action-sim
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # add your NVIDIA_API_KEY
+cp .env.example .env   # add your LLM_API_KEY
 ```
 
 ## Run
@@ -73,7 +73,7 @@ Edit `SAMPLE_MESSAGES` in `main.py` and change the index to test different inten
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `NVIDIA_API_KEY` | Your NVIDIA API key | ✅ Yes |
+| `LLM_API_KEY` | Your NVIDIA API key | ✅ Yes |
 
 ## Architecture
 
