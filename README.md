@@ -2,11 +2,11 @@
 
 # 🤖 crewai-recipes
 
-**A public library of ready-to-run CrewAI multi-agent automation templates — powered by NVIDIA NIM (Llama 3.3 70B).**
+**A public library of ready-to-run CrewAI multi-agent automation templates — powered by NVIDIA NIM (Llama 3.1 8B by default; swap to 70B with one env var).**
 
 [![CI](https://github.com/Karan-Raj-KR/crewai-recipes/actions/workflows/ci.yml/badge.svg)](https://github.com/Karan-Raj-KR/crewai-recipes/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10–3.12](https://img.shields.io/badge/python-3.10--3.12-blue.svg)](https://www.python.org/downloads/)
 [![CrewAI](https://img.shields.io/badge/CrewAI-latest-green.svg)](https://github.com/joaomdmoura/crewAI)
 [![NVIDIA NIM](https://img.shields.io/badge/LLM-NVIDIA%20NIM-76b900.svg)](https://build.nvidia.com/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
@@ -19,7 +19,7 @@
 
 ## What is this?
 
-`crewai-recipes` is a community-driven cookbook of **self-contained, production-ready multi-agent workflows** built with [CrewAI](https://github.com/joaomdmoura/crewAI) and [NVIDIA NIM](https://build.nvidia.com/) (Llama 3.3 70B Instruct). Each recipe is a standalone Python project you can clone, configure with a single environment variable, and run in minutes.
+`crewai-recipes` is a community-driven cookbook of **self-contained, production-ready multi-agent workflows** built with [CrewAI](https://github.com/joaomdmoura/crewAI) and [NVIDIA NIM](https://build.nvidia.com/). Recipes default to **Llama 3.1 8B Instruct** — fast and reliable on the NIM free tier — and you can switch to the larger 3.3 70B model with a single environment variable (`NIM_MODEL`). Each recipe is a standalone Python project you can clone, configure with a single API key, and run in minutes.
 
 No boilerplate hunting. No stitching together random blog posts. Just clone → set key → run.
 
@@ -51,6 +51,8 @@ python run.py --company "Acme Corp" --description "A 40-person B2B SaaS..."
 > **Get an API key:** Sign up free at [build.nvidia.com](https://build.nvidia.com/), browse models, and click **Get API Key**. The free tier gives generous monthly credits.
 
 > **Tip:** Copy `.env.example` → `.env` inside each recipe folder and fill in your key — `python-dotenv` is pre-wired in every recipe.
+
+> **Pick a model (optional):** Recipes default to `meta/llama-3.1-8b-instruct` (fast, reliable on the free tier). To use stronger reasoning, set `NIM_MODEL=meta/llama-3.3-70b-instruct` in your `.env` — no code changes needed. Note the 70B model can be slower and occasionally rate-limited on the free tier.
 
 ---
 
@@ -109,7 +111,7 @@ Contributions are very welcome! Whether you're fixing a bug, improving docs, or 
 
 Quick summary:
 - Each recipe lives in its own directory under `recipes/`
-- Must use CrewAI + NVIDIA NIM (Llama 3.3 70B or similar); other models can be optional extras
+- Must use CrewAI + NVIDIA NIM (default `meta/llama-3.1-8b-instruct`, 70B optional via `NIM_MODEL`); other models can be optional extras
 - Include a `README.md`, `requirements.txt`, `run.py`, and `.env.example`
 - Open an issue first for major new recipes so we can align before you build
 

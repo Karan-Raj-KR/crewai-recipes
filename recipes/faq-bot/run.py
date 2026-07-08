@@ -27,7 +27,7 @@ def parse_args() -> argparse.Namespace:
         description=(
             "🤖 CrewAI FAQ Bot Recipe — Orbitly Support Agent\n"
             "Answers customer questions from an in-memory knowledge base.\n\n"
-            "Powered by NVIDIA NIM (Llama 3.3 70B Instruct)."
+            "Powered by NVIDIA NIM (default: Llama 3.1 8B; set NIM_MODEL for 70B)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(

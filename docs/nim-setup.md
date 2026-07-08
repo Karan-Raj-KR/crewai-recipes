@@ -7,7 +7,7 @@ A step-by-step guide to getting your development environment ready for any recip
 ## 1. Get an NVIDIA NIM API Key
 
 1. Go to [build.nvidia.com](https://build.nvidia.com/) and sign up (it's free).
-2. Browse to any model (e.g., [Llama 3.3 70B Instruct](https://build.nvidia.com/meta/llama-3.3-70b-instruct)).
+2. Browse to any model (e.g., [Llama 3.1 8B Instruct](https://build.nvidia.com/meta/llama-3.1-8b-instruct) — the default these recipes use).
 3. Click **"Get API Key"** in the top right — you'll get an `nvapi-...` key.
 4. The free tier includes generous monthly credits. No credit card required.
 
@@ -71,10 +71,15 @@ https://integrate.api.nvidia.com/v1
 CrewAI's `LLM` class accepts a custom `base_url`, so we configure it like this:
 
 ```python
+import os
 from crewai import LLM
 
+# Recipes default to 8B and read NIM_MODEL from the environment so you can
+# switch models without editing code.
+model = os.getenv("NIM_MODEL", "meta/llama-3.1-8b-instruct")
+
 llm = LLM(
-    model="openai/meta/llama-3.3-70b-instruct",
+    model=f"openai/{model}",
     base_url="https://integrate.api.nvidia.com/v1",
     api_key=os.getenv("NVIDIA_API_KEY"),
     temperature=0.2,
@@ -90,16 +95,19 @@ No additional adapter libraries needed — just `crewai` and `openai`.
 
 | Model | Context | Best for |
 |-------|---------|----------|
-| `meta/llama-3.3-70b-instruct` | 128K | **Default** — best reasoning for most recipes |
-| `meta/llama-3.1-8b-instruct` | 128K | Fast tasks, lower latency |
+| `meta/llama-3.1-8b-instruct` | 128K | **Default** — fast, reliable on the free tier |
+| `meta/llama-3.3-70b-instruct` | 128K | Stronger reasoning (slower; may be rate-limited on the free tier) |
 | `nvidia/llama-3.1-nemotron-70b-instruct` | 128K | Enterprise-grade instruction following |
 | `meta/llama-3.2-3b-instruct` | 128K | Ultra-fast, lower quality |
 
-Change the model in `llm.py` inside any recipe:
+Pick a model **without editing code** by setting `NIM_MODEL` in your `.env` (or exporting it):
 
-```python
-NIM_MODEL = "meta/llama-3.3-70b-instruct"  # change here
+```bash
+# .env
+NIM_MODEL=meta/llama-3.3-70b-instruct
 ```
+
+Or change the baked-in default via `DEFAULT_MODEL` in a recipe's `llm.py`.
 
 ---
 

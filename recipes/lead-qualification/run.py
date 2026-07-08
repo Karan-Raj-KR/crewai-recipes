@@ -28,7 +28,7 @@ def parse_args() -> argparse.Namespace:
             "🎯 CrewAI Lead Qualification Recipe\n"
             "Runs a two-agent crew (Researcher + Scorer) to qualify a company\n"
             "against B2B SaaS ICP criteria and return a 0-100 score.\n\n"
-            "Powered by NVIDIA NIM (Llama 3.3 70B Instruct)."
+            "Powered by NVIDIA NIM (default: Llama 3.1 8B; set NIM_MODEL for 70B)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(

@@ -1,6 +1,6 @@
 # 🎯 Recipe: Lead Qualification
 
-Score and profile inbound sales leads using a two-agent CrewAI crew powered by **NVIDIA NIM (Llama 3.3 70B Instruct)**.
+Score and profile inbound sales leads using a two-agent CrewAI crew powered by **NVIDIA NIM** (defaults to `meta/llama-3.1-8b-instruct`; set `NIM_MODEL` for 70B).
 
 **Time to first run: ~5 minutes** — clone, install, set key, run.
 
@@ -28,7 +28,7 @@ Input: company name + short description
 Output: 0-100 score + HOT/WARM/COLD verdict + next action
 ```
 
-**Model used:** `meta/llama-3.3-70b-instruct` via NVIDIA NIM  
+**Default model:** `meta/llama-3.1-8b-instruct` via NVIDIA NIM (set `NIM_MODEL=meta/llama-3.3-70b-instruct` for stronger reasoning)  
 **LLM calls:** 2 (one per agent)  
 **Typical run time:** ~20-40 seconds
 
@@ -95,43 +95,8 @@ companies. 8-person team, pre-seed, targeting small courier businesses."
 
 ## Expected Output
 
-```
-🎯  Lead Qualification Crew — Starting
-   Company    : Notion
-   Description: Series C note-taking and wiki tool for teams...
-
-[Research Agent working...]
-[Scoring Agent working...]
-
-════════════════════════════════════════════════════
-📊  QUALIFICATION RESULT
-════════════════════════════════════════════════════
-
-## ICP Scorecard — Notion
-
-| Dimension            | Score | Rationale |
-|----------------------|-------|-----------|
-| Industry Fit         | 22/25 | Strong fit — knowledge management tools are a priority spend for our ICP |
-| Company Size Fit     | 20/25 | Mid-market and SMB focus aligns well; enterprise segment is a bonus |
-| Pain Point Acuity    | 20/25 | Doc sprawl and wiki fragmentation are acute pains our product solves |
-| Budget/Growth Signal | 21/25 | Series C + 50K customers signals strong willingness to invest in tooling |
-
-**Total: 83 / 100**
-**Verdict: 🔥 HOT**
-
-**Recommended next action:** Schedule a discovery call within 48 hours —
-high ICP match with clear budget signal.
-
-════════════════════════════════════════════════════
-```
-
-*(Actual LLM output will vary slightly. See below for a real run output.)*
-
----
-
-## Real Run Output
-
-The following was captured from an actual end-to-end run using **NVIDIA NIM (Llama 3.1 8B Instruct)**:
+The block below is the **final result** from a real end-to-end run (the verbose
+per-agent trace is omitted for brevity). Exact scores vary by input and model:
 
 ```
 $ python run.py \
@@ -194,7 +159,8 @@ Edit `tasks.py` — the `scoring_task` description contains the scoring rubric t
 This recipe uses **NVIDIA NIM** — a free, OpenAI-compatible inference API for NVIDIA-optimised models.
 
 - Endpoint: `https://integrate.api.nvidia.com/v1`
-- Model: `meta/llama-3.3-70b-instruct`
+- Default model: `meta/llama-3.1-8b-instruct` (fast, reliable on the free tier)
+- Upgrade model: `meta/llama-3.3-70b-instruct` (stronger reasoning; slower, may be rate-limited on the free tier)
 - Docs: [build.nvidia.com](https://build.nvidia.com/)
 
-To swap models, edit `NIM_MODEL` in `llm.py`.
+To swap models, set `NIM_MODEL` in your `.env` (no code change needed), or edit `DEFAULT_MODEL` in `llm.py`.
