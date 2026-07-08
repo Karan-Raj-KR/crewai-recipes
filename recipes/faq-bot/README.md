@@ -105,36 +105,22 @@ Questions outside these topics trigger a graceful fallback directing the custome
 
 ---
 
-## Real Run Output
+## Expected Output
+
+The pricing question above, showing the **final result block** (the verbose
+per-agent trace is omitted). Captured from a real call to NVIDIA NIM
+`meta/llama-3.1-8b-instruct` on 2026-07-08:
 
 ```
 🤖  Orbitly FAQ Bot — Starting
    Customer : Priya
    Question : How much does Orbitly cost?
 
-────────────────────────────────────────────────────────────
-
-# Agent: Orbitly Customer Support Specialist
-## Task: A customer named 'Priya' has sent this question...
-## Final Answer:
-Hi Priya,
-
-Orbitly offers three plans: Solo (free for 1 user, 3 projects), 
-Team ($29/month per user with unlimited projects and priority support), 
-and Enterprise (custom pricing with SSO, a dedicated SLA, and audit logs). 
-Annual billing gives you 2 months free!
-
-Would you like more details about any specific plan? Is there anything 
-else I can help with?
-
 ════════════════════════════════════════════════════════════
 💬  SUPPORT REPLY
 ════════════════════════════════════════════════════════════
 Hi Priya,
 
-Orbitly offers three plans: Solo (free for 1 user, 3 projects),
-Team ($29/month per user with unlimited projects and priority support),
-and Enterprise (custom pricing with SSO, a dedicated SLA, and audit logs).
 Orbitly offers three plans: Solo ($0/month, 1 user, 3 projects), Team
 ($29/month per user, unlimited projects, priority support), and Enterprise
 (custom pricing, SSO, dedicated SLA, audit logs). Annual billing gives you
@@ -144,7 +130,7 @@ Is there anything else I can help with?
 ════════════════════════════════════════════════════════════
 ```
 
-> ✅ **Verified:** Real call to NVIDIA NIM `meta/llama-3.1-8b-instruct` on 2026-07-08.
+> Exact wording varies slightly by model and run.
 
 ---
 
