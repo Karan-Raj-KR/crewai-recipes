@@ -64,7 +64,7 @@ recipes/
 
 ### 4. Write your recipe
 
-Follow the [Recipe Structure](#recipe-structure) and [Coding Style](#coding-style) sections below.
+Follow the [Recipe Structure](#recipe-structure) and [Coding Style](#coding-style) sections below. For a full step-by-step walkthrough (copying an existing recipe, wiring up `llm.py`, running from a fresh venv), see **[docs/writing-a-recipe.md](./docs/writing-a-recipe.md)**.
 
 ### 5. Test it end-to-end
 

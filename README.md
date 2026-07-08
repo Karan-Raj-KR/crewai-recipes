@@ -139,9 +139,11 @@ New to the project? Start with an issue labeled **[good first issue](https://git
 
 Extended guides live in [`/docs`](./docs/):
 
+- [Writing a New Recipe](./docs/writing-a-recipe.md) — step-by-step contributor walkthrough
 - [Architecture Overview](./docs/architecture.md)
 - [Agent Design Patterns](./docs/agent-patterns.md)
 - [NVIDIA NIM + CrewAI Setup Guide](./docs/nim-setup.md)
+- [Project Decisions](./docs/DECISIONS.md) — why the repo is set up the way it is
 
 ---
 
