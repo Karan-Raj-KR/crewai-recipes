@@ -2,4 +2,4 @@ crewai>=1.0.0
 litellm>=1.0.0
 python-dotenv>=1.0.0
 openai>=1.35.0
-tenacity>=8.0.0
+tenacity>=9.1.4
