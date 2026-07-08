@@ -32,9 +32,9 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  python run.py --question \"How much does Orbitly cost?\"\n"
-            "  python run.py --question \"Do you offer refunds?\" --name \"Alex\"\n"
-            "  python run.py --question \"What is your mobile app?\"  "
+            '  python run.py --question "How much does Orbitly cost?"\n'
+            '  python run.py --question "Do you offer refunds?" --name "Alex"\n'
+            '  python run.py --question "What is your mobile app?"  '
             "# tests fallback\n"
         ),
     )

@@ -39,6 +39,6 @@ def get_llm() -> LLM:
         model=f"openai/{NIM_MODEL}",
         base_url=NIM_BASE_URL,
         api_key=api_key,
-        temperature=0.1,   # Low temp — factual Q&A, not creative writing
+        temperature=0.1,  # Low temp — factual Q&A, not creative writing
         max_tokens=1024,
     )

@@ -35,7 +35,7 @@ def parse_args() -> argparse.Namespace:
             "Examples:\n"
             '  python run.py --company "Notion" \\\n'
             '    --description "A Series C note-taking and wiki tool used by\n'
-            "     50,000+ teams. Heavily adopted in SMB and mid-market.\\n\"\n"
+            '     50,000+ teams. Heavily adopted in SMB and mid-market.\\n"\n'
         ),
     )
     parser.add_argument(
