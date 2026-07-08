@@ -1,29 +1,70 @@
 # Manual To-Do
 
-This file tracks items that genuinely need your judgment or a one-time manual step — everything that could be automated has been.
+Status after the autonomous audit/upgrade pass. Everything that could be
+automated safely was. This file is now just: what's done, what needs *you*,
+and where to point next.
 
-## Actions Required (only you can do these)
+---
 
-- [ ] **Verify Social Links**: Confirm the Instagram (`https://instagram.com/karan.rajkr`) and Hashnode (`https://karanrajkr.hashnode.dev`) links in `README.md` are correct and are ones you want publicly attached to this project.
-- [ ] **Review NVIDIA NIM Network Issue**: The `llama-3.3-70b-instruct` model occasionally times out on direct API calls; `llama-3.1-8b-instruct` is reliable. This may be a free-tier rate limit — worth a quick check on your NVIDIA account if you want 70B as the default.
-- [ ] **Pin the welcome Discussion**: I posted and would have pinned an intro thread at [discussions/9](https://github.com/Karan-Raj-KR/crewai-recipes/discussions/9), but pinning isn't exposed via the GitHub API — 2 clicks in the UI (`Pin discussion` from the `...` menu).
-- [ ] **GitHub Project board**: I couldn't create one — the `gh` CLI token is missing the `project` scope. Run `gh auth refresh -s project,read:project` (this is a token permission change, so it's left to you) and I can build the roadmap board, or you can create one manually and I'll populate it from the issue tracker.
-- [ ] **Decide on `hacktoberfest` topic**: I added it to the repo topics for extra visibility during October, but it also invites low-effort PRs from people farming the event. Remove it from repo topics (Settings → General) if you'd rather not deal with that.
-- [ ] **Prioritize/triage the 8 open issues**: All are labeled `good first issue` and intentionally left unimplemented for contributors — I did not solve them myself, since that would defeat the point of an inviting first-issue queue.
+## ✅ Done this pass (all pushed to `main`, CI green)
 
-## What was automated this session
+**Safety (verified clean):**
+- Scanned the **full git history** for secrets — no real `nvapi-` key or hardcoded credential in any commit; only placeholders (`nvapi-your-key-here`, `nvapi-test`).
+- `.env` is git-ignored and has never been tracked.
+- PII scan: no local paths, phone numbers, or real emails in tracked files. The only emails are `@example.com` sample data (RFC 2606 reserved — safe by design).
 
-- **CI was red on every commit** since day one (`ruff format --check` failing on 3 files) — fixed and pushed; badge is now green.
-- Added `SECURITY.md`, PR template, issue-template contact links (Discussions + private security reporting), `CODEOWNERS`, `CHANGELOG.md`, `dependabot.yml` (weekly pip + Actions updates).
-- Fixed a stale label table in `CONTRIBUTING.md` that no longer matched the repo's actual labels, and a wrong-case issue link.
-- Added a first-interaction welcome-bot workflow that greets first-time issue/PR authors.
-- Enabled GitHub Discussions (default categories: Announcements, General, Ideas, Polls, Q&A, Show and tell) and posted a pinned-intent welcome thread.
-- Set repository topics (`crewai`, `ai-agents`, `multi-agent-systems`, `llm`, `nvidia-nim`, `python`, `automation`, `open-source`, `good-first-issue`, `agentic-ai`, `hacktoberfest`) for discoverability.
-- Turned on Dependabot security updates + vulnerability alerts, auto-delete of merged branches, and "always suggest updating pull request branches."
-- Added lightweight branch protection on `main`: CI must pass before merge, but admin (you) can still push directly — nothing is blocked for you, only for random write-access pushes bypassing CI.
-- Polished README: CI badge, good-first-issue count badge, Discussions badge, a Community section, and a contributors gallery.
+**Fixed what was broken / dishonest:**
+- **Model claim mismatch** — docs/badges/description claimed "Llama 3.3 70B" while the code ran 3.1 8B. Now 8B is the documented default everywhere, with 70B a one-line opt-in via the `NIM_MODEL` env var. Zero contradictions left.
+- **Resilience** — added `ResilientLLM` (retries NIM timeouts/429s 3× with exponential backoff) to all four recipes.
+- **Stale Groq guide** — deleted `docs/groq-setup.md` (project migrated to NIM; it was dead and contradictory).
+- **CI hardening** — per-recipe requirements install, pinned Python 3.12, run-cancellation, and import checks now assert the resilient LLM + 8B default wiring.
+
+**Contributor experience:**
+- New `docs/writing-a-recipe.md` (step-by-step), `docs/DECISIONS.md` (why the repo is set up as it is).
+- Real, clean **Expected Output** blocks in both stable recipe READMEs (captured from live NIM runs, not fabricated).
+- Right-sized governance: removed the solo-maintainer `CODEOWNERS`, slimmed `SECURITY.md` to a practical API-key note.
+- Commented on issue **#8** with the new guide; left it open for a contributor to add the `recipes/_template/` folder.
+
+**Verified end-to-end:**
+- Fresh `git clone` in a clean venv → `pip install` → run: succeeds through every step and fails **only** at the API-auth call with a placeholder key (403 Forbidden), exactly as intended.
+- Live run of `faq-bot` against NIM 8B produced a clean answer (also confirms the retry wrapper doesn't break real calls).
+- CI is **green** on `main` (commit `b1d9b8c`).
+
+---
+
+## 🙋 Needs you (with exact commands)
+
+1. **Verify your public links** in `README.md` are ones you want attached:
+   `https://instagram.com/karan.rajkr` and `https://karanrajkr.hashnode.dev`.
+
+2. **Pin the welcome Discussion** (the API can't do this — 2 clicks):
+   Open <https://github.com/Karan-Raj-KR/crewai-recipes/discussions/9> → `•••` menu → **Pin discussion**.
+
+3. **(Optional) GitHub Project board** — my `gh` token lacks the `project` scope. If you want a roadmap/triage board, run then tell me:
+   ```bash
+   gh auth refresh -s project,read:project
+   ```
+
+4. **(Optional) Decide on the `hacktoberfest` topic** — it's currently set for visibility, but invites low-effort PRs. To remove:
+   ```bash
+   gh repo edit Karan-Raj-KR/crewai-recipes --remove-topic hacktoberfest
+   ```
+
+5. **(Optional) Enforce CI on yourself too** — branch protection currently lets admins (you) bypass required checks. To make even your own pushes wait for green CI, enable "Include administrators" in branch protection settings.
+
+---
+
+## 🎯 Top 3 highest-impact next actions for attracting contributors
+
+1. **Ship one 30-minute win: the `recipes/_template/` folder (issue #8).** A copy-paste scaffold is the single biggest lever on "time to first PR." Pair it with a short Loom/GIF of building a recipe and link it in the README quickstart.
+
+2. **Add a demo GIF to the top of the README (issue #5).** A repo that *shows* a crew running in the first screen converts far better than one that only describes it. Record `lead-qualification` producing a scorecard.
+
+3. **Seed 3–5 more `good first issue`s and keep the queue full.** Contributors arrive in bursts (a blog post, an HN mention); an empty issue queue wastes that traffic. Good candidates: unit tests per recipe (#3, #4), the missing-key error-handling polish (#7), and one new small recipe (e.g. email-drafting, #6). Then post the build in your Instagram/blog to drive the first wave.
+
+---
 
 ## Notes
 
-- All Groq references have been successfully migrated to NVIDIA NIM across the codebase, documentation, and issue templates.
-- The default LLM across all active recipes and scaffolds is `meta/llama-3.1-8b-instruct` for reliability and speed, but can easily be swapped to `meta/llama-3.3-70b-instruct` as per the inline comments in the `llm.py` configurations.
+- Default LLM across all recipes: `meta/llama-3.1-8b-instruct` (fast, reliable on the free tier). Override anywhere with `NIM_MODEL=meta/llama-3.3-70b-instruct` in `.env` — no code change.
+- The 70B model still occasionally times out on the free tier; the retry wrapper softens this but doesn't eliminate it. If you want 70B as the default, check your NIM account's rate limits first.
