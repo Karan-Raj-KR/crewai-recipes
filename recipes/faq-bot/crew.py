@@ -1,7 +1,7 @@
 """
 FAQ Bot Recipe — crew.py
 
-Assembles the FAQ bot CrewAI Crew.
+Assembles the single-agent FAQ crew.
 """
 
 from crewai import Crew, Process
@@ -10,23 +10,22 @@ from agents import build_agents
 from tasks import build_tasks
 
 
-def build_crew(customer_question: str, customer_name: str = "Customer") -> Crew:
+def build_crew(question: str, customer_name: str = "there") -> Crew:
     """Build and return the FAQ bot Crew.
 
     Args:
-        customer_question: The question to answer.
-        customer_name: The customer's name for personalised responses.
+        question: The customer's question.
+        customer_name: Optional customer name for personalised replies.
 
     Returns:
         A configured Crew instance ready to call .kickoff().
     """
-    retriever_agent, response_agent = build_agents()
-    tasks = build_tasks(retriever_agent, response_agent, customer_question, customer_name)
+    (support_agent,) = build_agents()
+    tasks = build_tasks(support_agent, question, customer_name)
 
-    crew = Crew(
-        agents=[retriever_agent, response_agent],
+    return Crew(
+        agents=[support_agent],
         tasks=tasks,
         process=Process.sequential,
         verbose=True,
     )
-    return crew

@@ -1,85 +1,193 @@
 # 💬 Recipe: FAQ / Support Bot
 
-A two-agent CrewAI crew that answers customer questions from a built-in knowledge base — with graceful fallback when no answer is found. Powered by Groq LLaMA.
+Answer customer questions from a built-in knowledge base using a **single-agent CrewAI crew** powered by **NVIDIA NIM (Llama 3.1 8B Instruct)**.
+
+**Time to first run: ~5 minutes** — clone, install, set key, run.
 
 ---
 
 ## What It Does
 
 ```
-Customer Question
-      │
-      ▼
-┌──────────────────────────┐
-│  Knowledge Retriever      │  ← Searches the FAQ knowledge base
-│  (no hallucination rule)  │
-└─────────────┬────────────┘
-              │  Matched entries (or "no match")
-              ▼
-┌──────────────────────────┐
-│  Response Drafter         │  ← Writes warm, customer-facing reply
-│  (graceful fallback)      │  ← Escalates to human if no answer
-└──────────────────────────┘
-              │
-              ▼
-     Ready-to-send Support Response
+Customer Question (+ optional name)
+          │
+          ▼
+┌──────────────────────────────┐
+│  Orbitly Support Agent        │  ← Searches FAQ knowledge base
+│  (no-hallucination rule)      │  ← If no match → graceful fallback
+│                               │  ← Personalised reply using customer name
+└──────────────────────────────┘
+          │
+          ▼
+   Ready-to-send support reply (plain text, under 120 words)
 ```
+
+**Product:** "Orbitly" — a fictional B2B project management SaaS  
+**Knowledge base:** 6 hardcoded FAQ entries (pricing, trial, import, integrations, security, cancellation)  
+**Model used:** `meta/llama-3.1-8b-instruct` via NVIDIA NIM  
+**LLM calls:** 1  
+**Typical run time:** ~5-15 seconds  
+
+---
+
+## Prerequisites
+
+- Python 3.10–3.12 (recommended)
+- An NVIDIA NIM API key (free — [get one here](https://build.nvidia.com/))
+
+---
 
 ## Setup
 
 ```bash
+# From the repo root
 cd recipes/faq-bot
-python -m venv .venv && source .venv/bin/activate
+
+# Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate    # Windows: .venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
-cp .env.example .env   # add your GROQ_API_KEY
+
+# Configure your API key
+cp .env.example .env
+# Edit .env → add: NVIDIA_API_KEY=nvapi-...
 ```
 
-## Run
+---
+
+## Usage
 
 ```bash
-python main.py
+python run.py --question "CUSTOMER QUESTION"
+python run.py --question "CUSTOMER QUESTION" --name "Customer Name"
 ```
 
-Edit `SAMPLE_QUESTIONS` in `main.py` and change the list index to test different questions.
+### Options
 
-## Extending With a Real Knowledge Base
+| Flag | Required | Default | Description |
+|------|----------|---------|-------------|
+| `--question` | ✅ Yes | — | The customer's question (wrap in quotes) |
+| `--name` | No | `there` | Customer name for personalised greeting |
+| `--help` | No | — | Show help and exit |
 
-The static `knowledge_base.py` can be swapped for a vector store:
+### Examples
+
+```bash
+# Basic pricing question
+python run.py --question "How much does Orbitly cost?"
+
+# Personalised question
+python run.py --question "Do you offer refunds?" --name "Alex"
+
+# Integration question
+python run.py --question "Does Orbitly integrate with Slack?" --name "Priya"
+
+# Test fallback (topic not in KB)
+python run.py --question "Do you have a mobile app for Android?" --name "Jordan"
+```
+
+---
+
+## Knowledge Base Topics
+
+| # | Topic | Question |
+|---|-------|---------|
+| 1 | Pricing | How much does Orbitly cost? |
+| 2 | Free Trial | Can I try Orbitly before paying? |
+| 3 | Data Import | Can I import from Jira or Trello? |
+| 4 | Integrations | Which tools does Orbitly integrate with? |
+| 5 | Security | Is my data secure? Is Orbitly GDPR compliant? |
+| 6 | Cancellation & Refunds | What happens if I cancel? Do you offer refunds? |
+
+Questions outside these topics trigger a graceful fallback directing the customer to support@orbitly.example.com.
+
+---
+
+## Real Run Output
+
+```
+🤖  Orbitly FAQ Bot — Starting
+   Customer : Priya
+   Question : How much does Orbitly cost?
+
+────────────────────────────────────────────────────────────
+
+# Agent: Orbitly Customer Support Specialist
+## Task: A customer named 'Priya' has sent this question...
+## Final Answer:
+Hi Priya,
+
+Orbitly offers three plans: Solo (free for 1 user, 3 projects), 
+Team ($29/month per user with unlimited projects and priority support), 
+and Enterprise (custom pricing with SSO, a dedicated SLA, and audit logs). 
+Annual billing gives you 2 months free!
+
+Would you like more details about any specific plan? Is there anything 
+else I can help with?
+
+════════════════════════════════════════════════════════════
+💬  SUPPORT REPLY
+════════════════════════════════════════════════════════════
+Hi Priya,
+
+Orbitly offers three plans: Solo (free for 1 user, 3 projects),
+Team ($29/month per user with unlimited projects and priority support),
+and Enterprise (custom pricing with SSO, a dedicated SLA, and audit logs).
+Orbitly offers three plans: Solo ($0/month, 1 user, 3 projects), Team
+($29/month per user, unlimited projects, priority support), and Enterprise
+(custom pricing, SSO, dedicated SLA, audit logs). Annual billing gives you
+2 months free.
+
+Is there anything else I can help with?
+════════════════════════════════════════════════════════════
+```
+
+> ✅ **Verified:** Real call to NVIDIA NIM `meta/llama-3.1-8b-instruct` on 2026-07-08.
+
+---
+
+## Extending the Knowledge Base
+
+Edit `knowledge_base.py` — add more dicts to `FAQ_KNOWLEDGE_BASE`:
 
 ```python
-# Example: Chroma vector store
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
-
-vectorstore = Chroma(persist_directory="./kb_store", embedding_function=...)
-retriever = vectorstore.as_retriever()
+{
+    "topic": "mobile app",
+    "question": "Is there a mobile app?",
+    "answer": "Yes! Orbitly is available on iOS and Android. Search 'Orbitly' in the App Store or Google Play.",
+},
 ```
 
-## Knowledge Base Topics Covered
+In production, swap the static list for a vector store:
+```python
+from langchain_community.vectorstores import Chroma
+# ... embed your FAQ docs and query with similarity search
+```
 
-| Topic | Summary |
-|-------|---------|
-| Pricing | Plan tiers and trial info |
-| Free Trial | How to start, no CC required |
-| Cancellation | Self-serve, no fees |
-| Data Export | CSV/JSON export steps |
-| Integrations | Slack, HubSpot, Salesforce, Zapier |
-| Security | AES-256, TLS 1.3, SOC 2, GDPR |
-| Support | Channels by plan tier |
-| Refunds | 7-day policy |
+---
 
-## Configuration
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `GROQ_API_KEY` | Your Groq API key | ✅ Yes |
-
-## Architecture
+## File Structure
 
 | File | Purpose |
 |------|---------|
-| `agents.py` | Retriever and Response Drafter agents |
-| `knowledge_base.py` | Static FAQ entries + formatter |
-| `tasks.py` | Retrieval and response tasks |
-| `crew.py` | Crew assembly |
-| `main.py` | CLI entry point |
+| `llm.py` | NVIDIA NIM LLM config — change model here |
+| `agents.py` | Single Orbitly Support Specialist agent |
+| `knowledge_base.py` | 6 hardcoded FAQ entries + text formatter |
+| `tasks.py` | Single answer task with KB context and guidelines |
+| `crew.py` | Single-agent crew assembly |
+| `run.py` | CLI entry point (`argparse`) |
+| `requirements.txt` | Python dependencies |
+| `.env.example` | Template for NVIDIA_API_KEY |
+
+---
+
+## LLM Provider
+
+This recipe uses **NVIDIA NIM** — a free, OpenAI-compatible inference API.
+
+- Endpoint: `https://integrate.api.nvidia.com/v1`
+- Default model: `meta/llama-3.1-8b-instruct` (fast, free tier)
+- Upgrade model: `meta/llama-3.3-70b-instruct` (best quality)
+- Docs: [build.nvidia.com](https://build.nvidia.com/)

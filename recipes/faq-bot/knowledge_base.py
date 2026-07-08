@@ -1,99 +1,88 @@
 """
 FAQ Bot Recipe — knowledge_base.py
 
-A static, in-memory FAQ knowledge base.
-In production, replace this with a vector store (e.g. Chroma, Pinecone, pgvector)
-or a document loader from a CMS / Notion / Confluence page.
+In-memory FAQ for "Orbitly" — a fictional B2B project management SaaS.
+Each entry has a topic, question, and answer.
+
+To extend: add more dicts to FAQ_KNOWLEDGE_BASE.
+In production, swap this for a vector store (Chroma, Pinecone, pgvector).
 """
 
 FAQ_KNOWLEDGE_BASE: list[dict[str, str]] = [
     {
         "topic": "pricing",
-        "question": "How much does the product cost?",
+        "question": "How much does Orbitly cost?",
         "answer": (
-            "We offer three plans: Starter ($29/month), Growth ($79/month), "
-            "and Enterprise (custom pricing). All plans include a 14-day free "
-            "trial — no credit card required. Annual billing saves 20%."
+            "Orbitly offers three plans: Solo ($0/month, 1 user, 3 projects), "
+            "Team ($29/month per user, unlimited projects, priority support), "
+            "and Enterprise (custom pricing, SSO, dedicated SLA, audit logs). "
+            "Annual billing gives you 2 months free."
         ),
     },
     {
         "topic": "free trial",
-        "question": "How do I start a free trial?",
+        "question": "Can I try Orbitly before paying?",
         "answer": (
-            "Sign up at our website, choose any plan, and you'll automatically "
-            "start your 14-day free trial. No credit card is needed to start. "
-            "You'll receive a welcome email with onboarding steps."
+            "Yes! The Solo plan is free forever for one user. For team features, "
+            "every account gets a 21-day free trial of the Team plan — no credit "
+            "card required. Your trial auto-converts to Solo if you don't upgrade."
         ),
     },
     {
-        "topic": "cancellation",
-        "question": "Can I cancel my subscription at any time?",
+        "topic": "data import",
+        "question": "Can I import my projects from Jira or Trello?",
         "answer": (
-            "Yes, you can cancel at any time from your account settings under "
-            "Billing > Cancel Subscription. Your access continues until the "
-            "end of your current billing period. We do not charge cancellation fees."
-        ),
-    },
-    {
-        "topic": "data export",
-        "question": "Can I export my data?",
-        "answer": (
-            "Absolutely. Navigate to Settings > Data > Export. You can export "
-            "all your data as CSV or JSON. Enterprise customers also have "
-            "access to the bulk export API."
+            "Absolutely. Go to Settings → Import and choose your source: "
+            "Jira (Cloud or Server), Trello, Asana, or CSV. The import wizard "
+            "maps fields automatically and lets you preview before confirming. "
+            "Large imports (500+ issues) run in the background and email you when done."
         ),
     },
     {
         "topic": "integrations",
-        "question": "Which third-party tools do you integrate with?",
+        "question": "Which tools does Orbitly integrate with?",
         "answer": (
-            "We integrate natively with Slack, HubSpot, Salesforce, Zapier, "
-            "and Google Workspace. Over 1,000 additional apps are available "
-            "via our Zapier integration. API documentation is at /docs/api."
+            "Native integrations include Slack (notifications + /orbitly slash command), "
+            "GitHub (link commits to tasks), Figma (embed designs), Google Drive, "
+            "and Zapier (1,000+ apps). Webhooks and a REST API are available on "
+            "Team and Enterprise plans. Full API docs at docs.orbitly.example.com."
         ),
     },
     {
         "topic": "security",
-        "question": "Is my data secure?",
+        "question": "Is my data secure? Is Orbitly GDPR compliant?",
         "answer": (
-            "We take security seriously. All data is encrypted at rest (AES-256) "
-            "and in transit (TLS 1.3). We are SOC 2 Type II certified and GDPR "
-            "compliant. Two-factor authentication is available on all plans."
+            "Yes. All data is encrypted in transit (TLS 1.3) and at rest (AES-256). "
+            "Orbitly is SOC 2 Type II certified and fully GDPR compliant. "
+            "EU customers' data is stored in EU data centres. "
+            "You can export or delete all your data at any time from Settings → Privacy."
         ),
     },
     {
-        "topic": "support",
-        "question": "How do I contact support?",
+        "topic": "cancellation and refunds",
+        "question": "What happens if I cancel? Do you offer refunds?",
         "answer": (
-            "Starter and Growth customers can reach support via in-app chat "
-            "(Mon–Fri, 9am–6pm IST) and email (support@example.com). "
-            "Enterprise customers have 24/7 dedicated support with a named "
-            "account manager."
-        ),
-    },
-    {
-        "topic": "refunds",
-        "question": "Do you offer refunds?",
-        "answer": (
-            "We offer a full refund within 7 days of your first charge if you "
-            "are not satisfied. After 7 days, refunds are reviewed case-by-case. "
-            "Contact support@example.com to initiate a refund request."
+            "You can cancel anytime from Settings → Billing → Cancel Plan. "
+            "Access continues until the end of your current billing period — "
+            "we don't pro-rate or charge early cancellation fees. "
+            "Refund requests within 14 days of a charge are honoured in full; "
+            "after that, refunds are reviewed case-by-case. Email billing@orbitly.example.com."
         ),
     },
 ]
 
 
 def get_knowledge_base_text() -> str:
-    """Format the knowledge base as a readable text block for agent context.
+    """Format the FAQ knowledge base as a plain-text block for agent context.
 
     Returns:
-        A formatted string containing all FAQ entries.
+        A formatted string with all FAQ entries numbered and labelled.
     """
-    lines: list[str] = ["=== KNOWLEDGE BASE ===\n"]
+    lines: list[str] = ["=== ORBITLY FAQ KNOWLEDGE BASE ===\n"]
     for i, entry in enumerate(FAQ_KNOWLEDGE_BASE, 1):
-        lines.append(f"[Entry {i}] Topic: {entry['topic'].upper()}")
-        lines.append(f"Q: {entry['question']}")
-        lines.append(f"A: {entry['answer']}")
+        lines.append(f"[{i}] Topic: {entry['topic'].upper()}")
+        lines.append(f"    Q: {entry['question']}")
+        lines.append(f"    A: {entry['answer']}")
         lines.append("")
     lines.append("=== END OF KNOWLEDGE BASE ===")
     return "\n".join(lines)

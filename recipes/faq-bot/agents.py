@@ -1,82 +1,41 @@
 """
 FAQ Bot Recipe — agents.py
 
-Two-agent crew for answering customer questions from a knowledge base:
-  1. KnowledgeRetrieverAgent — searches the FAQ knowledge base for relevant answers
-  2. ResponseDraftingAgent   — crafts a clear, helpful customer-facing response
+Single agent: searches the knowledge base and drafts a customer-facing reply.
 """
 
-import os
-
 from crewai import Agent
-from langchain_groq import ChatGroq
+
+from llm import get_llm
 
 
-def _get_llm(model: str = "llama-3.1-8b-instant") -> ChatGroq:
-    """Instantiate the Groq LLaMA LLM.
-
-    Args:
-        model: Groq model identifier.
+def build_agents() -> tuple[Agent]:
+    """Build and return the FAQ support agent.
 
     Returns:
-        A configured ChatGroq instance.
-
-    Raises:
-        EnvironmentError: If GROQ_API_KEY is not set.
+        A single-element tuple containing the support_agent.
     """
-    api_key = os.getenv("GROQ_API_KEY")
-    if not api_key:
-        raise EnvironmentError(
-            "GROQ_API_KEY is not set. "
-            "Export it or add it to your .env file."
-        )
-    return ChatGroq(model=model, api_key=api_key, temperature=0.1)
+    llm = get_llm()
 
-
-def build_agents() -> tuple[Agent, Agent]:
-    """Build and return the FAQ bot agents.
-
-    Returns:
-        A tuple of (retriever_agent, response_agent).
-    """
-    llm = _get_llm()
-
-    retriever_agent = Agent(
-        role="FAQ Knowledge Retriever",
+    support_agent = Agent(
+        role="Orbitly Customer Support Specialist",
         goal=(
-            "Search the provided knowledge base to find the most relevant "
-            "answer entries for the customer's question. If no direct match "
-            "is found, identify the closest related topics and flag the gap."
+            "Answer customer questions about Orbitly accurately and helpfully, "
+            "drawing only from the provided knowledge base. "
+            "If the knowledge base contains the answer, give it clearly and concisely. "
+            "If not, acknowledge the gap honestly and invite the customer to "
+            "contact support for more help — never invent an answer."
         ),
         backstory=(
-            "You are a librarian-level information specialist who can quickly "
-            "scan a knowledge base and surface the most relevant excerpts. "
-            "You are rigorous: you only surface information that genuinely "
-            "addresses the question and clearly mark when no match exists. "
-            "You never make up information that is not in the knowledge base."
+            "You are a friendly, experienced support specialist for Orbitly, "
+            "a B2B project management SaaS. You know the product inside out. "
+            "Customers trust you because you are always accurate, never waffle, "
+            "and always end your reply with a clear next step. "
+            "You write in a warm, professional tone — no corporate jargon."
         ),
         llm=llm,
         verbose=True,
         allow_delegation=False,
     )
 
-    response_agent = Agent(
-        role="Customer Support Response Writer",
-        goal=(
-            "Transform the retrieved knowledge base excerpts into a warm, "
-            "clear, and complete customer-facing response. If the knowledge "
-            "base did not contain a relevant answer, craft a graceful "
-            "fallback message and suggest contacting support."
-        ),
-        backstory=(
-            "You are a senior customer success specialist with a gift for "
-            "turning technical documentation into human-friendly answers. "
-            "Your responses are always empathetic, concise, and actionable. "
-            "You never leave a customer without a clear next step."
-        ),
-        llm=llm,
-        verbose=True,
-        allow_delegation=False,
-    )
-
-    return retriever_agent, response_agent
+    return (support_agent,)
