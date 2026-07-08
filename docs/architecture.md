@@ -54,19 +54,21 @@ This ensures each task receives the full upstream context it needs.
 
 ## LLM Configuration
 
-All recipes use **Groq + LLaMA** as the default LLM:
+All recipes use **NVIDIA NIM + LLaMA** as the default LLM:
 
 ```python
-from langchain_groq import ChatGroq
+from crewai import LLM
+import os
 
-llm = ChatGroq(
-    model="llama-3.1-8b-instant",  # or llama3-70b-8192 for more power
-    api_key=os.getenv("GROQ_API_KEY"),
+llm = LLM(
+    model="openai/meta/llama-3.1-8b-instruct",  # or meta/llama-3.3-70b-instruct for more power
+    base_url="https://integrate.api.nvidia.com/v1",
+    api_key=os.getenv("NVIDIA_API_KEY"),
     temperature=0.2,
 )
 ```
 
-To swap for a different provider (OpenAI, Anthropic, etc.), replace `ChatGroq` with the appropriate LangChain chat model class and update `requirements.txt`.
+To swap for a different provider (OpenAI, Anthropic, etc.), update the `model` string according to CrewAI / LiteLLM documentation, and update `requirements.txt` if necessary.
 
 ---
 

@@ -98,7 +98,7 @@ Every recipe **must** include:
 | `.env.example` | List of required environment variables (values must be placeholders) |
 | `README.md` | What the recipe does, inputs/outputs, sample run, and architecture diagram (ASCII is fine) |
 
-**LLM requirement:** The default `llm` in every recipe must use **Groq + LLaMA** (e.g., `llama-3.1-8b-instant` or `llama3-70b-8192`). Supporting other providers as optional is fine.
+**LLM requirement:** The default `llm` in every recipe must use **NVIDIA NIM + LLaMA** (e.g., `meta/llama-3.1-8b-instruct` or `meta/llama-3.3-70b-instruct`). Supporting other providers as optional is fine.
 
 ---
 

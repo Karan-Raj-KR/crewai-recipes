@@ -1,6 +1,6 @@
 # 📅 Recipe: Appointment Booking
 
-A three-agent CrewAI crew that processes booking requests, matches them to available calendar slots, and drafts a confirmation email — all powered by Groq LLaMA.
+A three-agent CrewAI crew that processes booking requests, matches them to available calendar slots, and drafts a confirmation email — all powered by NVIDIA NIM.
 
 ---
 
@@ -34,7 +34,7 @@ Booking Request (name, email, type, preferences)
 cd recipes/appointment-booking
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # add your GROQ_API_KEY
+cp .env.example .env   # add your NVIDIA_API_KEY
 ```
 
 ## Run
@@ -59,7 +59,7 @@ from googleapiclient.discovery import build
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `GROQ_API_KEY` | Your Groq API key | ✅ Yes |
+| `NVIDIA_API_KEY` | Your NVIDIA API key | ✅ Yes |
 
 ## Architecture
 

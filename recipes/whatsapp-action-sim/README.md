@@ -2,7 +2,7 @@
 
 > 🚧 **Status: In Progress** — Core functionality works; real webhook integration and multi-turn conversation support are coming.
 
-A three-agent CrewAI crew that simulates a WhatsApp business automation pipeline: classify the user's intent → route to the correct action → compose a natural WhatsApp reply. Powered by Groq LLaMA.
+A three-agent CrewAI crew that simulates a WhatsApp business automation pipeline: classify the user's intent → route to the correct action → compose a natural WhatsApp reply. Powered by NVIDIA NIM.
 
 ---
 
@@ -51,7 +51,7 @@ Incoming WhatsApp Message
 cd recipes/whatsapp-action-sim
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # add your GROQ_API_KEY
+cp .env.example .env   # add your NVIDIA_API_KEY
 ```
 
 ## Run
@@ -73,7 +73,7 @@ Edit `SAMPLE_MESSAGES` in `main.py` and change the index to test different inten
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `GROQ_API_KEY` | Your Groq API key | ✅ Yes |
+| `NVIDIA_API_KEY` | Your NVIDIA API key | ✅ Yes |
 
 ## Architecture
 
