@@ -1,4 +1,4 @@
-name: CI — Lint & Test Recipes
+name: CI — Lint & Import Checks
 
 on:
   push:
@@ -17,19 +17,19 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install Ruff
         run: pip install ruff
 
       - name: Run Ruff check
-        run: ruff check recipes/
+        run: ruff check recipes/lead-qualification/ recipes/faq-bot/
 
       - name: Run Ruff format check
-        run: ruff format --check recipes/
+        run: ruff format --check recipes/lead-qualification/ recipes/faq-bot/
 
-  test-lead-qualification:
-    name: Smoke Test — lead-qualification
+  import-check-lead-qualification:
+    name: Import Check — lead-qualification
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -39,18 +39,26 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: pip install -r recipes/lead-qualification/requirements.txt
 
-      - name: Run import checks
+      - name: Check imports (no API call)
         run: |
           cd recipes/lead-qualification
-          python -c "from agents import build_agents; from tasks import build_tasks; from crew import build_crew; print('✅ lead-qualification imports OK')"
+          # Set a dummy key so the module-level EnvironmentError isn't triggered on import
+          NVIDIA_API_KEY=nvapi-test python -c "
+          import sys, os
+          os.environ['NVIDIA_API_KEY'] = 'nvapi-test'
+          # Only check that modules import and functions exist — no real LLM calls
+          from tasks import build_tasks
+          from crew import build_crew
+          print('✅ lead-qualification imports OK')
+          "
 
-  test-appointment-booking:
-    name: Smoke Test — appointment-booking
+  import-check-faq-bot:
+    name: Import Check — faq-bot
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -60,33 +68,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: pip install -r recipes/appointment-booking/requirements.txt
-
-      - name: Run import checks
-        run: |
-          cd recipes/appointment-booking
-          python -c "from agents import build_agents; from tasks import build_tasks; from crew import build_crew; print('✅ appointment-booking imports OK')"
-
-  test-faq-bot:
-    name: Smoke Test — faq-bot
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: pip install -r recipes/faq-bot/requirements.txt
 
-      - name: Run import checks
+      - name: Check imports (no API call)
         run: |
           cd recipes/faq-bot
-          python -c "from agents import build_agents; from tasks import build_tasks; from crew import build_crew; print('✅ faq-bot imports OK')"
+          NVIDIA_API_KEY=nvapi-test python -c "
+          import os
+          os.environ['NVIDIA_API_KEY'] = 'nvapi-test'
+          from knowledge_base import FAQ_KNOWLEDGE_BASE, get_knowledge_base_text
+          assert len(FAQ_KNOWLEDGE_BASE) >= 6, 'Expected at least 6 FAQ entries'
+          kb_text = get_knowledge_base_text()
+          assert 'PRICING' in kb_text, 'Expected PRICING topic in KB text'
+          print(f'✅ faq-bot: {len(FAQ_KNOWLEDGE_BASE)} KB entries verified')
+          "

@@ -1,0 +1,66 @@
+name: "🍳 Feature / Recipe Request"
+description: "Request a new recipe or an improvement to an existing one."
+labels: ["recipe: new"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got an idea for a new recipe or an improvement? Great! Fill in the details below
+        so we can evaluate and prioritise. Please search existing issues before submitting.
+
+  - type: dropdown
+    id: request-type
+    attributes:
+      label: "Request Type"
+      options:
+        - "New recipe (brand-new use case)"
+        - "Improve existing recipe (add agents, fix prompts, extend)"
+        - "New documentation"
+    validations:
+      required: true
+
+  - type: input
+    id: recipe-name
+    attributes:
+      label: "Recipe Name (if new)"
+      description: "Short hyphenated name — will become the folder name."
+      placeholder: "e.g. email-drafting"
+    validations:
+      required: false
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Problem / Use Case"
+      description: "What real-world automation does this recipe cover? Who is it for?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-design
+    attributes:
+      label: "Proposed Agent Design (optional)"
+      description: "List agents and their roles. Rough sketch is fine."
+      placeholder: |
+        - Drafting Agent: writes the first email draft based on context
+        - Review Agent: checks tone, grammar, and CTA clarity
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: "Acceptance Criteria"
+      description: "How do we know this is done? What should the output look like?"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Before Submitting"
+      options:
+        - label: "I searched existing issues and this is not a duplicate."
+          required: true
+        - label: "I am willing to build this recipe myself (or contribute to it)."
+          required: false

@@ -1,19 +1,25 @@
 name: "🐛 Bug Report"
-description: "Something in an existing recipe is broken or behaving unexpectedly."
+description: "Something in a recipe is broken or behaving unexpectedly."
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report!
-        Please be as specific as possible so we can reproduce and fix the issue quickly.
+        Please be as specific as possible so we can reproduce and fix quickly.
 
-  - type: input
+  - type: dropdown
     id: recipe
     attributes:
       label: "Affected Recipe"
       description: "Which recipe is this bug in?"
-      placeholder: "e.g. lead-qualification"
+      options:
+        - lead-qualification
+        - faq-bot
+        - appointment-booking
+        - whatsapp-action-sim
+        - docs / README
+        - other / repo-wide
     validations:
       required: true
 
@@ -22,7 +28,7 @@ body:
     attributes:
       label: "Bug Description"
       description: "A clear and concise description of what the bug is."
-      placeholder: "When I run main.py with X inputs, I get Y error instead of Z output."
+      placeholder: "When I run run.py with X inputs, I get Y error instead of Z output."
     validations:
       required: true
 
@@ -32,9 +38,10 @@ body:
       label: "Steps to Reproduce"
       description: "How can we reproduce the issue?"
       value: |
-        1.
-        2.
-        3.
+        1. cd recipes/<recipe-name>
+        2. pip install -r requirements.txt
+        3. python run.py --...
+        4. See error:
     validations:
       required: true
 
@@ -42,15 +49,13 @@ body:
     id: expected
     attributes:
       label: "Expected Behaviour"
-      description: "What did you expect to happen?"
     validations:
       required: true
 
   - type: textarea
     id: actual
     attributes:
-      label: "Actual Behaviour / Error"
-      description: "Paste the full error message or unexpected output here."
+      label: "Actual Behaviour / Full Error"
       render: shell
     validations:
       required: true
@@ -59,7 +64,7 @@ body:
     id: python-version
     attributes:
       label: "Python Version"
-      placeholder: "e.g. 3.11.4"
+      placeholder: "e.g. 3.12.0"
     validations:
       required: true
 
@@ -67,14 +72,16 @@ body:
     id: crewai-version
     attributes:
       label: "CrewAI Version"
-      placeholder: "e.g. 0.28.0"
+      placeholder: "e.g. 1.15.2"
     validations:
       required: false
 
-  - type: textarea
-    id: additional
+  - type: checkboxes
+    id: checks
     attributes:
-      label: "Additional Context"
-      description: "Any other context, screenshots, or logs."
-    validations:
-      required: false
+      label: "Before Submitting"
+      options:
+        - label: "I searched existing issues and this is not a duplicate."
+          required: true
+        - label: "I confirmed NVIDIA_API_KEY is set and valid."
+          required: false
