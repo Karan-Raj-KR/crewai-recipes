@@ -1,89 +1,200 @@
 # 🎯 Recipe: Lead Qualification
 
-Automatically **research, score, and summarise** inbound sales leads using a three-agent CrewAI crew powered by Groq LLaMA.
+Score and profile inbound sales leads using a two-agent CrewAI crew powered by **NVIDIA NIM (Llama 3.3 70B Instruct)**.
+
+**Time to first run: ~5 minutes** — clone, install, set key, run.
 
 ---
 
 ## What It Does
 
 ```
-Inbound Lead Data
-      │
-      ▼
-┌─────────────────────┐
-│  Research Agent     │  ← Profiles the lead and company
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│  ICP Scoring Agent  │  ← Scores across 4 dimensions (0–100)
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│  Report Writer      │  ← Produces CRM-ready qualification report
-└─────────────────────┘
-         │
-         ▼
-  Qualification Report
-  (score · verdict · next action · talking points)
+Input: company name + short description
+            │
+            ▼
+┌─────────────────────────┐
+│  Company Research Agent  │  ← Extracts industry, size, pain points,
+│                          │    business model, growth stage from desc.
+└────────────┬────────────┘
+             │ structured research summary
+             ▼
+┌─────────────────────────┐
+│  ICP Scoring Agent       │  ← Scores across 4 dimensions (25 pts each)
+│                          │    Industry Fit · Size Fit · Pain Point ·
+│                          │    Budget/Growth Signal
+└─────────────────────────┘
+             │
+             ▼
+Output: 0-100 score + HOT/WARM/COLD verdict + next action
 ```
+
+**Model used:** `meta/llama-3.3-70b-instruct` via NVIDIA NIM  
+**LLM calls:** 2 (one per agent)  
+**Typical run time:** ~20-40 seconds
+
+---
+
+## Prerequisites
+
+- Python 3.10–3.12 (recommended)
+- An NVIDIA NIM API key (free — [get one here](https://build.nvidia.com/))
+
+---
 
 ## Setup
 
 ```bash
 # From the repo root
 cd recipes/lead-qualification
-python -m venv .venv && source .venv/bin/activate
+
+# Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate    # Windows: .venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
-cp .env.example .env          # then add your GROQ_API_KEY
+
+# Configure your API key
+cp .env.example .env
+# Edit .env → add: NVIDIA_API_KEY=nvapi-...
 ```
 
-## Run
+---
+
+## Usage
 
 ```bash
-python main.py
+python run.py --company "COMPANY NAME" --description "SHORT DESCRIPTION"
 ```
 
-Edit the `SAMPLE_LEAD` dict in `main.py` with your lead's details.
+### Options
 
-## Sample Output
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--company` | ✅ Yes | Company name (e.g. `"Acme Corp"`) |
+| `--description` | ✅ Yes | Description of the company — more detail = better score |
+| `--help` | No | Show help and exit |
 
-```
-═══════════════════════════════════════════════════════════
-📋  QUALIFICATION REPORT
-═══════════════════════════════════════════════════════════
+### Examples
 
-## Lead Snapshot
-- **Name:** Jordan Lee
-- **Role:** Head of Revenue Operations @ Acme SaaS Co.
-- **Score:** 82 / 100 — 🔥 HOT
+```bash
+# Basic usage
+python run.py \
+  --company "Notion" \
+  --description "Series C note-taking and wiki tool for teams. \
+Used by 50,000+ companies. Primarily SMB and mid-market, strong B2B growth."
 
-## Top 3 Talking Points
-1. Their spreadsheet-based pipeline is a growth bottleneck at 40 reps.
-2. Series B velocity means they need scalable processes now.
-3. RevOps hiring signals imminent tool consolidation.
-
-## Recommended Next Action
-**CALL NOW** — High ICP fit + active vendor evaluation = short buying window.
-
-## Personalisation Angle
-Reference their growth from 5 → 40 reps to show you've done your homework.
-
-═══════════════════════════════════════════════════════════
+# Startup example
+python run.py \
+  --company "FleetTrackr" \
+  --description "Early-stage logistics SaaS for last-mile delivery \
+companies. 8-person team, pre-seed, targeting small courier businesses."
 ```
 
-## Configuration
+---
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `GROQ_API_KEY` | Your Groq API key | ✅ Yes |
+## Expected Output
 
-## Architecture
+```
+🎯  Lead Qualification Crew — Starting
+   Company    : Notion
+   Description: Series C note-taking and wiki tool for teams...
+
+[Research Agent working...]
+[Scoring Agent working...]
+
+════════════════════════════════════════════════════
+📊  QUALIFICATION RESULT
+════════════════════════════════════════════════════
+
+## ICP Scorecard — Notion
+
+| Dimension            | Score | Rationale |
+|----------------------|-------|-----------|
+| Industry Fit         | 22/25 | Strong fit — knowledge management tools are a priority spend for our ICP |
+| Company Size Fit     | 20/25 | Mid-market and SMB focus aligns well; enterprise segment is a bonus |
+| Pain Point Acuity    | 20/25 | Doc sprawl and wiki fragmentation are acute pains our product solves |
+| Budget/Growth Signal | 21/25 | Series C + 50K customers signals strong willingness to invest in tooling |
+
+**Total: 83 / 100**
+**Verdict: 🔥 HOT**
+
+**Recommended next action:** Schedule a discovery call within 48 hours —
+high ICP match with clear budget signal.
+
+════════════════════════════════════════════════════
+```
+
+*(Actual LLM output will vary slightly. See below for a real run output.)*
+
+---
+
+## Real Run Output
+
+The following was captured from an actual end-to-end run using **NVIDIA NIM (Llama 3.1 8B Instruct)**:
+
+```
+$ python run.py \
+  --company "FleetTrackr" \
+  --description "Early-stage logistics SaaS for last-mile delivery companies.
+   12-person team, seed-stage, targeting small courier businesses with 10-50
+   drivers. Route optimization and proof-of-delivery. Customers are frustrated
+   with spreadsheets and WhatsApp for dispatch."
+
+🎯  Lead Qualification Crew — Starting
+   Company    : FleetTrackr
+   Description: Early-stage logistics SaaS for last-mile delivery...
+
+════════════════════════════════════════════════════════════
+📊  QUALIFICATION RESULT
+════════════════════════════════════════════════════════════
+**FleetTrackr ICP Scorecard**
+
+| Dimension            | Score      | Rationale |
+|----------------------|------------|-----------|
+| Industry Fit         | 22 / 25    | Targets last-mile delivery companies, aligning closely with our B2B SaaS buyer profile. |
+| Company Size Fit     | 12 / 25    | Early-stage startup; team size may not reflect SMB-to-mid-market sweet spot. |
+| Pain Point Acuity    | 20 / 25    | Manual processes and inefficient routing are acute, urgent pain points. |
+| Budget/Growth Signal | 15 / 25    | Limited spending power at seed stage; growth potential present but early. |
+
+**Total Score:** 69 / 100
+**Verdict:** WARM
+
+**Recommended Next Action:** Schedule a discovery call to discuss specific
+pain points and assess readiness for a B2B SaaS solution.
+════════════════════════════════════════════════════════════
+```
+
+> ✅ **Verified:** Real call to NVIDIA NIM `meta/llama-3.1-8b-instruct` on 2026-07-08.
+
+---
+
+## File Structure
 
 | File | Purpose |
 |------|---------|
-| `agents.py` | Defines Research, Scoring, and Report agents |
-| `tasks.py` | Defines the three sequential tasks |
-| `crew.py` | Assembles the Crew with sequential process |
-| `main.py` | CLI entry point |
+| `llm.py` | NVIDIA NIM LLM configuration — change model here |
+| `agents.py` | Research Agent and Scoring Agent definitions |
+| `tasks.py` | Task descriptions with ICP scoring rubric |
+| `crew.py` | Crew assembly (sequential process) |
+| `run.py` | CLI entry point (`argparse`) |
+| `requirements.txt` | Python dependencies |
+| `.env.example` | Template for environment variables |
+
+---
+
+## Customising the ICP
+
+Edit `tasks.py` — the `scoring_task` description contains the scoring rubric table. Adjust the dimensions, weights, or thresholds to match your sales team's ICP definition.
+
+---
+
+## LLM Provider
+
+This recipe uses **NVIDIA NIM** — a free, OpenAI-compatible inference API for NVIDIA-optimised models.
+
+- Endpoint: `https://integrate.api.nvidia.com/v1`
+- Model: `meta/llama-3.3-70b-instruct`
+- Docs: [build.nvidia.com](https://build.nvidia.com/)
+
+To swap models, edit `NIM_MODEL` in `llm.py`.

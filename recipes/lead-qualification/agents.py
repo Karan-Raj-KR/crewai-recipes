@@ -1,60 +1,39 @@
 """
 Lead Qualification Recipe — agents.py
 
-Defines the three agents that make up the lead qualification crew:
-  1. ResearchAgent  — gathers background info on the lead's company
-  2. ScoringAgent   — applies ICP criteria to rate the lead
-  3. SummaryAgent   — produces a structured qualification report
+Two agents:
+  1. ResearchAgent — profiles the company from the provided description
+  2. ScoringAgent  — applies ICP criteria and outputs a 0-100 score
 """
 
-import os
-
 from crewai import Agent
-from langchain_groq import ChatGroq
+
+from llm import get_llm
 
 
-def _get_llm(model: str = "llama-3.1-8b-instant") -> ChatGroq:
-    """Instantiate the Groq LLaMA LLM.
-
-    Args:
-        model: Groq model identifier.
+def build_agents() -> tuple[Agent, Agent]:
+    """Build and return the Researcher and Scorer agents.
 
     Returns:
-        A configured ChatGroq instance.
-
-    Raises:
-        EnvironmentError: If GROQ_API_KEY is not set.
+        A tuple of (research_agent, scoring_agent).
     """
-    api_key = os.getenv("GROQ_API_KEY")
-    if not api_key:
-        raise EnvironmentError(
-            "GROQ_API_KEY is not set. "
-            "Export it or add it to your .env file."
-        )
-    return ChatGroq(model=model, api_key=api_key, temperature=0.2)
-
-
-def build_agents() -> tuple[Agent, Agent, Agent]:
-    """Build and return the lead qualification agents.
-
-    Returns:
-        A tuple of (research_agent, scoring_agent, summary_agent).
-    """
-    llm = _get_llm()
+    llm = get_llm()
 
     research_agent = Agent(
-        role="Lead Research Specialist",
+        role="Company Research Analyst",
         goal=(
-            "Gather comprehensive, accurate background information about a "
-            "sales lead: their company, industry, size, funding stage, and "
-            "the lead's seniority and likely decision-making authority."
+            "Analyse the company description provided and extract all "
+            "relevant signals for a B2B SaaS sales qualification: "
+            "industry vertical, company size estimate, business model "
+            "(B2B/B2C/marketplace), growth stage, likely tech stack, "
+            "and the biggest operational pain points they probably face."
         ),
         backstory=(
-            "You are a seasoned B2B sales researcher with 10+ years of "
-            "experience profiling prospects. You know exactly what signals "
-            "matter: team size, tech stack, recent funding, and growth "
-            "trajectory. You rely only on the information provided and reason "
-            "carefully rather than fabricating details."
+            "You are a senior B2B sales researcher with a decade of "
+            "experience profiling SaaS prospects. You are rigorous and "
+            "methodical — you only draw conclusions that are supported "
+            "by the description given. You never fabricate information. "
+            "If something is unclear, you note the ambiguity explicitly."
         ),
         llm=llm,
         verbose=True,
@@ -62,38 +41,24 @@ def build_agents() -> tuple[Agent, Agent, Agent]:
     )
 
     scoring_agent = Agent(
-        role="ICP Scoring Analyst",
+        role="ICP Scoring Specialist",
         goal=(
-            "Evaluate the lead against the Ideal Customer Profile (ICP) and "
-            "produce a numeric score from 0–100 along with clear reasoning "
-            "for each scoring dimension."
+            "Score the company against a standard B2B SaaS Ideal Customer "
+            "Profile (ICP) and produce a total score from 0 to 100. "
+            "Break the score into four equally-weighted dimensions (25 pts each): "
+            "Industry Fit, Company Size Fit, Pain Point Acuity, and "
+            "Budget/Growth Signal. Provide a one-sentence rationale per dimension. "
+            "End with a verdict: HOT (75-100), WARM (40-74), or COLD (0-39)."
         ),
         backstory=(
-            "You are a data-driven sales strategist who has built and refined "
-            "ICP frameworks for SaaS companies. You score leads objectively "
-            "across four dimensions: company fit, role fit, timing signals, "
-            "and engagement potential. You never inflate scores without evidence."
+            "You are a data-driven revenue operations analyst who built ICP "
+            "scoring frameworks for three Series B SaaS companies. You score "
+            "objectively and conservatively — you only give high scores when "
+            "there is clear evidence in the research, never on assumption."
         ),
         llm=llm,
         verbose=True,
         allow_delegation=False,
     )
 
-    summary_agent = Agent(
-        role="Qualification Report Writer",
-        goal=(
-            "Synthesise the research and scoring into a concise, actionable "
-            "qualification report that a sales rep can read in under 2 minutes."
-        ),
-        backstory=(
-            "You are a former enterprise sales director who now coaches reps "
-            "on pipeline hygiene. You write crystal-clear qualification reports "
-            "with a recommended next action (call, nurture, or disqualify) and "
-            "three bullet points the sales rep should mention in the first touch."
-        ),
-        llm=llm,
-        verbose=True,
-        allow_delegation=False,
-    )
-
-    return research_agent, scoring_agent, summary_agent
+    return research_agent, scoring_agent
