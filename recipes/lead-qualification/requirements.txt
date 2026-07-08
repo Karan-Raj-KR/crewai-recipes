@@ -1,5 +1,5 @@
 crewai>=1.0.0
-litellm>=1.0.0
+litellm>=1.83.7
 python-dotenv>=1.0.0
 openai>=1.35.0
 tenacity>=8.0.0
