@@ -35,3 +35,11 @@ the NIM free tier, so every recipe actually defaults to **`meta/llama-3.1-8b-ins
 (fast, reliable, free). Rather than paper over that, the docs now state 8B as the
 default and expose 70B as an opt-in via the `NIM_MODEL` environment variable. No
 contradictory claims left in code, docs, badges, or the repo description.
+
+## Playground Frontend: Plain HTML/JS (2026-07)
+
+For the local web playground, a vanilla HTML/CSS/JS frontend was chosen over React/Vite.
+**Why?**
+- **Zero build step:** Contributors can edit `index.html` and refresh the browser instantly without running Node.js or `npm install`.
+- **Minimal dependencies:** The backend is Python (FastAPI). Forcing users to install a JS toolchain just to run the local playground raises the barrier to entry significantly.
+- **Longevity:** Plain HTML/JS doesn't suffer from dependency rot. It will work identically 5 years from now.

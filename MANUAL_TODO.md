@@ -105,3 +105,30 @@ CodeRabbit provides AI-assisted PR reviews, which saves maintainer time. It requ
 - [Issue #26: Build out Content Production Pipeline recipe](https://github.com/Karan-Raj-KR/crewai-recipes/issues/26)
 - [Issue #27: Build out Support Ticket Escalation recipe](https://github.com/Karan-Raj-KR/crewai-recipes/issues/27)
 - [Issue #38: Add optional support for a second OpenAI-compatible provider via env config](https://github.com/Karan-Raj-KR/crewai-recipes/issues/38)
+
+## 🎮 Local Playground & Multi-Provider Config (Autonomous Update)
+
+**What Shipped:**
+- **Multi-Provider LLM Config:** Refactored `llm.py` in all recipes to fully rely on `LLM_BASE_URL`, `LLM_MODEL`, and `LLM_API_KEY`, making it trivial to swap to OpenRouter, Cerebras, or GitHub Models. The default remains NVIDIA NIM. Documented in `docs/providers.md`.
+- **Local Web Playground:** Created a `/playground` directory with a FastAPI backend and a vanilla HTML/JS frontend. It dynamically lists recipes and provides input forms based on the `run.py` requirements. It executes the crew in the background and surfaces the final output, all completely locally.
+- **CI Validation:** Added an `import-check-playground` step in CI to ensure the FastAPI app imports correctly and isn't broken by dependency updates.
+
+**Judgment Calls Made:**
+- **Frontend Framework:** Chosen vanilla HTML/CSS/JS (no Vite/React) to keep the repository extremely lightweight and dependency-free for users who just want to run python. Justified this in `docs/DECISIONS.md`.
+- **Backward Compatibility:** `get_llm()` explicitly checks for the deprecated `NVIDIA_API_KEY` to prevent breaking existing user environments while nudging them to use `LLM_API_KEY`.
+
+### 🙋 Needs you
+1. **Add a Screenshot:** Replace the placeholder `![Playground Screenshot Placeholder](./screenshot.png)` in `playground/README.md` with a real screenshot of the playground running.
+
+### 📝 New Playground Issues Added
+
+**Frontend:**
+- 🟢 Beginner: [Issue #40: Add copy-to-clipboard button for result output](https://github.com/Karan-Raj-KR/crewai-recipes/issues/40)
+- 🟢 Beginner: [Issue #41: Show helpful input validation messages on the UI](https://github.com/Karan-Raj-KR/crewai-recipes/issues/41)
+- 🟡 Intermediate: [Issue #42: Add a session-based run history sidebar](https://github.com/Karan-Raj-KR/crewai-recipes/issues/42)
+- 🟡 Intermediate: [Issue #43: Add an LLM Provider selector to the UI](https://github.com/Karan-Raj-KR/crewai-recipes/issues/43)
+
+**Backend:**
+- 🟢 Beginner: [Issue #44: Add request logging to FastAPI backend](https://github.com/Karan-Raj-KR/crewai-recipes/issues/44)
+- 🟡 Intermediate: [Issue #45: Implement response caching for identical runs](https://github.com/Karan-Raj-KR/crewai-recipes/issues/45)
+- 🔴 Advanced: [Issue #46: Add a WebSocket endpoint to stream CrewAI progress](https://github.com/Karan-Raj-KR/crewai-recipes/issues/46)

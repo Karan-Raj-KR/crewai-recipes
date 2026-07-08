@@ -56,6 +56,23 @@ python run.py --company "Acme Corp" --description "A 40-person B2B SaaS..."
 
 ---
 
+## 🎮 Local Playground
+
+Want to test recipes in your browser instead of the CLI? The repo includes a lightweight, local-only web playground. **Your API key never leaves your machine.**
+
+```bash
+cd playground
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Start the playground server
+uvicorn main:app --reload
+```
+Then open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
+
+---
+
 ## 📚 Recipes
 
 | Recipe | Description | Status |

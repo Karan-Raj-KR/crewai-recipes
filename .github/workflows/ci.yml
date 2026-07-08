@@ -100,3 +100,32 @@ jobs:
           assert type(llm).__name__ == 'ResilientLLM', 'expected retry-wrapped LLM'
           print(f'✅ faq-bot: {len(FAQ_KNOWLEDGE_BASE)} KB entries + resilient LLM wiring OK')
           "
+
+  import-check-playground:
+    name: Import Check — playground
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install playground dependencies
+        run: pip install -r playground/requirements.txt
+
+      - name: Verify FastAPI app imports and starts
+        env:
+          # Dummy key so env validation doesn't fail
+          LLM_API_KEY: test-key
+        run: |
+          cd playground
+          # Use python to import main and instantiate the app
+          python -c "
+          from main import app
+          assert app.title == 'CrewAI Recipes Playground'
+          print('✅ playground: FastAPI app imports and initializes OK')
+          "
