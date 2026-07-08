@@ -4,11 +4,14 @@
 
 **A public library of ready-to-run CrewAI multi-agent automation templates — powered by NVIDIA NIM (Llama 3.3 70B).**
 
+[![CI](https://github.com/Karan-Raj-KR/crewai-recipes/actions/workflows/ci.yml/badge.svg)](https://github.com/Karan-Raj-KR/crewai-recipes/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![CrewAI](https://img.shields.io/badge/CrewAI-latest-green.svg)](https://github.com/joaomdmoura/crewAI)
 [![NVIDIA NIM](https://img.shields.io/badge/LLM-NVIDIA%20NIM-76b900.svg)](https://build.nvidia.com/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
+[![Good First Issues](https://img.shields.io/github/issues/Karan-Raj-KR/crewai-recipes/good%20first%20issue?color=7057ff&label=good%20first%20issues)](https://github.com/Karan-Raj-KR/crewai-recipes/labels/good%20first%20issue)
+[![Discussions](https://img.shields.io/badge/Discussions-join%20the%20conversation-blueviolet)](https://github.com/Karan-Raj-KR/crewai-recipes/discussions)
 
 </div>
 
@@ -87,9 +90,14 @@ crewai-recipes/
 ├── docs/                        # Deep-dive guides and architecture notes
 ├── .github/
 │   ├── ISSUE_TEMPLATE/          # Bug report & recipe request templates
-│   └── workflows/               # CI workflows
+│   ├── workflows/               # CI + welcome-bot workflows
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── CODEOWNERS
+│   └── dependabot.yml
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
+├── SECURITY.md
+├── CHANGELOG.md
 └── README.md
 ```
 
@@ -104,6 +112,24 @@ Quick summary:
 - Must use CrewAI + NVIDIA NIM (Llama 3.3 70B or similar); other models can be optional extras
 - Include a `README.md`, `requirements.txt`, `run.py`, and `.env.example`
 - Open an issue first for major new recipes so we can align before you build
+
+New to the project? Start with an issue labeled **[good first issue](https://github.com/Karan-Raj-KR/crewai-recipes/labels/good%20first%20issue)** — each one is scoped to be a self-contained, mergeable PR.
+
+---
+
+## 💬 Community
+
+- 🙋 **New here?** Introduce yourself in [Discussions](https://github.com/Karan-Raj-KR/crewai-recipes/discussions)
+- 💡 Have a recipe idea but want to talk it through first? → [Ideas](https://github.com/Karan-Raj-KR/crewai-recipes/discussions/categories/ideas)
+- ❓ Stuck on setup or usage? → [Q&A](https://github.com/Karan-Raj-KR/crewai-recipes/discussions/categories/q-a)
+- 🐛 Found a bug? → [open an issue](https://github.com/Karan-Raj-KR/crewai-recipes/issues/new/choose)
+- 🔒 Found a security issue? → see [SECURITY.md](./SECURITY.md) — please don't file it publicly
+
+### Contributors
+
+<a href="https://github.com/Karan-Raj-KR/crewai-recipes/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Karan-Raj-KR/crewai-recipes" alt="Contributors" />
+</a>
 
 ---
 
