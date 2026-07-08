@@ -68,3 +68,40 @@ and where to point next.
 
 - Default LLM across all recipes: `meta/llama-3.1-8b-instruct` (fast, reliable on the free tier). Override anywhere with `NIM_MODEL=meta/llama-3.3-70b-instruct` in `.env` — no code change.
 - The 70B model still occasionally times out on the free tier; the retry wrapper softens this but doesn't eliminate it. If you want 70B as the default, check your NIM account's rate limits first.
+
+## 🤖 Contributor Automation & Backlog Expansion (Autonomous Update)
+
+**Judgment Calls Made:**
+- **Labeler Setup:** For the labeler workflow, I mapped `docs/**` to the `docs` label, `.github/**` to `ci`, and `recipes/**` to `recipe: improvement`. This ensures any change in recipes gets attention without incorrectly labeling bug fixes as new recipes.
+- **Stale Bot:** Configured to mark issues and PRs stale after 45 days, but leaves them open indefinitely (`days-before-close: -1`) to avoid losing valid community context. It exempts `level: advanced` issues and anything assigned to a user.
+- **Welcome Message:** First-time contributors get a warm automated welcome via `actions/first-interaction`, nudging them to check `CONTRIBUTING.md` and `good first issue`s.
+
+**How to Enable CodeRabbit AI (Free Open-Source Tier)**
+CodeRabbit provides AI-assisted PR reviews, which saves maintainer time. It requires GitHub authorization, so you must install it manually:
+1. Go to the [CodeRabbit App on GitHub Marketplace](https://github.com/marketplace/coderabbitai) or [coderabbit.ai](https://coderabbit.ai).
+2. Click **Install for Free** (it's free for public OSS).
+3. Select this repository (`Karan-Raj-KR/crewai-recipes`) to grant access.
+4. Once installed, it will automatically review new PRs and leave inline comments.
+
+### 📝 New Issues Added
+
+**Beginner (Great for new contributors):**
+- [Issue #28: Add `--json` output flag to run.py in lead-qualification recipe](https://github.com/Karan-Raj-KR/crewai-recipes/issues/28)
+- [Issue #29: Add input validation with helpful errors to lead-qualification recipe](https://github.com/Karan-Raj-KR/crewai-recipes/issues/29)
+- [Issue #30: Make faq-bot knowledge base loadable from a YAML file](https://github.com/Karan-Raj-KR/crewai-recipes/issues/30)
+- [Issue #31: Add Pytest smoke tests mocking LLM call for lead-qualification](https://github.com/Karan-Raj-KR/crewai-recipes/issues/31)
+- [Issue #32: Add Pytest smoke tests mocking LLM call for faq-bot](https://github.com/Karan-Raj-KR/crewai-recipes/issues/32)
+- [Issue #34: Add rich colored CLI output to recipes using Rich](https://github.com/Karan-Raj-KR/crewai-recipes/issues/34)
+- [Issue #39: Document how to run recipes using Docker](https://github.com/Karan-Raj-KR/crewai-recipes/issues/39)
+
+**Intermediate (Requires some familiarity with CrewAI/Python):**
+- [Issue #25: Build out Customer Onboarding workflow recipe](https://github.com/Karan-Raj-KR/crewai-recipes/issues/25)
+- [Issue #33: Add a top-level Makefile or Justfile for common developer commands](https://github.com/Karan-Raj-KR/crewai-recipes/issues/33)
+- [Issue #35: Add a `--verbose` flag to toggle CrewAI trace output](https://github.com/Karan-Raj-KR/crewai-recipes/issues/35)
+- [Issue #36: Add a CI job to run mocked pytest smoke tests](https://github.com/Karan-Raj-KR/crewai-recipes/issues/36)
+- [Issue #37: Matrix-test Python 3.10, 3.11, and 3.12 in CI](https://github.com/Karan-Raj-KR/crewai-recipes/issues/37)
+
+**Advanced (Complex integrations or multi-agent architectures):**
+- [Issue #26: Build out Content Production Pipeline recipe](https://github.com/Karan-Raj-KR/crewai-recipes/issues/26)
+- [Issue #27: Build out Support Ticket Escalation recipe](https://github.com/Karan-Raj-KR/crewai-recipes/issues/27)
+- [Issue #38: Add optional support for a second OpenAI-compatible provider via env config](https://github.com/Karan-Raj-KR/crewai-recipes/issues/38)
