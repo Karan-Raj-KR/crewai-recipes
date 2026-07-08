@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
 
+# Cancel superseded runs on the same ref so pushes don't pile up.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     name: Ruff Lint
@@ -17,11 +22,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
+          # CrewAI requires Python >=3.10,<3.14. Pin to 3.12 for CI.
           python-version: "3.12"
 
       - name: Install Ruff
         run: pip install ruff
 
+      # Lint only the stable recipes. The scaffolds intentionally contain
+      # TODO stubs (unused imports/vars) and are excluded until implemented.
       - name: Run Ruff check
         run: ruff check recipes/lead-qualification/ recipes/faq-bot/
 
@@ -41,20 +49,24 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install this recipe's dependencies
         run: pip install -r recipes/lead-qualification/requirements.txt
 
-      - name: Check imports (no API call)
+      - name: Check imports + LLM wiring (no API call)
+        env:
+          # Dummy key so the module-level EnvironmentError isn't triggered.
+          # Constructing the LLM does NOT hit the network — no real call is made.
+          NVIDIA_API_KEY: nvapi-test
         run: |
           cd recipes/lead-qualification
-          # Set a dummy key so the module-level EnvironmentError isn't triggered on import
-          NVIDIA_API_KEY=nvapi-test python -c "
-          import sys, os
-          os.environ['NVIDIA_API_KEY'] = 'nvapi-test'
-          # Only check that modules import and functions exist — no real LLM calls
+          python -c "
           from tasks import build_tasks
           from crew import build_crew
-          print('✅ lead-qualification imports OK')
+          from llm import get_llm
+          llm = get_llm()                       # validates ResilientLLM builds
+          assert type(llm).__name__ == 'ResilientLLM', 'expected retry-wrapped LLM'
+          assert 'llama-3.1-8b-instruct' in llm.model, f'unexpected default model: {llm.model}'
+          print('✅ lead-qualification: imports + resilient LLM wiring OK')
           "
 
   import-check-faq-bot:
@@ -70,18 +82,21 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install this recipe's dependencies
         run: pip install -r recipes/faq-bot/requirements.txt
 
-      - name: Check imports (no API call)
+      - name: Check knowledge base + LLM wiring (no API call)
+        env:
+          NVIDIA_API_KEY: nvapi-test
         run: |
           cd recipes/faq-bot
-          NVIDIA_API_KEY=nvapi-test python -c "
-          import os
-          os.environ['NVIDIA_API_KEY'] = 'nvapi-test'
+          python -c "
           from knowledge_base import FAQ_KNOWLEDGE_BASE, get_knowledge_base_text
+          from llm import get_llm
           assert len(FAQ_KNOWLEDGE_BASE) >= 6, 'Expected at least 6 FAQ entries'
           kb_text = get_knowledge_base_text()
           assert 'PRICING' in kb_text, 'Expected PRICING topic in KB text'
-          print(f'✅ faq-bot: {len(FAQ_KNOWLEDGE_BASE)} KB entries verified')
+          llm = get_llm()                       # validates ResilientLLM builds
+          assert type(llm).__name__ == 'ResilientLLM', 'expected retry-wrapped LLM'
+          print(f'✅ faq-bot: {len(FAQ_KNOWLEDGE_BASE)} KB entries + resilient LLM wiring OK')
           "
