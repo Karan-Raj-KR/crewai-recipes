@@ -206,5 +206,5 @@ This project is being built in public. Follow along:
 ---
 
 <div align="center">
-  <sub>Made with ☕ and multi-agent enthusiasm. Star ⭐ the repo if it saves you time!</sub>
+  <sub>Made with ☕ and multi-agent enthusiasm. Star ⭐ this repo if it saves you time!</sub>
 </div>
