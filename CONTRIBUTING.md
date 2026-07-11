@@ -20,7 +20,7 @@ Please take a few minutes to read this guide before opening a PR.
 
 ## Code of Conduct
 
-This project follows the [Contributor Covenant](./CODE_OF_CONDUCT.md). By participating, you agree to uphold its standards. Please report unacceptable behaviour to the maintainers.
+This project follows the [Contributor Covenant](./CODE_OF_CONDUCT.md). By participating, you agree to uphold its standards. Please report unacceptable behavior to the maintainers.
 
 ---
 
