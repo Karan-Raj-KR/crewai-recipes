@@ -151,6 +151,17 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        .invalid-field {
+            border-color: var(--error) !important;
+        }
+
+        .field-error {
+            color: var(--error);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -259,15 +270,33 @@
         const recipeId = select.value;
         if (!recipeId) return;
 
+        // Clear previous validation states
+        inputsContainer.querySelectorAll('.invalid-field').forEach(el => {
+            el.classList.remove('invalid-field');
+        });
+        inputsContainer.querySelectorAll('.field-error').forEach(el => {
+            el.remove();
+        });
+        errorMsg.style.display = 'none';
+
         const inputs = {};
         let missing = false;
         inputsContainer.querySelectorAll('input, textarea').forEach(el => {
-            if (!el.value.trim()) missing = true;
-            inputs[el.dataset.name] = el.value.trim();
+            const val = el.value.trim();
+            if (!val) {
+                missing = true;
+                el.classList.add('invalid-field');
+                
+                const err = document.createElement('div');
+                err.className = 'field-error';
+                err.textContent = 'This field is required.';
+                el.parentElement.appendChild(err);
+            } else {
+                inputs[el.dataset.name] = val;
+            }
         });
 
         if (missing) {
-            showError("Please fill in all fields.");
             return;
         }
 
@@ -302,6 +331,16 @@
         errorMsg.textContent = msg;
         errorMsg.style.display = 'block';
     }
+
+    inputsContainer.addEventListener('input', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            if (e.target.value.trim()) {
+                e.target.classList.remove('invalid-field');
+                const err = e.target.parentElement.querySelector('.field-error');
+                if (err) err.remove();
+            }
+        }
+    });
 
     loadRecipes();
 </script>
