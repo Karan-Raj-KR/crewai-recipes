@@ -15,14 +15,12 @@ import os
 import sys
 
 # Reconfigure streams to support UTF-8 (for emojis) on Windows
-if sys.platform.startswith('win'):
+if sys.platform.startswith("win"):
     try:
-        sys.stdout.reconfigure(encoding='utf-8')
-        sys.stderr.reconfigure(encoding='utf-8')
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
     except AttributeError:
         pass
-
-
 
 
 def parse_args() -> argparse.Namespace:
@@ -60,6 +58,7 @@ def preflight() -> None:
     """Validate environment before running the crew."""
     if not os.getenv("CREWAI_RECIPES_SKIP_DOTENV"):
         from dotenv import load_dotenv
+
         load_dotenv()
 
     if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):

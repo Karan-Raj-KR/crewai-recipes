@@ -34,8 +34,12 @@ def test_missing_key() -> None:
     )
     # Normalize newlines for cross-platform matching
     norm_stdout = result.stdout.replace("\r\n", "\n")
-    assert expected_output in norm_stdout, f"Expected setup message, got:\n{result.stdout}"
-    assert "Traceback" not in result.stderr, f"Traceback detected in stderr:\n{result.stderr}"
+    assert expected_output in norm_stdout, (
+        f"Expected setup message, got:\n{result.stdout}"
+    )
+    assert "Traceback" not in result.stderr, (
+        f"Traceback detected in stderr:\n{result.stderr}"
+    )
 
 
 if __name__ == "__main__":
