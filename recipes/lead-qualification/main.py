@@ -39,7 +39,10 @@ def main() -> None:
     print(f"   Company: {SAMPLE_LEAD['company']}\n")
     print("─" * 60)
 
-    crew = build_crew(SAMPLE_LEAD)
+    crew = build_crew(
+        company=SAMPLE_LEAD["company"],
+        description=SAMPLE_LEAD["notes"],
+    )
     result = crew.kickoff()
 
     print("\n" + "═" * 60)

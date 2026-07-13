@@ -69,6 +69,13 @@ jobs:
           print('✅ lead-qualification: imports + resilient LLM wiring OK')
           "
 
+      - name: Smoke test — main() with mocked LLM
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/lead-qualification
+          python test_main.py
+
   import-check-faq-bot:
     name: Import Check — faq-bot
     runs-on: ubuntu-latest
@@ -100,6 +107,13 @@ jobs:
           assert type(llm).__name__ == 'ResilientLLM', 'expected retry-wrapped LLM'
           print(f'✅ faq-bot: {len(FAQ_KNOWLEDGE_BASE)} KB entries + resilient LLM wiring OK')
           "
+
+      - name: Smoke test — main() with mocked LLM
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/faq-bot
+          python test_main.py
 
   import-check-playground:
     name: Import Check — playground
