@@ -21,19 +21,7 @@ if sys.platform.startswith('win'):
     except AttributeError:
         pass
 
-from dotenv import load_dotenv
 
-# Load .env before importing crew (crew imports llm which reads env vars)
-load_dotenv()
-
-if not os.getenv('NVIDIA_API_KEY'):
-    print('❌  NVIDIA_API_KEY is not set.')
-    print('   1. Copy .env.example → .env')
-    print('   2. Add your key: NVIDIA_API_KEY=nvapi-...')
-    print('   3. Get a free key at https://build.nvidia.com/')
-    sys.exit(1)
-
-from crew import build_crew  # noqa: E402
 
 
 def parse_args() -> argparse.Namespace:
@@ -70,9 +58,27 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def preflight() -> None:
+    """Validate environment before running the crew."""
+    if not os.getenv("CREWAI_RECIPES_SKIP_DOTENV"):
+        from dotenv import load_dotenv
+        load_dotenv()
+
+    if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
+        print("❌  LLM_API_KEY is not set.")
+        print("   1. Copy .env.example → .env")
+        print("   2. Add your key: LLM_API_KEY=your-key-here")
+        print("   3. Get a free key at https://build.nvidia.com/")
+        sys.exit(1)
+
+
 def main() -> None:
     """Run the lead qualification crew."""
     args = parse_args()
+
+    preflight()
+
+    from crew import build_crew
 
     company = args.company.strip()
     description = args.description.strip()

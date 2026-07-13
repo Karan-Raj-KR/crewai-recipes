@@ -7,15 +7,16 @@ from pathlib import Path
 
 
 def test_missing_key() -> None:
-    # Set up environment without NVIDIA_API_KEY
+    # Set up environment without LLM_API_KEY and NVIDIA_API_KEY, and skip loading .env
     env = os.environ.copy()
-    if "NVIDIA_API_KEY" in env:
-        del env["NVIDIA_API_KEY"]
+    env["CREWAI_RECIPES_SKIP_DOTENV"] = "1"
+    env.pop("LLM_API_KEY", None)
+    env.pop("NVIDIA_API_KEY", None)
 
     # Run run.py as a subprocess
     run_py = Path(__file__).parent / "run.py"
     result = subprocess.run(
-        [sys.executable, str(run_py)],
+        [sys.executable, str(run_py), "--question", "query"],
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -27,9 +28,9 @@ def test_missing_key() -> None:
 
     # Verify output message
     expected_output = (
-        "❌  NVIDIA_API_KEY is not set.\n"
+        "❌  LLM_API_KEY is not set.\n"
         "   1. Copy .env.example → .env\n"
-        "   2. Add your key: NVIDIA_API_KEY=nvapi-...\n"
+        "   2. Add your key: LLM_API_KEY=your-key-here\n"
         "   3. Get a free key at https://build.nvidia.com/\n"
     )
     # Normalize newlines for cross-platform matching

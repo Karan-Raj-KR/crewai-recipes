@@ -5,6 +5,13 @@ import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+if sys.platform.startswith('win'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
+
 os.environ.setdefault("LLM_API_KEY", "nvapi-test")
 sys.path.insert(0, str(Path(__file__).parent))
 
