@@ -33,7 +33,7 @@ small solo-maintained project. Adopted:
 Early copy claimed "Llama 3.3 70B." In practice the 70B model times out often on
 the NIM free tier, so every recipe actually defaults to **`meta/llama-3.1-8b-instruct`**
 (fast, reliable, free). Rather than paper over that, the docs now state 8B as the
-default and expose 70B as an opt-in via the `NIM_MODEL` environment variable. No
+default and expose 70B as an opt-in via the `LLM_MODEL` environment variable. No
 contradictory claims left in code, docs, badges, or the repo description.
 
 ## README structure: fastest path first (2026-07)

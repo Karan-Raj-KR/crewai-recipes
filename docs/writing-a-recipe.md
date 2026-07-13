@@ -58,7 +58,7 @@ See [architecture.md](./architecture.md) for the reasoning behind this split.
 ## 3. Keep `llm.py` exactly as-is
 
 Every recipe uses the same `llm.py`: it defaults to `meta/llama-3.1-8b-instruct`,
-lets users pick a model via the `NIM_MODEL` env var, and wraps calls in
+lets users pick a model via the `LLM_MODEL` env var, and wraps calls in
 `ResilientLLM` (retries transient NIM timeouts/429s with exponential backoff).
 **Copy it unchanged** — only adjust `temperature`/`max_tokens` if your task needs it.
 

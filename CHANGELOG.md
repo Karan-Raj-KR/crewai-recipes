@@ -7,7 +7,7 @@ All notable changes to this project are documented here. Format loosely follows 
 ### Added
 - Community infrastructure: `SECURITY.md`, PR template, issue template contact links, `CHANGELOG.md`.
 - GitHub Discussions enabled for Q&A and recipe ideas.
-- `NIM_MODEL` environment variable to switch models without editing code (defaults to `meta/llama-3.1-8b-instruct`).
+- `LLM_MODEL` environment variable to switch models without editing code (defaults to `meta/llama-3.1-8b-instruct`).
 - Retry with exponential backoff around NVIDIA NIM calls, so a single free-tier timeout/429 no longer fails a whole crew run.
 - `docs/DECISIONS.md` (why the repo is set up the way it is) and `docs/writing-a-recipe.md` (contributor walkthrough).
 
