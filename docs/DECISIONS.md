@@ -36,6 +36,26 @@ the NIM free tier, so every recipe actually defaults to **`meta/llama-3.1-8b-ins
 default and expose 70B as an opt-in via the `NIM_MODEL` environment variable. No
 contradictory claims left in code, docs, badges, or the repo description.
 
+## README structure: fastest path first (2026-07)
+
+Moved the "30-second start" block to the very top of the README — immediately after
+the one-line description and badges, before "What is this?" and before the full
+Quickstart. Rationale: a first-time visitor who arrives from a LinkedIn post or a
+search result makes a go/no-go decision in the first scroll. If the first thing they
+see is a 5-step guide, many bounce. The inline `LLM_API_KEY=... python run.py ...`
+block takes four lines, works without a `.env` file, and proves the repo actually
+runs — immediately.
+
+Added a "Why crewai-recipes?" comparison table (rolling-your-own vs. recipe) after
+the description. Each row was verified against the code before writing — no row claims
+a feature that doesn't exist. The CI row says "lint + import-wiring assertions", not
+"unit tests", because that's what CI currently does.
+
+Also fixed two stale references uncovered during the audit:
+- `CODEOWNERS` removed from the project structure tree (was deleted in a prior pass).
+- `NIM_MODEL` in the Contributing summary replaced with `LLM_MODEL` (the current name).
+Added `docs/providers.md` to the Documentation link list (it exists but wasn't linked).
+
 ## Playground Frontend: Plain HTML/JS (2026-07)
 
 For the local web playground, a vanilla HTML/CSS/JS frontend was chosen over React/Vite.
