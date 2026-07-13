@@ -116,6 +116,15 @@ Nothing to convert to issues.
 
 ---
 
+## Notes on intentional decisions
+
+**`faq-bot/run.py` — `args.name.strip() or "there"` guard (NOT removed)**
+- `argparse` passes `--name ""` as an empty string; `.strip() or "there"` is reachable.
+- Verified: `python -c "import argparse; p=argparse.ArgumentParser(); p.add_argument('--name', default='there'); print(repr(p.parse_args(['--name', '']).name))"` → `''`
+- Removing it would make an empty `--name ""` silently break the task description. Kept.
+
+---
+
 ## 🎯 Top 3 highest-impact next actions for attracting contributors
 
 1. **Ship `recipes/_template/` folder (issue #8).** A copy-paste scaffold is the single

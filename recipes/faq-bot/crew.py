@@ -20,7 +20,7 @@ def build_crew(question: str, customer_name: str = "there") -> Crew:
     Returns:
         A configured Crew instance ready to call .kickoff().
     """
-    (support_agent,) = build_agents()
+    support_agent = build_agents()
     tasks = build_tasks(support_agent, question, customer_name)
 
     return Crew(
