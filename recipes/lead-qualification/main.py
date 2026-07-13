@@ -11,7 +11,7 @@ Edit the SAMPLE_LEAD dict below or pipe in your own data to get started.
 
 from dotenv import load_dotenv
 
-load_dotenv()  # Load NVIDIA_API_KEY from .env if present
+load_dotenv()  # Load LLM_API_KEY from .env if present
 
 from crew import build_crew  # noqa: E402 (import after load_dotenv)
 

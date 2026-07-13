@@ -71,9 +71,11 @@ def get_llm() -> LLM:
     """
     api_key = os.getenv("LLM_API_KEY")
     if not api_key:
-        api_key = os.getenv("NVIDIA_API_KEY") # Backwards compatibility
+        api_key = os.getenv("NVIDIA_API_KEY")  # Backwards compatibility
         if api_key:
-            print("WARNING: NVIDIA_API_KEY is deprecated. Please use LLM_API_KEY instead.")
+            print(
+                "WARNING: NVIDIA_API_KEY is deprecated. Please use LLM_API_KEY instead."
+            )
         else:
             raise EnvironmentError(
                 "LLM_API_KEY is not set.\n"

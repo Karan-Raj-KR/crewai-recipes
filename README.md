@@ -2,7 +2,7 @@
 
 # 🤖 crewai-recipes
 
-**A public library of ready-to-run CrewAI multi-agent automation templates — powered by NVIDIA NIM (Llama 3.1 8B by default; swap to 70B with one env var).**
+**A public library of ready-to-run CrewAI multi-agent automation templates — powered by NVIDIA NIM (Llama 3.1 8B by default; swap to 70B with one env var: `LLM_MODEL`).**
 
 [![CI](https://github.com/Karan-Raj-KR/crewai-recipes/actions/workflows/ci.yml/badge.svg)](https://github.com/Karan-Raj-KR/crewai-recipes/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
@@ -19,7 +19,7 @@
 
 ## What is this?
 
-`crewai-recipes` is a community-driven cookbook of **self-contained, production-ready multi-agent workflows** built with [CrewAI](https://github.com/joaomdmoura/crewAI) and [NVIDIA NIM](https://build.nvidia.com/). Recipes default to **Llama 3.1 8B Instruct** — fast and reliable on the NIM free tier — and you can switch to the larger 3.3 70B model with a single environment variable (`NIM_MODEL`). Each recipe is a standalone Python project you can clone, configure with a single API key, and run in minutes.
+`crewai-recipes` is a community-driven cookbook of **self-contained, production-ready multi-agent workflows** built with [CrewAI](https://github.com/joaomdmoura/crewAI) and [NVIDIA NIM](https://build.nvidia.com/). Recipes default to **Llama 3.1 8B Instruct** — fast and reliable on the NIM free tier — and you can switch to the larger 3.3 70B model with a single environment variable (`LLM_MODEL`). Each recipe is a standalone Python project you can clone, configure with a single API key, and run in minutes.
 
 No boilerplate hunting. No stitching together random blog posts. Just clone → set key → run.
 
@@ -40,9 +40,9 @@ source .venv/bin/activate        # Windows: .venv\Scripts\activate
 cd recipes/lead-qualification
 pip install -r requirements.txt
 
-# 4. Set your NVIDIA API key (free at https://build.nvidia.com/)
+# 4. Set your API key (free at https://build.nvidia.com/)
 cp .env.example .env
-# Edit .env and set: NVIDIA_API_KEY=nvapi-...
+# Edit .env and set: LLM_API_KEY=nvapi-...
 
 # 5. Run the recipe
 python run.py --company "Acme Corp" --description "A 40-person B2B SaaS..."
@@ -52,7 +52,7 @@ python run.py --company "Acme Corp" --description "A 40-person B2B SaaS..."
 
 > **Tip:** Copy `.env.example` → `.env` inside each recipe folder and fill in your key — `python-dotenv` is pre-wired in every recipe.
 
-> **Pick a model (optional):** Recipes default to `meta/llama-3.1-8b-instruct` (fast, reliable on the free tier). To use stronger reasoning, set `NIM_MODEL=meta/llama-3.3-70b-instruct` in your `.env` — no code changes needed. Note the 70B model can be slower and occasionally rate-limited on the free tier.
+> **Pick a model (optional):** Recipes default to `meta/llama-3.1-8b-instruct` (fast, reliable on the free tier). To use stronger reasoning, set `LLM_MODEL=meta/llama-3.3-70b-instruct` in your `.env` — no code changes needed. Note the 70B model can be slower and occasionally rate-limited on the free tier.
 
 ---
 

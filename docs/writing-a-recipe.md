@@ -48,7 +48,7 @@ from another recipe:
 | `crew.py` | Assembles the `Crew` (agents + tasks + `process`) |
 | `run.py` | CLI entry point — `argparse`, `load_dotenv()`, `crew.kickoff()` |
 | `requirements.txt` | Pinned deps (start from the copied one) |
-| `.env.example` | `NVIDIA_API_KEY` + optional `NIM_MODEL` placeholders — **no real keys** |
+| `.env.example` | `LLM_API_KEY` + optional `LLM_MODEL` placeholders — **no real keys** |
 | `README.md` | What it does, setup, usage, a real Expected Output block |
 
 See [architecture.md](./architecture.md) for the reasoning behind this split.
@@ -99,7 +99,7 @@ recipes for other people:
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env             # then add your NVIDIA_API_KEY
+cp .env.example .env             # then add your LLM_API_KEY
 python run.py --help
 python run.py ...                # a real invocation
 ```

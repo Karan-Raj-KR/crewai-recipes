@@ -47,14 +47,14 @@ pip install -r requirements.txt
 ```bash
 cp .env.example .env
 # Edit .env and add your key:
-# NVIDIA_API_KEY=nvapi-...
+# LLM_API_KEY=nvapi-...
 ```
 
 **Option B — Environment variable (recommended for CI/CD):**
 ```bash
-export NVIDIA_API_KEY="nvapi-..."    # Linux/macOS
-set NVIDIA_API_KEY=nvapi-...         # Windows CMD
-$env:NVIDIA_API_KEY="nvapi-..."      # Windows PowerShell
+export LLM_API_KEY="nvapi-..."    # Linux/macOS
+set LLM_API_KEY=nvapi-...         # Windows CMD
+$env:LLM_API_KEY="nvapi-..."      # Windows PowerShell
 ```
 
 Every recipe loads `.env` automatically via `python-dotenv`.
@@ -74,17 +74,12 @@ CrewAI's `LLM` class accepts a custom `base_url`, so we configure it like this:
 import os
 from crewai import LLM
 
-# Recipes default to 8B and read NIM_MODEL from the environment so you can
-# switch models without editing code.
-model = os.getenv("NIM_MODEL", "meta/llama-3.1-8b-instruct")
+# All recipes use get_llm() from llm.py — reads LLM_API_KEY, LLM_MODEL,
+# and LLM_BASE_URL from the environment so you can switch providers or models
+# without editing code.
+from llm import get_llm
 
-llm = LLM(
-    model=f"openai/{model}",
-    base_url="https://integrate.api.nvidia.com/v1",
-    api_key=os.getenv("NVIDIA_API_KEY"),
-    temperature=0.2,
-    max_tokens=2048,
-)
+llm = get_llm()  # returns a ResilientLLM pre-configured from env vars
 ```
 
 No additional adapter libraries needed — just `crewai` and `openai`.
@@ -100,11 +95,11 @@ No additional adapter libraries needed — just `crewai` and `openai`.
 | `nvidia/llama-3.1-nemotron-70b-instruct` | 128K | Enterprise-grade instruction following |
 | `meta/llama-3.2-3b-instruct` | 128K | Ultra-fast, lower quality |
 
-Pick a model **without editing code** by setting `NIM_MODEL` in your `.env` (or exporting it):
+Pick a model **without editing code** by setting `LLM_MODEL` in your `.env` (or exporting it):
 
 ```bash
 # .env
-NIM_MODEL=meta/llama-3.3-70b-instruct
+LLM_MODEL=meta/llama-3.3-70b-instruct
 ```
 
 Or change the baked-in default via `DEFAULT_MODEL` in a recipe's `llm.py`.
@@ -126,7 +121,7 @@ You should see CrewAI's verbose output as each agent works, followed by the fina
 
 | Error | Solution |
 |-------|---------|
-| `EnvironmentError: NVIDIA_API_KEY is not set` | Check your `.env` file or export the variable |
+| `EnvironmentError: LLM_API_KEY is not set` | Check your `.env` file or export the variable |
 | `401 Unauthorized` | Key may be expired or wrong — regenerate at build.nvidia.com |
 | `404 Not Found` on model | Use the exact model ID from the [NIM catalogue](https://build.nvidia.com/) |
 | `ModuleNotFoundError: crewai` | Run `pip install -r requirements.txt` in the recipe directory |

@@ -56,7 +56,7 @@ jobs:
         env:
           # Dummy key so the module-level EnvironmentError isn't triggered.
           # Constructing the LLM does NOT hit the network — no real call is made.
-          NVIDIA_API_KEY: nvapi-test
+          LLM_API_KEY: nvapi-test
         run: |
           cd recipes/lead-qualification
           python -c "
@@ -87,7 +87,7 @@ jobs:
 
       - name: Check knowledge base + LLM wiring (no API call)
         env:
-          NVIDIA_API_KEY: nvapi-test
+          LLM_API_KEY: nvapi-test
         run: |
           cd recipes/faq-bot
           python -c "

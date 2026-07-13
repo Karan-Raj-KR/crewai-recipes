@@ -43,8 +43,9 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# ─── Typing / MyPy ────────────────────────────────────────────────────────────
+# ─── Typing / Linting ─────────────────────────────────────────────────────────
 .mypy_cache/
+.ruff_cache/
 .dmypy.json
 dmypy.json
 .pyre/
