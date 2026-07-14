@@ -669,10 +669,25 @@
         providerSelect.appendChild(opt);
     });
 
+    // Helper to escape HTML characters
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, 
+            tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag] || tag)
+        );
+    }
+
     // ── Build syntax-highlighted .env text ───────────────────────
     function buildEnvHTML(env) {
         return Object.entries(env).map(([k, v]) => {
-            return `<span class="env-key">${k}</span>=<span class="env-value">${v}</span>`;
+            const safeKey = escapeHTML(k);
+            const safeVal = escapeHTML(v);
+            return `<span class="env-key">${safeKey}</span>=<span class="env-value">${safeVal}</span>`;
         }).join('\n');
     }
 
@@ -710,8 +725,8 @@
     // ── Event listeners: modal ────────────────────────────────────
     providerInfoBtn.addEventListener('click', openModal);
     providerSelect.addEventListener('change', () => {
-        // If modal is open, refresh it for the new selection
-        if (modalOverlay.classList.contains('open')) openModal();
+        // Open/refresh modal for the new selection
+        openModal();
     });
 
     modalClose.addEventListener('click', closeModal);
