@@ -12,9 +12,10 @@ Please take a few minutes to read this guide before opening a PR.
 2. [How to Add a New Recipe](#how-to-add-a-new-recipe)
 3. [Recipe Structure](#recipe-structure)
 4. [Coding Style](#coding-style)
-5. [Pull Request Process](#pull-request-process)
-6. [Issue Labels](#issue-labels)
-7. [Improving Existing Recipes](#improving-existing-recipes)
+5. [Running Recipes with Docker](#running-recipes-with-docker)
+6. [Pull Request Process](#pull-request-process)
+7. [Issue Labels](#issue-labels)
+8. [Improving Existing Recipes](#improving-existing-recipes)
 
 ---
 
@@ -99,6 +100,42 @@ Every recipe **must** include:
 | `README.md` | What the recipe does, inputs/outputs, sample run, and architecture diagram (ASCII is fine) |
 
 **LLM requirement:** The default `llm` in every recipe must use **NVIDIA NIM + LLaMA**. Default to `meta/llama-3.1-8b-instruct` (fast and reliable on the free tier) and make the model overridable via the `LLM_MODEL` environment variable (so users can opt into `meta/llama-3.3-70b-instruct` without editing code). Copy the `ResilientLLM` + `get_llm()` pattern from an existing recipe's `llm.py`. Supporting other providers as optional extras is fine.
+
+---
+
+## Running Recipes with Docker
+
+Prefer not to touch your system Python? Every recipe can be run inside a Docker container — no virtual environments needed.
+
+**Recommended — start the web playground (all recipes in one UI):**
+
+```bash
+# 1. Set your API key
+cp playground/.env.example playground/.env
+# Edit playground/.env: LLM_API_KEY=nvapi-your-key-here
+
+# 2. Build and run
+docker compose up playground
+# Open http://localhost:8000
+```
+
+**Alternative — run a single CLI recipe:**
+
+```bash
+# Build (MODE=recipe + RECIPE=<name>)
+docker build \
+    --build-arg MODE=recipe \
+    --build-arg RECIPE=lead-qualification \
+    -t crewai-lead .
+
+# Run — pass your .env at runtime (secrets never enter the image)
+docker run --rm \
+    --env-file recipes/lead-qualification/.env \
+    crewai-lead \
+    --company "Acme Corp" --description "A 40-person B2B SaaS startup"
+```
+
+For the full guide — Docker Compose, switching recipes, CI/CD tips, and troubleshooting — see **[docs/docker.md](./docs/docker.md)**.
 
 ---
 

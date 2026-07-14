@@ -1,0 +1,60 @@
+# ============================================================
+# crewai-recipes — Docker Compose
+# ============================================================
+# Two services:
+#
+#   playground  — FastAPI + uvicorn web UI (default, recommended)
+#   recipe      — CLI recipe runner
+#
+# --- Playground (recommended) ---
+#   1. cp playground/.env.example playground/.env
+#      # Edit playground/.env: LLM_API_KEY=nvapi-...
+#   2. docker compose up playground
+#   3. Open http://localhost:8000
+#
+# --- Single CLI recipe ---
+#   1. cp recipes/lead-qualification/.env.example recipes/lead-qualification/.env
+#      # Edit the .env with your key
+#   2. RECIPE=lead-qualification docker compose run --rm recipe \
+#          --company "Acme Corp" --description "A 40-person B2B SaaS"
+#
+# See docs/docker.md for the full guide.
+# ============================================================
+
+services:
+
+  # ----------------------------------------------------------
+  # Playground — FastAPI web UI served by uvicorn on port 8000
+  # ----------------------------------------------------------
+  playground:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODE: playground
+    # Reads playground/.env at runtime — LLM_API_KEY never baked into the image
+    env_file:
+      - path: ./playground/.env
+        required: false   # Won't fail if .env doesn't exist yet; API will return 401
+    ports:
+      - "8000:8000"
+    # Restart automatically if the server crashes
+    restart: unless-stopped
+
+  # ----------------------------------------------------------
+  # Recipe — CLI runner for a single recipe
+  # ----------------------------------------------------------
+  recipe:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODE: recipe
+        RECIPE: ${RECIPE:-lead-qualification}
+    # Reads the selected recipe's .env at runtime
+    env_file:
+      - path: ./recipes/${RECIPE:-lead-qualification}/.env
+        required: false
+    # Use `docker compose run --rm recipe <args>` to pass CLI arguments
+    profiles:
+      - cli
