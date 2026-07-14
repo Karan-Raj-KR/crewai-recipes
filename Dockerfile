@@ -13,7 +13,7 @@
 #     Runs a single CLI recipe (set RECIPE build arg).
 #     Build:  docker build --build-arg MODE=recipe --build-arg RECIPE=lead-qualification -t crewai-lead .
 #     Run:    docker run --rm --env-file recipes/lead-qualification/.env crewai-lead \
-#                 --company "Acme" --description "A 40-person B2B SaaS"
+#                 --company "Acme Corp" --description "A 40-person B2B SaaS"
 #
 # See docs/docker.md for the full guide.
 # ============================================================
@@ -43,30 +43,33 @@ RUN useradd --create-home --shell /bin/bash appuser
 # ---------- working directory ----------
 WORKDIR /app
 
-# ---------- install dependencies ----------
-# Copy only the relevant requirements.txt first to maximise layer caching.
-# The layer is only rebuilt when requirements.txt changes.
-RUN if [ "$MODE" = "playground" ]; then \
-        echo "MODE=playground: will install playground/requirements.txt"; \
-    else \
-        echo "MODE=recipe (${RECIPE}): will install recipes/${RECIPE}/requirements.txt"; \
-    fi
-
-COPY playground/requirements.txt ./playground-requirements.txt
-COPY recipes/${RECIPE}/requirements.txt ./recipe-requirements.txt
-
-RUN pip install --no-cache-dir --upgrade pip && \
-    if [ "$MODE" = "playground" ]; then \
-        pip install --no-cache-dir -r ./playground-requirements.txt; \
-    else \
-        pip install --no-cache-dir -r ./recipe-requirements.txt; \
-    fi
-
-# ---------- copy source ----------
-# Playground needs both playground/ and recipes/ (it dynamically loads crews).
-# A single CLI recipe only needs its own folder.
+# ---------- copy all sources ----------
+# We copy playground/ and recipes/ together so that:
+#   - playground mode can install deps from ALL recipes (it imports them dynamically)
+#   - recipe mode has the specific recipe available
+# entrypoint.sh is copied to / so it survives a USER switch.
+COPY entrypoint.sh /entrypoint.sh
 COPY playground/ ./playground/
 COPY recipes/ ./recipes/
+
+# ---------- install dependencies ----------
+# playground mode: install playground deps + every recipe's requirements so
+#   the playground can dynamically import any recipe's crew.py without
+#   hitting missing-module errors at runtime. (Fix for dependency drift.)
+#
+# recipe mode: install only the selected recipe's requirements to keep the
+#   image small and build fast.
+RUN pip install --no-cache-dir --upgrade pip && \
+    if [ "$MODE" = "playground" ]; then \
+        pip install --no-cache-dir -r ./playground/requirements.txt && \
+        find ./recipes -maxdepth 2 -name "requirements.txt" \
+            | xargs -I{} pip install --no-cache-dir -r {}; \
+    else \
+        pip install --no-cache-dir -r ./recipes/${RECIPE}/requirements.txt; \
+    fi
+
+# Make the entrypoint executable after root operations
+RUN chmod +x /entrypoint.sh
 
 # ---------- switch to non-root user ----------
 USER appuser
@@ -75,18 +78,13 @@ USER appuser
 EXPOSE 8000
 
 # ---------- entry point ----------
-# Playground: uvicorn serves main.py on 0.0.0.0:8000
-# Recipe:     ENTRYPOINT=python run.py; override CMD at `docker run` time with recipe args.
+# entrypoint.sh reads $MODE and $RECIPE at runtime.
 #
-# Playground example:
+# Playground:
 #   docker run --rm -p 8000:8000 --env-file playground/.env crewai-playground
 #
-# Recipe example:
+# Recipe (args are forwarded with correct quoting via "$@"):
 #   docker run --rm --env-file recipes/lead-qualification/.env crewai-lead \
-#       --company "Acme" --description "40-person B2B SaaS"
-
-CMD if [ "$MODE" = "playground" ]; then \
-        uvicorn playground.main:app --host 0.0.0.0 --port 8000; \
-    else \
-        exec sh -c "cd /app/recipes/${RECIPE} && python run.py $*" -- "$@"; \
-    fi
+#       --company "Acme Corp" --description "A 40-person B2B SaaS"
+ENTRYPOINT ["/entrypoint.sh"]
+CMD []
