@@ -1,0 +1,49 @@
+# ─── Secrets (never bake API keys into the image) ────────────────────────────
+.env
+.env.*
+!.env.example
+*.env
+
+# ─── Virtual Environments ─────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ─── Python bytecode ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# ─── Git & CI ─────────────────────────────────────────────────────────────────
+.git/
+.github/
+.gitignore
+
+# ─── Docs (not needed at runtime) ────────────────────────────────────────────
+docs/
+
+# ─── Tests & coverage ─────────────────────────────────────────────────────────
+*.cover
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# ─── OS & editor noise ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# ─── Logs / scratch ───────────────────────────────────────────────────────────
+*.log
+logs/
+tmp/
+temp/
