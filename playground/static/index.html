@@ -8,11 +8,14 @@
         :root {
             --bg-color: #0f172a;
             --surface-color: #1e293b;
+            --surface-2: #263148;
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
             --primary: #3b82f6;
             --primary-hover: #2563eb;
             --error: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
             --border: #334155;
             --font-main: system-ui, -apple-system, sans-serif;
             --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -35,13 +38,19 @@
             box-sizing: border-box;
         }
 
+        /* ── Header ─────────────────────────────────────────── */
         header {
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border);
             padding-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
-        h1 {
+        .header-left h1 {
             margin: 0;
             font-size: 1.5rem;
         }
@@ -49,9 +58,85 @@
         p.subtitle {
             color: var(--text-muted);
             margin-top: 0.5rem;
+            margin-bottom: 0;
             font-size: 0.9rem;
         }
 
+        /* ── Provider Selector Pill ─────────────────────────── */
+        .provider-selector {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .provider-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .provider-pill-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #provider-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border);
+            color: var(--text-color);
+            padding: 0.45rem 2rem 0.45rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.6rem center;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: auto;
+        }
+
+        #provider-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        #provider-select:hover {
+            border-color: var(--primary);
+        }
+
+        .provider-info-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.3rem;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: background-color 0.15s, color 0.15s;
+            flex-shrink: 0;
+        }
+
+        .provider-info-btn:hover {
+            background-color: var(--surface-color);
+            color: var(--primary);
+        }
+
+        /* ── Card / Form ────────────────────────────────────── */
         .card {
             background-color: var(--surface-color);
             border-radius: 8px;
@@ -162,14 +247,255 @@
             margin-top: 0.25rem;
             display: block;
         }
+
+        /* ── Modal Overlay ───────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--surface-color);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 540px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+            transform: translateY(12px) scale(0.98);
+            transition: transform 0.22s ease;
+        }
+
+        .modal-overlay.open .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .provider-icon {
+            font-size: 1.4rem;
+            line-height: 1;
+        }
+
+        .modal-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin: 0.15rem 0 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            line-height: 1;
+            width: auto;
+            transition: background-color 0.15s, color 0.15s;
+        }
+
+        .modal-close:hover {
+            background-color: var(--surface-2);
+            color: var(--text-color);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .modal-section-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 0.6rem;
+        }
+
+        /* ── .env code block ─────────────────────────────────── */
+        .env-block {
+            background-color: #0a0f1e;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .env-block-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.85rem;
+            background-color: var(--surface-2);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .env-block-filename {
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            width: auto;
+            transition: all 0.15s;
+            font-family: var(--font-main);
+        }
+
+        .copy-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(59,130,246,0.08);
+        }
+
+        .copy-btn.copied {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .env-code {
+            padding: 1rem 1.1rem;
+            font-family: var(--font-mono);
+            font-size: 0.83rem;
+            line-height: 1.8;
+            margin: 0;
+            white-space: pre;
+            overflow-x: auto;
+            color: #e2e8f0;
+        }
+
+        .env-key   { color: #93c5fd; }   /* blue  */
+        .env-value { color: #86efac; }   /* green */
+        .env-comment { color: #64748b; } /* muted */
+
+        /* ── Restart warning callout ─────────────────────────── */
+        .restart-callout {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+        }
+
+        .restart-callout-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 0.05rem;
+        }
+
+        .restart-callout-text {
+            font-size: 0.84rem;
+            color: #fcd34d;
+            line-height: 1.5;
+        }
+
+        .restart-callout-text strong {
+            display: block;
+            margin-bottom: 0.2rem;
+            color: #fde68a;
+        }
+
+        /* ── Get API Key link ────────────────────────────────── */
+        .get-key-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: var(--surface-2);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .get-key-label {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+        }
+
+        .get-key-link {
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color 0.15s;
+        }
+
+        .get-key-link:hover {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>🤖 CrewAI Recipes Playground</h1>
-        <p class="subtitle">Run recipes locally. Your API key never leaves your machine.</p>
+        <div class="header-left">
+            <h1>🤖 CrewAI Recipes Playground</h1>
+            <p class="subtitle">Run recipes locally. Your API key never leaves your machine.</p>
+        </div>
+
+        <!-- ── Provider Selector ── -->
+        <div class="provider-selector">
+            <span class="provider-label">LLM Provider</span>
+            <div class="provider-pill-wrapper">
+                <select id="provider-select" title="Select LLM provider">
+                    <!-- populated by JS -->
+                </select>
+                <button class="provider-info-btn" id="provider-info-btn" title="View .env setup for this provider" aria-label="Provider setup instructions">ⓘ</button>
+            </div>
+        </div>
     </header>
 
     <div class="card">
@@ -196,15 +522,228 @@
     </div>
 </div>
 
-<script>
-    let recipesData = [];
+<!-- ── Provider Modal ─────────────────────────────────────────── -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal" id="modal">
+        <div class="modal-header">
+            <div class="modal-header-left">
+                <span class="provider-icon" id="modal-icon"></span>
+                <div>
+                    <p class="modal-title" id="modal-title"></p>
+                    <p class="modal-subtitle" id="modal-subtitle"></p>
+                </div>
+            </div>
+            <button class="modal-close" id="modal-close" aria-label="Close modal">×</button>
+        </div>
 
-    const select = document.getElementById('recipe-select');
-    const desc = document.getElementById('recipe-desc');
+        <div class="modal-body">
+
+            <!-- Get API Key row -->
+            <div class="get-key-row" id="modal-key-row">
+                <span class="get-key-label">Don't have an API key yet?</span>
+                <a class="get-key-link" id="modal-key-link" href="#" target="_blank" rel="noopener noreferrer">
+                    Get a free key ↗
+                </a>
+            </div>
+
+            <!-- .env snippet -->
+            <div>
+                <p class="modal-section-label">Add these to your <code style="font-size:0.78rem; background:#0a0f1e; padding:0.1rem 0.35rem; border-radius:4px;">playground/.env</code></p>
+                <div class="env-block">
+                    <div class="env-block-header">
+                        <span class="env-block-filename">playground/.env</span>
+                        <button class="copy-btn" id="copy-btn">Copy</button>
+                    </div>
+                    <pre class="env-code" id="modal-env-code"></pre>
+                </div>
+            </div>
+
+            <!-- Restart callout -->
+            <div class="restart-callout">
+                <span class="restart-callout-icon">⚠️</span>
+                <div class="restart-callout-text">
+                    <strong>Restart required after saving .env</strong>
+                    Stop and restart the Uvicorn server for the new environment variables to take effect:
+                    <code style="display:inline-block; margin-top:0.4rem; font-family:var(--font-mono); font-size:0.8rem; background:rgba(0,0,0,0.3); padding:0.25rem 0.5rem; border-radius:4px;">uvicorn main:app --reload</code>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // ── Provider configuration ────────────────────────────────────
+    const PROVIDERS = [
+        {
+            id: 'nvidia-nim',
+            name: 'NVIDIA NIM',
+            icon: '🟢',
+            subtitle: 'Default provider · Generous free tier',
+            keyUrl: 'https://build.nvidia.com/',
+            keyLabel: 'Get free key at build.nvidia.com',
+            env: {
+                LLM_BASE_URL: 'https://integrate.api.nvidia.com/v1',
+                LLM_MODEL:    'meta/llama-3.1-8b-instruct',
+                LLM_API_KEY:  'nvapi-your-key-here',
+            },
+        },
+        {
+            id: 'cerebras',
+            name: 'Cerebras',
+            icon: '⚡',
+            subtitle: 'Ultra-fast Llama inference',
+            keyUrl: 'https://cloud.cerebras.ai',
+            keyLabel: 'Get key at cloud.cerebras.ai',
+            env: {
+                LLM_BASE_URL: 'https://api.cerebras.ai/v1',
+                LLM_MODEL:    'llama3.1-8b',
+                LLM_API_KEY:  'csk-your-key-here',
+            },
+        },
+        {
+            id: 'openrouter',
+            name: 'OpenRouter',
+            icon: '🔀',
+            subtitle: 'Hundreds of models · Free tiers available',
+            keyUrl: 'https://openrouter.ai',
+            keyLabel: 'Get key at openrouter.ai',
+            env: {
+                LLM_BASE_URL: 'https://openrouter.ai/api/v1',
+                LLM_MODEL:    'meta-llama/llama-3.1-8b-instruct:free',
+                LLM_API_KEY:  'sk-or-v1-your-key-here',
+            },
+        },
+        {
+            id: 'github-models',
+            name: 'GitHub Models',
+            icon: '🐙',
+            subtitle: 'Free tier · Requires GitHub Personal Access Token',
+            keyUrl: 'https://github.com/marketplace/models',
+            keyLabel: 'Get token at github.com/marketplace/models',
+            env: {
+                LLM_BASE_URL: 'https://models.inference.ai.azure.com',
+                LLM_MODEL:    'Llama-3.3-70B-Instruct',
+                LLM_API_KEY:  'ghp_your-personal-access-token',
+            },
+        },
+        {
+            id: 'google-gemini',
+            name: 'Google Gemini',
+            icon: '✨',
+            subtitle: 'OpenAI-compatible · Free tier via AI Studio',
+            keyUrl: 'https://aistudio.google.com',
+            keyLabel: 'Get key at aistudio.google.com',
+            env: {
+                LLM_BASE_URL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
+                LLM_MODEL:    'gemini-2.5-flash',
+                LLM_API_KEY:  'AIza-your-key-here',
+            },
+        },
+    ];
+
+    // ── DOM refs ──────────────────────────────────────────────────
+    const providerSelect  = document.getElementById('provider-select');
+    const providerInfoBtn = document.getElementById('provider-info-btn');
+    const modalOverlay    = document.getElementById('modal-overlay');
+    const modalClose      = document.getElementById('modal-close');
+    const modalIcon       = document.getElementById('modal-icon');
+    const modalTitle      = document.getElementById('modal-title');
+    const modalSubtitle   = document.getElementById('modal-subtitle');
+    const modalKeyLink    = document.getElementById('modal-key-link');
+    const modalEnvCode    = document.getElementById('modal-env-code');
+    const copyBtn         = document.getElementById('copy-btn');
+
+    const select          = document.getElementById('recipe-select');
+    const desc            = document.getElementById('recipe-desc');
     const inputsContainer = document.getElementById('dynamic-inputs');
-    const runBtn = document.getElementById('run-btn');
-    const resultPanel = document.getElementById('result');
-    const errorMsg = document.getElementById('error-msg');
+    const runBtn          = document.getElementById('run-btn');
+    const resultPanel     = document.getElementById('result');
+    const errorMsg        = document.getElementById('error-msg');
+
+    // ── Populate provider dropdown ────────────────────────────────
+    PROVIDERS.forEach((p, i) => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = `${p.icon} ${p.name}`;
+        providerSelect.appendChild(opt);
+    });
+
+    // ── Build syntax-highlighted .env text ───────────────────────
+    function buildEnvHTML(env) {
+        return Object.entries(env).map(([k, v]) => {
+            return `<span class="env-key">${k}</span>=<span class="env-value">${v}</span>`;
+        }).join('\n');
+    }
+
+    function buildEnvPlainText(env) {
+        return Object.entries(env).map(([k, v]) => `${k}=${v}`).join('\n');
+    }
+
+    // ── Open modal for selected provider ─────────────────────────
+    function openModal() {
+        const provider = PROVIDERS.find(p => p.id === providerSelect.value) || PROVIDERS[0];
+
+        modalIcon.textContent     = provider.icon;
+        modalTitle.textContent    = provider.name;
+        modalSubtitle.textContent = provider.subtitle;
+        modalKeyLink.href         = provider.keyUrl;
+        modalKeyLink.textContent  = provider.keyLabel + ' ↗';
+        modalEnvCode.innerHTML    = buildEnvHTML(provider.env);
+
+        // Reset copy button state
+        copyBtn.textContent = 'Copy';
+        copyBtn.classList.remove('copied');
+        copyBtn._plainText = buildEnvPlainText(provider.env);
+
+        modalOverlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        modalClose.focus();
+    }
+
+    function closeModal() {
+        modalOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+        providerInfoBtn.focus();
+    }
+
+    // ── Event listeners: modal ────────────────────────────────────
+    providerInfoBtn.addEventListener('click', openModal);
+    providerSelect.addEventListener('change', () => {
+        // If modal is open, refresh it for the new selection
+        if (modalOverlay.classList.contains('open')) openModal();
+    });
+
+    modalClose.addEventListener('click', closeModal);
+
+    // Close on overlay click (outside modal card)
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('open')) closeModal();
+    });
+
+    // ── Copy button ───────────────────────────────────────────────
+    copyBtn.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(copyBtn._plainText);
+            copyBtn.textContent = '✓ Copied!';
+            copyBtn.classList.add('copied');
+            setTimeout(() => {
+                copyBtn.textContent = 'Copy';
+                copyBtn.classList.remove('copied');
+            }, 2000);
+        } catch {
+            // Fallback for environments without clipboard API
+            copyBtn.textContent = 'Copy manually';
+        }
+    });
+
+    // ── Recipe loading ────────────────────────────────────────────
+    let recipesData = [];
 
     async function loadRecipes() {
         try {
