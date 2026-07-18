@@ -132,3 +132,7 @@
 <!-- session: 2026-07-18-7 -->
 ## 2026-07-18 session 7
 - feat: add example prompt variations
+
+<!-- session: 2026-07-18-8 -->
+## 2026-07-18 session 8
+- fix: resolve edge case in agent loop
