@@ -120,3 +120,7 @@
 <!-- session: 2026-07-18-4 -->
 ## 2026-07-18 session 4
 - feat: add retry logic example
+
+<!-- session: 2026-07-18-5 -->
+## 2026-07-18 session 5
+- docs: update dev log with session notes
