@@ -160,3 +160,7 @@
 <!-- session: 2026-07-18-14 -->
 ## 2026-07-18 session 14
 - docs: document new recipe patterns
+
+<!-- session: 2026-07-18-15 -->
+## 2026-07-18 session 15
+- chore: remove unused imports
