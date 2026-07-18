@@ -148,3 +148,7 @@
 <!-- session: 2026-07-18-11 -->
 ## 2026-07-18 session 11
 - chore: update dependencies list
+
+<!-- session: 2026-07-18-12 -->
+## 2026-07-18 session 12
+- feat: improve error handling in crew runner
