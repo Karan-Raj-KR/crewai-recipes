@@ -168,3 +168,7 @@
 <!-- session: 2026-07-19-0 -->
 ## 2026-07-19 session 0
 - fix: correct typo in example output
+
+<!-- session: 2026-07-19-1 -->
+## 2026-07-19 session 1
+- feat: add fallback for missing env vars
