@@ -184,3 +184,7 @@
 <!-- session: 2026-07-19-4 -->
 ## 2026-07-19 session 4
 - chore: format code with black
+
+<!-- session: 2026-07-20-0 -->
+## 2026-07-20 session 0
+- feat: support multi-agent workflow example
