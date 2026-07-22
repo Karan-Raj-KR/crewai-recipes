@@ -62,11 +62,14 @@ jobs:
           python -c "
           from tasks import build_tasks
           from crew import build_crew
-          from llm import get_llm
-          llm = get_llm()                       # validates ResilientLLM builds
-          assert type(llm).__name__ == 'ResilientLLM', 'expected retry-wrapped LLM'
+          from llm import get_llm, MAX_RETRIES
+          llm = get_llm()
           assert 'llama-3.1-8b-instruct' in llm.model, f'unexpected default model: {llm.model}'
-          print('✅ lead-qualification: imports + resilient LLM wiring OK')
+          # Assert retries reach the underlying SDK client, not just the config
+          # object — a provider-routing change once silently dropped them.
+          retries = llm._get_client_params()['max_retries']
+          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
+          print(f'✅ lead-qualification: imports + LLM wiring OK ({retries} retries)')
           "
 
       - name: Smoke test — main() with mocked LLM
@@ -99,13 +102,16 @@ jobs:
           cd recipes/faq-bot
           python -c "
           from knowledge_base import FAQ_KNOWLEDGE_BASE, get_knowledge_base_text
-          from llm import get_llm
+          from llm import get_llm, MAX_RETRIES
           assert len(FAQ_KNOWLEDGE_BASE) >= 6, 'Expected at least 6 FAQ entries'
           kb_text = get_knowledge_base_text()
           assert 'PRICING' in kb_text, 'Expected PRICING topic in KB text'
-          llm = get_llm()                       # validates ResilientLLM builds
-          assert type(llm).__name__ == 'ResilientLLM', 'expected retry-wrapped LLM'
-          print(f'✅ faq-bot: {len(FAQ_KNOWLEDGE_BASE)} KB entries + resilient LLM wiring OK')
+          llm = get_llm()
+          # Assert retries reach the underlying SDK client, not just the config
+          # object — a provider-routing change once silently dropped them.
+          retries = llm._get_client_params()['max_retries']
+          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
+          print(f'✅ faq-bot: {len(FAQ_KNOWLEDGE_BASE)} KB entries + LLM wiring OK ({retries} retries)')
           "
 
       - name: Smoke test — main() with mocked LLM
