@@ -300,3 +300,7 @@
 <!-- session: 2026-07-22-12 -->
 ## 2026-07-22 session 12
 - docs: expand getting started guide
+
+<!-- session: 2026-07-22-13 -->
+## 2026-07-22 session 13
+- chore: format code with black
