@@ -45,7 +45,7 @@ No boilerplate hunting. No stitching together random blog posts. Just clone → 
 |---|---|---|
 | **Time to first run** | Write agent, task, crew, and LLM config from scratch | `git clone` → `pip install` → set one env var → run |
 | **LLM / provider config** | Hardcode model, base URL, and API key in source | `LLM_API_KEY`, `LLM_MODEL`, `LLM_BASE_URL` env vars — swap providers without touching code |
-| **Transient error handling** | Roll your own or skip it | `ResilientLLM` included: 3 retries with exponential backoff on timeouts and 429s |
+| **Transient error handling** | Roll your own or skip it | `max_retries=3` pre-wired: exponential backoff on timeouts, 429s, and 5xx, honouring `Retry-After` |
 | **CI validation** | Set up yourself | ruff lint, format check, and import-wiring assertions on every push to `main` |
 | **Entry points** | Write from scratch | `run.py` (argparse CLI) and `main.py` (edit-and-run sample) included per recipe |
 | **Local browser UI** | Build separately | `/playground` — FastAPI + HTML, runs locally, key never leaves your machine |

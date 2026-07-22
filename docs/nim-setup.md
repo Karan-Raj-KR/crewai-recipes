@@ -79,7 +79,7 @@ from crewai import LLM
 # without editing code.
 from llm import get_llm
 
-llm = get_llm()  # returns a ResilientLLM pre-configured from env vars
+llm = get_llm()  # returns an LLM pre-configured from env vars, with retries
 ```
 
 No additional adapter libraries needed — just `crewai` and `openai`.

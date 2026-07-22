@@ -6,54 +6,22 @@ All agents import from here so changing the model is a one-line edit — or,
 better, an environment variable (LLM_MODEL) so you don't touch code at all.
 
 By default, this is wired for NVIDIA NIM (Llama 3.1 8B).
-CrewAI 1.x uses LiteLLM under the hood. For OpenAI-compatible endpoints,
-the model string must be prefixed with "openai/" so LiteLLM routes correctly.
+CrewAI routes an "openai/"-prefixed model with a custom base_url to its native
+OpenAI provider, which is why the prefix below matters — see get_llm().
 """
 
 import os
 
 from crewai import LLM
-from tenacity import (
-    retry,
-    retry_if_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
 
 # Default to NVIDIA NIM if not provided
 DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
 DEFAULT_MODEL = "meta/llama-3.1-8b-instruct"
 
-try:
-    import litellm
-
-    _RETRYABLE_ERRORS: tuple[type[Exception], ...] = (
-        litellm.exceptions.Timeout,
-        litellm.exceptions.RateLimitError,
-        litellm.exceptions.APIConnectionError,
-        litellm.exceptions.ServiceUnavailableError,
-        litellm.exceptions.InternalServerError,
-    )
-except Exception:  # pragma: no cover
-    _RETRYABLE_ERRORS = (Exception,)
-
-
-class ResilientLLM(LLM):
-    """A CrewAI LLM that retries transient API failures with backoff.
-
-    Free tiers occasionally return timeouts or 429s under load. Rather
-    than fail an entire crew run on one flaky call, retry up to 3 times with
-    exponential backoff (2s → 4s, capped at 10s) before giving up.
-    """
-
-    @retry(
-        retry=retry_if_exception_type(_RETRYABLE_ERRORS),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
-        stop=stop_after_attempt(3),
-        reraise=True,
-    )
-    def call(self, *args: object, **kwargs: object) -> object:
-        return super().call(*args, **kwargs)
+# Free tiers occasionally return timeouts or 429s under load. The OpenAI SDK
+# retries those (plus 5xx and connection errors) with exponential backoff and
+# honours Retry-After headers, so one flaky call doesn't fail a whole crew run.
+MAX_RETRIES = 3
 
 
 def get_llm() -> LLM:
@@ -64,7 +32,8 @@ def get_llm() -> LLM:
     before importing this.
 
     Returns:
-        A retry-wrapped LLM instance ready for use in CrewAI agents.
+        An LLM configured to retry transient API failures, ready for use in
+        CrewAI agents.
 
     Raises:
         EnvironmentError: If LLM_API_KEY is not set.
@@ -86,12 +55,14 @@ def get_llm() -> LLM:
     model = os.getenv("LLM_MODEL", os.getenv("NIM_MODEL", DEFAULT_MODEL))
     base_url = os.getenv("LLM_BASE_URL", DEFAULT_BASE_URL)
 
-    # The "openai/" prefix tells LiteLLM (used by CrewAI) to route
-    # this call to the OpenAI-compatible endpoint at base_url.
-    return ResilientLLM(
+    # The "openai/" prefix routes this through CrewAI's native OpenAI-compatible
+    # provider, pointed at base_url. That provider forwards max_retries to the
+    # OpenAI SDK client, which is what actually performs the backoff.
+    return LLM(
         model=f"openai/{model}",
         base_url=base_url,
         api_key=api_key,
         temperature=0.2,
         max_tokens=2048,
+        max_retries=MAX_RETRIES,
     )
