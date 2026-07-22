@@ -260,3 +260,7 @@
 <!-- session: 2026-07-22-2 -->
 ## 2026-07-22 session 2
 - refactor: simplify tool call handling
+
+<!-- session: 2026-07-22-3 -->
+## 2026-07-22 session 3
+- docs: add usage notes to README
