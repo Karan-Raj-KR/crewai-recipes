@@ -99,7 +99,7 @@ Every recipe **must** include:
 | `.env.example` | List of required environment variables (values must be placeholders) |
 | `README.md` | What the recipe does, inputs/outputs, sample run, and architecture diagram (ASCII is fine) |
 
-**LLM requirement:** The default `llm` in every recipe must use **NVIDIA NIM + LLaMA**. Default to `meta/llama-3.1-8b-instruct` (fast and reliable on the free tier) and make the model overridable via the `LLM_MODEL` environment variable (so users can opt into `meta/llama-3.3-70b-instruct` without editing code). Copy the `ResilientLLM` + `get_llm()` pattern from an existing recipe's `llm.py`. Supporting other providers as optional extras is fine.
+**LLM requirement:** The default `llm` in every recipe must use **NVIDIA NIM + LLaMA**. Default to `meta/llama-3.1-8b-instruct` (fast and reliable on the free tier) and make the model overridable via the `LLM_MODEL` environment variable (so users can opt into `meta/llama-3.3-70b-instruct` without editing code). Copy the `get_llm()` pattern from an existing recipe's `llm.py` unchanged — it keeps the `openai/` model prefix and `max_retries` wiring that CrewAI's provider routing depends on. Supporting other providers as optional extras is fine.
 
 ---
 
