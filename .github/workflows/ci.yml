@@ -79,6 +79,13 @@ jobs:
           cd recipes/lead-qualification
           python test_main.py
 
+      - name: Regression test — LLM retries behavior (#109)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/lead-qualification
+          python test_llm_retries.py
+
   import-check-faq-bot:
     name: Import Check — faq-bot
     runs-on: ubuntu-latest
@@ -120,6 +127,13 @@ jobs:
         run: |
           cd recipes/faq-bot
           python test_main.py
+
+      - name: Regression test — LLM retries behavior (#109)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/faq-bot
+          python test_llm_retries.py
 
   import-check-playground:
     name: Import Check — playground
