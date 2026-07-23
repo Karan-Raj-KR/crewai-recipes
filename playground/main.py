@@ -2,6 +2,9 @@ import importlib.util
 import json
 import os
 import sys
+import importlib.util
+import logging
+import time
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -10,6 +13,12 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 load_dotenv()
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="CrewAI Recipes Playground")
 
@@ -57,7 +66,16 @@ def list_recipes():
 
 @app.post("/run")
 def run_recipe(req: RunRequest):
+    start_time = time.time()
+    
+    sanitized_inputs = {
+        k: ("***" if "key" in k.lower() or "secret" in k.lower() or "token" in k.lower() else v) 
+        for k, v in req.inputs.items()
+    }
+    logger.info(f"Incoming request to run recipe '{req.recipe}' with inputs: {sanitized_inputs}")
+
     if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
+        logger.error(f"Recipe '{req.recipe}' failed: Missing API keys (Execution time: {time.time() - start_time:.2f}s)")
         raise HTTPException(
             status_code=401, detail="LLM_API_KEY is not set in the environment."
         )
@@ -67,6 +85,7 @@ def run_recipe(req: RunRequest):
         raise HTTPException(status_code=400, detail="Invalid recipe name")
     crew_path = recipe_dir / "crew.py"
     if not recipe_dir.exists() or not crew_path.exists():
+        logger.error(f"Recipe '{req.recipe}' failed: Not found (Execution time: {time.time() - start_time:.2f}s)")
         raise HTTPException(status_code=404, detail="Recipe not found")
 
     original_sys_path = sys.path.copy()
@@ -78,17 +97,21 @@ def run_recipe(req: RunRequest):
         spec.loader.exec_module(module)
 
         if not hasattr(module, "build_crew"):
+            logger.error(f"Recipe '{req.recipe}' failed: Could not find build_crew in crew.py (Execution time: {time.time() - start_time:.2f}s)")
             raise HTTPException(
                 status_code=500, detail="Could not find build_crew in crew.py"
             )
-
         try:
             crew = module.build_crew(**req.inputs)
             crew.verbose = False
             result = crew.kickoff()
+            exec_time = time.time() - start_time
+            logger.info(f"Recipe '{req.recipe}' completed successfully in {exec_time:.2f}s")
             return {"output": str(result)}
         except Exception as e:
+            exec_time = time.time() - start_time
             err_str = str(e)
+            logger.error(f"Recipe '{req.recipe}' failed during execution in {exec_time:.2f}s. Error: {err_str}")
             if "API_KEY is not set" in err_str:
                 raise HTTPException(
                     status_code=401,
