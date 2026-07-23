@@ -64,7 +64,7 @@ from llm import get_llm
 llm = get_llm()  # reads LLM_API_KEY, LLM_MODEL, LLM_BASE_URL from env
 ```
 
-`get_llm()` returns a `ResilientLLM` that retries transient NIM failures with exponential backoff. Defaults to `meta/llama-3.1-8b-instruct` via NVIDIA NIM. To swap provider or model, set `LLM_API_KEY`, `LLM_MODEL`, and `LLM_BASE_URL` in `.env` — no code changes needed. See [docs/providers.md](./providers.md) for examples.
+`get_llm()` returns an `LLM` configured with `max_retries=3`, so the OpenAI SDK retries transient NIM failures (429s, timeouts, 5xx, connection errors) with exponential backoff, honouring `Retry-After` headers. Defaults to `meta/llama-3.1-8b-instruct` via NVIDIA NIM. To swap provider or model, set `LLM_API_KEY`, `LLM_MODEL`, and `LLM_BASE_URL` in `.env` — no code changes needed. See [docs/providers.md](./providers.md) for examples.
 
 ---
 
