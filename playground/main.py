@@ -62,7 +62,9 @@ def run_recipe(req: RunRequest):
             status_code=401, detail="LLM_API_KEY is not set in the environment."
         )
 
-    recipe_dir = RECIPES_DIR / req.recipe
+    recipe_dir = (RECIPES_DIR / req.recipe).resolve()
+    if not recipe_dir.is_relative_to(RECIPES_DIR.resolve()):
+        raise HTTPException(status_code=400, detail="Invalid recipe name")
     crew_path = recipe_dir / "crew.py"
     if not recipe_dir.exists() or not crew_path.exists():
         raise HTTPException(status_code=404, detail="Recipe not found")
@@ -92,9 +94,7 @@ def run_recipe(req: RunRequest):
                     status_code=401,
                     detail="API Key is missing. Please check your .env file.",
                 )
-            raise HTTPException(
-                status_code=500, detail=f"Execution error: {err_str}"
-            )
+            raise HTTPException(status_code=500, detail=f"Execution error: {err_str}")
 
     finally:
         sys.path = original_sys_path
