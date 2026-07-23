@@ -33,7 +33,7 @@ def main() -> None:
     print(f"   Question : {question}\n")
     print("─" * 60)
 
-    crew = build_crew(customer_question=question, customer_name=customer_name)
+    crew = build_crew(question=question, customer_name=customer_name)
     result = crew.kickoff()
 
     print("\n" + "═" * 60)

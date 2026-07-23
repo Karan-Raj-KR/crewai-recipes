@@ -33,14 +33,14 @@ def build_tasks(
             "Use the knowledge base below to find the answer.\n\n"
             f"{kb_text}\n\n"
             "Reply guidelines:\n"
-            "1. Start with 'Hi {name},' (use their name).\n"
+            f"1. Start with 'Hi {customer_name},' (use their name).\n"
             "2. Answer directly from the knowledge base — do not guess.\n"
             "3. If no entry matches, say so honestly and suggest they email "
             "   support@orbitly.example.com or start a chat on the website.\n"
             "4. End with: 'Is there anything else I can help with?'\n"
             "5. Keep the reply under 120 words.\n"
             "6. Plain text only — no markdown."
-        ).replace("{name}", customer_name),
+        ),
         expected_output=(
             "A complete customer support reply in plain text. "
             "Warm, accurate, under 120 words."

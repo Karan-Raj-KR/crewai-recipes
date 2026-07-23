@@ -9,12 +9,8 @@ from crewai import Agent
 from llm import get_llm
 
 
-def build_agents() -> tuple[Agent]:
-    """Build and return the FAQ support agent.
-
-    Returns:
-        A single-element tuple containing the support_agent.
-    """
+def build_agents() -> Agent:
+    """Build and return the FAQ support agent."""
     llm = get_llm()
 
     support_agent = Agent(
@@ -38,4 +34,4 @@ def build_agents() -> tuple[Agent]:
         allow_delegation=False,
     )
 
-    return (support_agent,)
+    return support_agent

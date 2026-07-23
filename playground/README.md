@@ -2,8 +2,6 @@
 
 A local, lightweight web interface to test your recipes. **This runs entirely on your local machine; your API key never leaves your device.**
 
-![Playground Screenshot Placeholder](./screenshot.png)
-
 ## Quickstart
 
 1. Navigate to the playground directory:

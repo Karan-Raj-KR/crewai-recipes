@@ -48,7 +48,7 @@ from another recipe:
 | `crew.py` | Assembles the `Crew` (agents + tasks + `process`) |
 | `run.py` | CLI entry point — `argparse`, `load_dotenv()`, `crew.kickoff()` |
 | `requirements.txt` | Pinned deps (start from the copied one) |
-| `.env.example` | `NVIDIA_API_KEY` + optional `NIM_MODEL` placeholders — **no real keys** |
+| `.env.example` | `LLM_API_KEY` + optional `LLM_MODEL` placeholders — **no real keys** |
 | `README.md` | What it does, setup, usage, a real Expected Output block |
 
 See [architecture.md](./architecture.md) for the reasoning behind this split.
@@ -58,8 +58,8 @@ See [architecture.md](./architecture.md) for the reasoning behind this split.
 ## 3. Keep `llm.py` exactly as-is
 
 Every recipe uses the same `llm.py`: it defaults to `meta/llama-3.1-8b-instruct`,
-lets users pick a model via the `NIM_MODEL` env var, and wraps calls in
-`ResilientLLM` (retries transient NIM timeouts/429s with exponential backoff).
+lets users pick a model via the `LLM_MODEL` env var, and sets `max_retries=3` so
+transient NIM timeouts/429s are retried with exponential backoff.
 **Copy it unchanged** — only adjust `temperature`/`max_tokens` if your task needs it.
 
 ```python
@@ -99,7 +99,7 @@ recipes for other people:
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env             # then add your NVIDIA_API_KEY
+cp .env.example .env             # then add your LLM_API_KEY
 python run.py --help
 python run.py ...                # a real invocation
 ```

@@ -10,14 +10,16 @@ For help:
 """
 
 import argparse
+import os
 import sys
 
-from dotenv import load_dotenv
-
-# Load .env before importing crew (crew imports llm which reads env vars)
-load_dotenv()
-
-from crew import build_crew  # noqa: E402
+# Reconfigure streams to support UTF-8 (for emojis) on Windows
+if sys.platform.startswith("win"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except AttributeError:
+        pass
 
 
 def parse_args() -> argparse.Namespace:
@@ -28,7 +30,7 @@ def parse_args() -> argparse.Namespace:
             "🎯 CrewAI Lead Qualification Recipe\n"
             "Runs a two-agent crew (Researcher + Scorer) to qualify a company\n"
             "against B2B SaaS ICP criteria and return a 0-100 score.\n\n"
-            "Powered by NVIDIA NIM (default: Llama 3.1 8B; set NIM_MODEL for 70B)."
+            "Powered by NVIDIA NIM (default: Llama 3.1 8B; set LLM_MODEL for 70B)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -54,9 +56,28 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def preflight() -> None:
+    """Validate environment before running the crew."""
+    if not os.getenv("CREWAI_RECIPES_SKIP_DOTENV"):
+        from dotenv import load_dotenv
+
+        load_dotenv()
+
+    if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
+        print("❌  LLM_API_KEY is not set.")
+        print("   1. Copy .env.example → .env")
+        print("   2. Add your key: LLM_API_KEY=your-key-here")
+        print("   3. Get a free key at https://build.nvidia.com/")
+        sys.exit(1)
+
+
 def main() -> None:
     """Run the lead qualification crew."""
     args = parse_args()
+
+    preflight()
+
+    from crew import build_crew
 
     company = args.company.strip()
     description = args.description.strip()

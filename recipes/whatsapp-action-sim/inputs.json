@@ -1,0 +1,4 @@
+[
+  {"name": "user_message", "label": "WhatsApp Message"},
+  {"name": "sender_name", "label": "Sender Name (optional)"}
+]

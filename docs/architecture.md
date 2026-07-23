@@ -13,7 +13,9 @@ recipe/
 ├── agents.py    # Who does the work
 ├── tasks.py     # What work gets done
 ├── crew.py      # How agents and tasks are assembled
-└── main.py      # Entry point + sample inputs
+├── llm.py       # LLM config — reads LLM_API_KEY, LLM_MODEL, LLM_BASE_URL
+├── run.py       # CLI entry point (argparse + crew.kickoff)
+└── main.py      # Interactive sample runner (edit-and-run)
 ```
 
 ### Why this structure?
@@ -54,21 +56,15 @@ This ensures each task receives the full upstream context it needs.
 
 ## LLM Configuration
 
-All recipes use **NVIDIA NIM + LLaMA** as the default LLM:
+All recipes use **NVIDIA NIM + LLaMA** as the default LLM, configured via `llm.py`:
 
 ```python
-from crewai import LLM
-import os
+from llm import get_llm
 
-llm = LLM(
-    model="openai/meta/llama-3.1-8b-instruct",  # or meta/llama-3.3-70b-instruct for more power
-    base_url="https://integrate.api.nvidia.com/v1",
-    api_key=os.getenv("NVIDIA_API_KEY"),
-    temperature=0.2,
-)
+llm = get_llm()  # reads LLM_API_KEY, LLM_MODEL, LLM_BASE_URL from env
 ```
 
-To swap for a different provider (OpenAI, Anthropic, etc.), update the `model` string according to CrewAI / LiteLLM documentation, and update `requirements.txt` if necessary.
+`get_llm()` returns an `LLM` configured with `max_retries=3`, so the OpenAI SDK retries transient NIM failures (429s, timeouts, 5xx, connection errors) with exponential backoff, honouring `Retry-After` headers. Defaults to `meta/llama-3.1-8b-instruct` via NVIDIA NIM. To swap provider or model, set `LLM_API_KEY`, `LLM_MODEL`, and `LLM_BASE_URL` in `.env` — no code changes needed. See [docs/providers.md](./providers.md) for examples.
 
 ---
 

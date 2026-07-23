@@ -1,0 +1,4 @@
+[
+  {"name": "question", "label": "Customer Question"},
+  {"name": "customer_name", "label": "Customer Name (optional)"}
+]

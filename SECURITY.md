@@ -6,7 +6,7 @@ uses an API key.
 
 ## API keys
 
-- Recipes read `NVIDIA_API_KEY` from a git-ignored `.env` file. **Never commit a real key.**
+- Recipes read `LLM_API_KEY` from a git-ignored `.env` file. **Never commit a real key.**
 - If you accidentally commit one, rotate it immediately at [build.nvidia.com](https://build.nvidia.com/) — assume anything pushed to GitHub is compromised — and let the maintainer know so history can be scrubbed.
 - `.env.example` files must only ever contain placeholders (e.g. `nvapi-your-key-here`).
 

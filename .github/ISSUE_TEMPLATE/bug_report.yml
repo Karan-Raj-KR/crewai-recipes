@@ -83,5 +83,5 @@ body:
       options:
         - label: "I searched existing issues and this is not a duplicate."
           required: true
-        - label: "I confirmed NVIDIA_API_KEY is set and valid."
+        - label: "I confirmed LLM_API_KEY is set and valid."
           required: false

@@ -11,7 +11,7 @@ Edit the SAMPLE_LEAD dict below or pipe in your own data to get started.
 
 from dotenv import load_dotenv
 
-load_dotenv()  # Load NVIDIA_API_KEY from .env if present
+load_dotenv()  # Load LLM_API_KEY from .env if present
 
 from crew import build_crew  # noqa: E402 (import after load_dotenv)
 
@@ -39,7 +39,10 @@ def main() -> None:
     print(f"   Company: {SAMPLE_LEAD['company']}\n")
     print("─" * 60)
 
-    crew = build_crew(SAMPLE_LEAD)
+    crew = build_crew(
+        company=SAMPLE_LEAD["company"],
+        description=SAMPLE_LEAD["notes"],
+    )
     result = crew.kickoff()
 
     print("\n" + "═" * 60)

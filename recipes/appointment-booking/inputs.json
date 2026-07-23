@@ -1,0 +1,7 @@
+[
+  {"name": "name", "label": "Requester Name"},
+  {"name": "email", "label": "Requester Email"},
+  {"name": "meeting_type", "label": "Meeting Type"},
+  {"name": "preferred_times", "label": "Preferred Times"},
+  {"name": "notes", "label": "Notes (optional)"}
+]

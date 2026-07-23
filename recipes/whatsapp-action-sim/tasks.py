@@ -8,7 +8,7 @@ import json
 
 from crewai import Agent, Task
 
-from action_registry import SUPPORTED_INTENTS, execute_action
+from action_registry import SUPPORTED_INTENTS
 
 
 def build_tasks(
@@ -54,10 +54,16 @@ def build_tasks(
         agent=intent_agent,
     )
 
-    # Pre-compute a simulated action result so the router has concrete data.
-    # In a real pipeline, the router agent would call a tool to do this.
-    _simulated_result = execute_action("ORDER_STATUS", user_message)
-    simulated_result_json = json.dumps(_simulated_result, indent=2)
+    # Static example showing the shape of an action-registry response.
+    # The router agent should use the *classified* intent from the previous
+    # task, not this hard-wired ORDER_STATUS example.
+    _example_payload = {
+        "action": "GET_ORDER_STATUS",
+        "status": "success",
+        "payload": {"order_id": "ORD-78421", "status": "Out for Delivery"},
+        "next_step": "Send order status to user",
+    }
+    simulated_result_json = json.dumps(_example_payload, indent=2)
 
     router_task = Task(
         description=(
