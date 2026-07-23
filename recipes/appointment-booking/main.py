@@ -30,7 +30,7 @@ def main() -> None:
     print(f"   Preferred : {SAMPLE_REQUEST['preferred_times']}\n")
     print("─" * 60)
 
-    crew = build_crew(SAMPLE_REQUEST)
+    crew = build_crew(**SAMPLE_REQUEST)
     result = crew.kickoff()
 
     print("\n" + "═" * 60)

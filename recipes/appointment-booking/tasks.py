@@ -21,7 +21,11 @@ def build_tasks(
     intake_agent: Agent,
     availability_agent: Agent,
     confirmation_agent: Agent,
-    booking_request: dict[str, str],
+    name: str,
+    email: str,
+    meeting_type: str,
+    preferred_times: str,
+    notes: str = "None",
 ) -> list[Task]:
     """Build the ordered task list for the appointment booking crew.
 
@@ -29,17 +33,17 @@ def build_tasks(
         intake_agent: Agent that validates the booking request.
         availability_agent: Agent that checks available slots.
         confirmation_agent: Agent that drafts the confirmation.
-        booking_request: Raw booking request data.
-            Expected keys: name, email, meeting_type, preferred_times, notes.
+        name: Requester's full name.
+        email: Requester's email address.
+        meeting_type: Type of meeting requested.
+        preferred_times: Preferred days/times stated by the requester.
+        notes: Optional additional notes or context.
 
     Returns:
         An ordered list of Task objects.
     """
-    name = booking_request.get("name", "Guest")
-    email = booking_request.get("email", "")
-    meeting_type = booking_request.get("meeting_type", "General Meeting")
-    preferred_times = booking_request.get("preferred_times", "Any time this week")
-    notes = booking_request.get("notes", "None")
+    notes_str = notes if notes and notes.strip() else "None"
+
 
     intake_task = Task(
         description=(
@@ -48,7 +52,7 @@ def build_tasks(
             f"  Email       : {email}\n"
             f"  Meeting Type: {meeting_type}\n"
             f"  Preferred   : {preferred_times}\n"
-            f"  Notes       : {notes}\n\n"
+            f"  Notes       : {notes_str}\n\n"
             "Validate that all required fields are present. "
             "If anything is ambiguous, note it clearly. "
             "Summarise the validated request in a structured format."
