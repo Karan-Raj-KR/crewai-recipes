@@ -1,6 +1,6 @@
 # 📱 Recipe: WhatsApp Action Sim
 
-> 🚧 **Status: In Progress** — Core functionality works; real webhook integration and multi-turn conversation support are coming.
+> ✅ **Status: Stable** — Fully working three-agent crew with intent classification, simulated action routing, and WhatsApp response composition.
 
 A three-agent CrewAI crew that simulates a WhatsApp business automation pipeline: classify the user's intent → route to the correct action → compose a natural WhatsApp reply. Powered by NVIDIA NIM.
 
@@ -13,21 +13,21 @@ Incoming WhatsApp Message
           │
           ▼
 ┌──────────────────────────┐
-│  Intent Classifier Agent  │  → ORDER_STATUS / BOOK_APPOINTMENT /
-│                           │    FAQ / COMPLAINT / FEEDBACK /
-│                           │    HUMAN_ESCALATION / UNKNOWN
+│  Intent Classifier Agent │  → ORDER_STATUS / BOOK_APPOINTMENT /
+│                          │    FAQ / COMPLAINT / FEEDBACK /
+│                          │    HUMAN_ESCALATION / UNKNOWN
 └────────────┬─────────────┘
              │ classified intent + entities
              ▼
 ┌──────────────────────────┐
-│  Action Router Agent      │  → Calls simulated action registry
-│                           │    Returns structured payload
+│  Action Router Agent     │  → Calls simulated action registry
+│                          │    Returns structured payload
 └────────────┬─────────────┘
              │ action result payload
              ▼
 ┌──────────────────────────┐
-│  Response Composer Agent  │  → Natural, emoji-friendly WhatsApp reply
-└──────────────────────────┘
+│  Response Composer Agent │  → Natural, emoji-friendly WhatsApp reply
+└────────────┬─────────────┘
              │
              ▼
      Outbound WhatsApp Message
@@ -56,18 +56,38 @@ cp .env.example .env   # add your LLM_API_KEY
 
 ## Run
 
+### Interactive / CLI mode
+```bash
+python run.py --user_message "Where is my order 12345?" --sender_name "Ravi"
+```
+
+### Options
+- `--user_message`, `--user-message`, `--message`: The WhatsApp message text to process.
+- `--sender_name`, `--sender-name`: Display name of the sender (default: `Ravi`).
+
+### Batch sample mode
 ```bash
 python main.py
 ```
 
-Edit `SAMPLE_MESSAGES` in `main.py` and change the index to test different intents.
+## Sample Output
 
-## Roadmap
+```
+📱  WhatsApp Action Sim — Processing Message
 
-- [ ] Real WhatsApp webhook integration (Meta Cloud API)
-- [ ] Multi-turn conversation state management
-- [ ] Tool-based action execution (replace simulated registry)
-- [ ] Persistent conversation history with Redis
+   From    : Ravi
+   Message : Hey! Where's my order? It's been 3 days now 😤
+
+────────────────────────────────────────────────────────────
+
+============================================================
+📤  WHATSAPP REPLY
+============================================================
+Hi Ravi! 📦 Your order ORD-78421 is Out for Delivery via BlueDart and estimated to arrive today by 6:00 PM. 
+
+Track live here: https://track.example.com/ORD-78421 🚚
+============================================================
+```
 
 ## Configuration
 
@@ -83,4 +103,5 @@ Edit `SAMPLE_MESSAGES` in `main.py` and change the index to test different inten
 | `action_registry.py` | Simulated action responses by intent |
 | `tasks.py` | Three sequential processing tasks |
 | `crew.py` | Crew assembly |
-| `main.py` | CLI entry point |
+| `run.py` | CLI runner with argument parser |
+| `main.py` | Sample batch test script |
