@@ -107,7 +107,7 @@ Then open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 | [appointment-booking](./recipes/appointment-booking/) | Agent crew that collects availability, checks a simulated calendar, and drafts a confirmation | 🚧 Scaffold |
 | [whatsapp-action-sim](./recipes/whatsapp-action-sim/) | Classifies WhatsApp-style messages by intent and routes to the correct downstream action | 🚧 Scaffold |
 | [customer-onboarding](./recipes/customer-onboarding/) | End-to-end onboarding: data collection → validation → welcome email draft | ✅ Stable |
-| content-pipeline | Blog ideation → research → draft → SEO review — fully automated crew | 💡 Wanted |
+| [content-pipeline](./recipes/content-pipeline/) | Blog ideation → research → draft → SEO review — fully automated crew | ✅ Stable |
 | support-escalation | Tier-1 auto-resolve → escalate to human with full context summary | 💡 Wanted |
 
 > **Legend:** ✅ Stable (tested, production-ready) · 🚧 Scaffold (structure in place, contributions welcome) · 💡 Wanted (open for contributions!)
@@ -131,7 +131,8 @@ crewai-recipes/
 │   ├── faq-bot/
 │   ├── appointment-booking/
 │   ├── whatsapp-action-sim/
-│   └── customer-onboarding/
+│   ├── customer-onboarding/
+│   └── content-pipeline/
 ├── playground/                  # Local web UI for testing recipes
 ├── docs/                        # Deep-dive guides and architecture notes
 ├── .github/
