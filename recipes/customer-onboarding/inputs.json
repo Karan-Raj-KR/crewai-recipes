@@ -1,0 +1,7 @@
+[
+  {"name": "customer_name", "label": "Customer Name"},
+  {"name": "company", "label": "Company Name"},
+  {"name": "role", "label": "Job Role / Title"},
+  {"name": "use_case", "label": "Primary Use Case / Goal"},
+  {"name": "team_size", "label": "Team Size"}
+]
