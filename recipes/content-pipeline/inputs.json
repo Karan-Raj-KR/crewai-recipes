@@ -1,0 +1,5 @@
+[
+  {"name": "topic", "label": "Blog Topic"},
+  {"name": "target_audience", "label": "Target Audience"},
+  {"name": "keywords", "label": "Target Keywords (comma-separated)"}
+]
