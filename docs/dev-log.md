@@ -420,3 +420,7 @@
 <!-- session: 2026-07-25-1 -->
 ## 2026-07-25 session 1
 - docs: expand getting started guide
+
+<!-- session: 2026-07-25-2 -->
+## 2026-07-25 session 2
+- chore: format code with black
