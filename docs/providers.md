@@ -10,6 +10,41 @@ No code changes are required.
 
 ---
 
+## Secondary & Fallback LLM Provider Configuration (#75)
+
+You can also configure an optional **secondary / fallback provider** to switch providers seamlessly without changing code or editing primary credentials.
+
+### Secondary Provider Environment Variables:
+- `LLM_FALLBACK_API_KEY`: Authentication key for the secondary provider.
+- `LLM_FALLBACK_MODEL`: Model name as expected by the secondary provider.
+- `LLM_FALLBACK_BASE_URL`: OpenAI-compatible API endpoint for the secondary provider.
+- `LLM_PROVIDER`: Optional provider selection (`primary` or `fallback`, default: `primary`).
+
+### Worked Example: Primary (NVIDIA NIM) + Fallback (OpenRouter)
+
+```env
+# Primary Provider (NVIDIA NIM)
+LLM_BASE_URL=https://integrate.api.nvidia.com/v1
+LLM_MODEL=meta/llama-3.1-8b-instruct
+LLM_API_KEY=nvapi-...
+
+# Secondary / Fallback Provider (OpenRouter)
+LLM_FALLBACK_BASE_URL=https://openrouter.ai/api/v1
+LLM_FALLBACK_MODEL=meta-llama/llama-3.1-8b-instruct:free
+LLM_FALLBACK_API_KEY=sk-or-v1-...
+```
+
+### Behavior:
+1. **Default Mode (`LLM_PROVIDER=primary` or unset)**:
+   - Uses `LLM_API_KEY` with `LLM_BASE_URL` and `LLM_MODEL`.
+   - If `LLM_API_KEY` is missing/unset but `LLM_FALLBACK_API_KEY` is present, `get_llm()` automatically falls back to the secondary provider configuration.
+2. **Explicit Fallback Mode (`LLM_PROVIDER=fallback`)**:
+   - Explicitly instructs `get_llm()` to construct the LLM object using the secondary provider configuration (`LLM_FALLBACK_*`).
+3. **Programmatic Selection**:
+   - Recipe scripts can pass `get_llm(provider="fallback")` directly.
+
+---
+
 ## NVIDIA NIM (Default)
 NVIDIA provides a generous free tier for top open-source models.
 - **Get a key**: [build.nvidia.com](https://build.nvidia.com)
