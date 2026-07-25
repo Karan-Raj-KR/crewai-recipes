@@ -436,3 +436,7 @@
 <!-- session: 2026-07-25-5 -->
 ## 2026-07-25 session 5
 - docs: add architecture diagram notes
+
+<!-- session: 2026-07-25-6 -->
+## 2026-07-25 session 6
+- chore: update .gitignore entries
