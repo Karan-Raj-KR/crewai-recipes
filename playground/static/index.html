@@ -516,6 +516,21 @@
         <div id="error-msg" class="error"></div>
     </div>
 
+    <div class="card" id="progress-card" style="display: none;">
+        <div class="progress-header">
+            <div class="progress-title-group">
+                <span class="pulse-indicator" id="progress-pulse"></span>
+                <span style="font-weight: 600;">Live Agent Progress</span>
+            </div>
+            <div class="active-agent-badge" id="active-agent-badge">
+                <span class="agent-icon">🤖</span>
+                <span id="active-agent-name">Initializing Crew...</span>
+            </div>
+        </div>
+        
+        <div class="progress-stream" id="progress-stream"></div>
+    </div>
+
     <div class="card" style="margin-top: 2rem;">
         <label>Final Output</label>
         <div id="result" class="result-panel">Ready. Select a recipe and click Run.</div>
@@ -571,6 +586,146 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* ── Live Progress Card Styles ──────────────────────────────── */
+    .progress-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border);
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .progress-title-group {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .pulse-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--primary);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+        animation: pulse 1.6s infinite;
+    }
+
+    .pulse-indicator.completed {
+        background-color: var(--success);
+        box-shadow: none;
+        animation: none;
+    }
+
+    .pulse-indicator.error {
+        background-color: var(--error);
+        box-shadow: none;
+        animation: none;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+        }
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+        }
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        }
+    }
+
+    .active-agent-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background-color: var(--surface-2);
+        border: 1px solid var(--border);
+        padding: 0.3rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #93c5fd;
+    }
+
+    .progress-stream {
+        background-color: #090d16;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 1rem;
+        max-height: 320px;
+        overflow-y: auto;
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .stream-item {
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
+        border-left: 3px solid var(--border);
+        background: rgba(255, 255, 255, 0.02);
+        line-height: 1.5;
+    }
+
+    .stream-item.agent_step {
+        border-left-color: var(--primary);
+        background: rgba(59, 130, 246, 0.05);
+    }
+
+    .stream-item.task_complete {
+        border-left-color: var(--success);
+        background: rgba(34, 197, 94, 0.05);
+    }
+
+    .stream-item.log {
+        border-left-color: #475569;
+        color: #94a3b8;
+    }
+
+    .stream-item.error {
+        border-left-color: var(--error);
+        background: rgba(239, 68, 68, 0.08);
+        color: #fca5a5;
+    }
+
+    .step-tag {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 0.1rem 0.4rem;
+        border-radius: 3px;
+        margin-bottom: 0.25rem;
+    }
+
+    .step-tag.agent { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+    .step-tag.task { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+    .step-tag.tool { background: rgba(245, 158, 11, 0.2); color: #fde68a; }
+
+    .step-thought {
+        color: #e2e8f0;
+        margin-top: 0.2rem;
+    }
+
+    .step-result {
+        color: #cbd5e1;
+        font-size: 0.78rem;
+        margin-top: 0.3rem;
+        padding: 0.3rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+    }
+</style>
 
 <script>
     // ── Provider configuration ────────────────────────────────────
@@ -661,6 +816,14 @@
     const resultPanel     = document.getElementById('result');
     const errorMsg        = document.getElementById('error-msg');
 
+    const progressCard      = document.getElementById('progress-card');
+    const progressStream    = document.getElementById('progress-stream');
+    const activeAgentBadge  = document.getElementById('active-agent-badge');
+    const activeAgentName   = document.getElementById('active-agent-name');
+    const progressPulse     = document.getElementById('progress-pulse');
+
+    let currentAbortController = null;
+
     // ── Populate provider dropdown ────────────────────────────────
     PROVIDERS.forEach((p, i) => {
         const opt = document.createElement('option');
@@ -671,7 +834,8 @@
 
     // Helper to escape HTML characters
     function escapeHTML(str) {
-        return str.replace(/[&<>'"]/g, 
+        if (!str) return '';
+        return String(str).replace(/[&<>'"]/g, 
             tag => ({
                 '&': '&amp;',
                 '<': '&lt;',
@@ -725,18 +889,15 @@
     // ── Event listeners: modal ────────────────────────────────────
     providerInfoBtn.addEventListener('click', openModal);
     providerSelect.addEventListener('change', () => {
-        // Open/refresh modal for the new selection
         openModal();
     });
 
     modalClose.addEventListener('click', closeModal);
 
-    // Close on overlay click (outside modal card)
     modalOverlay.addEventListener('click', (e) => {
         if (e.target === modalOverlay) closeModal();
     });
 
-    // Close on Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modalOverlay.classList.contains('open')) closeModal();
     });
@@ -752,7 +913,6 @@
                 copyBtn.classList.remove('copied');
             }, 2000);
         } catch {
-            // Fallback for environments without clipboard API
             copyBtn.textContent = 'Copy manually';
         }
     });
@@ -820,11 +980,77 @@
         });
     });
 
+    // ── Stream Progress UI Handlers ────────────────────────────────
+    function appendStreamItem(type, contentHtml) {
+        const item = document.createElement('div');
+        item.className = `stream-item ${type}`;
+        item.innerHTML = contentHtml;
+        progressStream.appendChild(item);
+        progressStream.scrollTop = progressStream.scrollHeight;
+    }
+
+    function handleEvent(event) {
+        switch (event.type) {
+            case 'start':
+                activeAgentName.textContent = 'Starting Agents...';
+                appendStreamItem('log', `🚀 Executing recipe: <strong>${escapeHTML(event.recipe)}</strong>`);
+                break;
+            case 'agent_step':
+                if (event.agent) {
+                    activeAgentName.textContent = `Active: ${event.agent}`;
+                }
+                let stepContent = `<span class="step-tag agent">${escapeHTML(event.agent || 'Agent')}</span>`;
+                if (event.tool) {
+                    stepContent += ` <span class="step-tag tool">🔧 ${escapeHTML(event.tool)}</span>`;
+                }
+                if (event.thought) {
+                    stepContent += `<div class="step-thought">${escapeHTML(event.thought)}</div>`;
+                }
+                if (event.result) {
+                    stepContent += `<div class="step-result"><strong>Result:</strong> ${escapeHTML(event.result)}</div>`;
+                }
+                appendStreamItem('agent_step', stepContent);
+                break;
+            case 'task_complete':
+                if (event.agent) {
+                    activeAgentName.textContent = `Completed step by ${event.agent}`;
+                }
+                const taskContent = `
+                    <span class="step-tag task">✅ Task Complete</span>
+                    <div style="font-weight:600; margin-top:0.2rem;">${escapeHTML(event.description)}</div>
+                    <div class="step-result" style="margin-top:0.4rem;">${escapeHTML(event.output)}</div>
+                `;
+                appendStreamItem('task_complete', taskContent);
+                break;
+            case 'log':
+                if (event.text) {
+                    if (event.text.includes('Working Agent:')) {
+                        const parts = event.text.split('Working Agent:');
+                        if (parts[1]) activeAgentName.textContent = parts[1].trim();
+                    }
+                    appendStreamItem('log', escapeHTML(event.text));
+                }
+                break;
+            case 'complete':
+                progressPulse.className = 'pulse-indicator completed';
+                activeAgentName.textContent = 'Crew Completed!';
+                appendStreamItem('task_complete', '✨ <strong>Execution Finished.</strong> Rendering final result below.');
+                resultPanel.textContent = event.output;
+                break;
+            case 'error':
+                progressPulse.className = 'pulse-indicator error';
+                activeAgentName.textContent = 'Execution Failed';
+                appendStreamItem('error', `❌ <strong>Error:</strong> ${escapeHTML(event.error)}`);
+                showError(event.error);
+                resultPanel.textContent = "Failed.";
+                break;
+        }
+    }
+
     runBtn.addEventListener('click', async () => {
         const recipeId = select.value;
         if (!recipeId) return;
 
-        // Clear previous validation states
         inputsContainer.querySelectorAll('.invalid-field').forEach(el => {
             el.classList.remove('invalid-field');
         });
@@ -850,34 +1076,82 @@
             }
         });
 
-        if (missing) {
-            return;
+        if (missing) return;
+
+        if (currentAbortController) {
+            currentAbortController.abort();
         }
+        currentAbortController = new AbortController();
 
         errorMsg.style.display = 'none';
-        resultPanel.innerHTML = '<span class="loader"></span> Running agents... (this may take a minute)';
+        progressCard.style.display = 'block';
+        progressStream.innerHTML = '';
+        progressPulse.className = 'pulse-indicator';
+        activeAgentName.textContent = 'Initializing Crew...';
+        resultPanel.innerHTML = '<span class="loader"></span> Streaming agent progress in real-time...';
         runBtn.disabled = true;
 
         try {
-            const res = await fetch('/run', {
+            const response = await fetch('/run/stream', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ recipe: recipeId, inputs })
+                body: JSON.stringify({ recipe: recipeId, inputs }),
+                signal: currentAbortController.signal
             });
 
-            const data = await res.json();
-            
-            if (!res.ok) {
-                showError(data.detail || "An error occurred.");
-                resultPanel.textContent = "Failed.";
-            } else {
-                resultPanel.textContent = data.output;
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({ detail: 'Server error' }));
+                showError(errData.detail || 'Failed to start streaming execution.');
+                resultPanel.textContent = 'Failed.';
+                progressPulse.className = 'pulse-indicator error';
+                return;
             }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                const parts = buffer.split('\n\n');
+                buffer = parts.pop(); // keep last incomplete chunk
+
+                for (const part of parts) {
+                    const line = part.trim();
+                    if (line.startswith && line.startswith('data: ')) {
+                        const jsonStr = line.slice(6).trim();
+                        try {
+                            const event = JSON.parse(jsonStr);
+                            handleEvent(event);
+                        } catch (err) {
+                            console.error("Failed to parse SSE event", err);
+                        }
+                    } else if (line.indexOf('data: ') === 0) {
+                        const jsonStr = line.slice(6).trim();
+                        try {
+                            const event = JSON.parse(jsonStr);
+                            handleEvent(event);
+                        } catch (err) {
+                            console.error("Failed to parse SSE event", err);
+                        }
+                    }
+                }
+            }
+
         } catch (e) {
-            showError("Network error. Is the backend running?");
-            resultPanel.textContent = "Failed.";
+            if (e.name === 'AbortError') {
+                appendStreamItem('log', '⚠️ Request cancelled by user.');
+            } else {
+                showError("Network error while streaming progress. Is the backend running?");
+                resultPanel.textContent = "Failed.";
+                progressPulse.className = 'pulse-indicator error';
+            }
         } finally {
             runBtn.disabled = false;
+            currentAbortController = null;
         }
     });
 
@@ -901,3 +1175,4 @@
 
 </body>
 </html>
+
