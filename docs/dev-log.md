@@ -464,3 +464,7 @@
 <!-- session: 2026-07-26-0 -->
 ## 2026-07-26 session 0
 - feat: add streaming output example
+
+<!-- session: 2026-07-26-1 -->
+## 2026-07-26 session 1
+- fix: improve token count estimation
