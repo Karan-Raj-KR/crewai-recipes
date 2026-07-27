@@ -476,3 +476,7 @@
 <!-- session: 2026-07-26-3 -->
 ## 2026-07-26 session 3
 - chore: clean up temp files
+
+<!-- session: 2026-07-27-0 -->
+## 2026-07-27 session 0
+- feat: add retry logic example
