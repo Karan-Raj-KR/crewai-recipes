@@ -532,3 +532,7 @@
 <!-- session: 2026-07-28-11 -->
 ## 2026-07-28 session 11
 - feat: add fallback for missing env vars
+
+<!-- session: 2026-07-28-12 -->
+## 2026-07-28 session 12
+- refactor: extract helper functions
