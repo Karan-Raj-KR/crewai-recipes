@@ -552,3 +552,7 @@
 <!-- session: 2026-07-28-16 -->
 ## 2026-07-28 session 16
 - fix: handle empty task list gracefully
+
+<!-- session: 2026-07-28-17 -->
+## 2026-07-28 session 17
+- docs: add architecture diagram notes
