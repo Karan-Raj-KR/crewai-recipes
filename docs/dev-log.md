@@ -564,3 +564,7 @@
 <!-- session: 2026-07-29-1 -->
 ## 2026-07-29 session 1
 - feat: add rate limiting example
+
+<!-- session: 2026-07-29-2 -->
+## 2026-07-29 session 2
+- fix: correct agent role descriptions
