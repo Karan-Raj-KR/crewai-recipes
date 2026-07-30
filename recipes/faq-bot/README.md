@@ -13,7 +13,7 @@ Customer Question (+ optional name)
           │
           ▼
 ┌──────────────────────────────┐
-│  Orbitly Support Agent        │  ← Searches FAQ knowledge base
+│  Orbitly Support Agent        │  ← Searches FAQ knowledge base (YAML file)
 │  (no-hallucination rule)      │  ← If no match → graceful fallback
 │                               │  ← Personalised reply using customer name
 └──────────────────────────────┘
@@ -23,7 +23,7 @@ Customer Question (+ optional name)
 ```
 
 **Product:** "Orbitly" — a fictional B2B project management SaaS  
-**Knowledge base:** 6 hardcoded FAQ entries (pricing, trial, import, integrations, security, cancellation)  
+**Knowledge base:** Loaded from `knowledge_base.yaml` (6 default FAQ entries: pricing, trial, import, integrations, security, cancellation)  
 **Model used:** `meta/llama-3.1-8b-instruct` via NVIDIA NIM  
 **LLM calls:** 1  
 **Typical run time:** ~5-15 seconds  
@@ -92,6 +92,8 @@ python run.py --question "Do you have a mobile app for Android?" --name "Jordan"
 
 ## Knowledge Base Topics
 
+Loaded dynamically from `knowledge_base.yaml`:
+
 | # | Topic | Question |
 |---|-------|---------|
 | 1 | Pricing | How much does Orbitly cost? |
@@ -102,6 +104,27 @@ python run.py --question "Do you have a mobile app for Android?" --name "Jordan"
 | 6 | Cancellation & Refunds | What happens if I cancel? Do you offer refunds? |
 
 Questions outside these topics trigger a graceful fallback directing the customer to support@orbitly.example.com.
+
+---
+
+## Extending the Knowledge Base
+
+The FAQ content is separated from logic in `knowledge_base.yaml`. Add a new entry to `knowledge_base.yaml`:
+
+```yaml
+- topic: mobile app
+  question: Is there a mobile app?
+  answer: >-
+    Yes! Orbitly is available on iOS and Android. Search 'Orbitly' in the App Store or Google Play.
+```
+
+### Custom Knowledge Base Path
+You can point to your own external YAML knowledge base file by setting the `FAQ_KNOWLEDGE_BASE_PATH` environment variable:
+
+```bash
+export FAQ_KNOWLEDGE_BASE_PATH="/path/to/my_custom_faq.yaml"
+python run.py --question "Custom FAQ question"
+```
 
 ---
 
@@ -134,37 +157,18 @@ Is there anything else I can help with?
 
 ---
 
-## Extending the Knowledge Base
-
-Edit `knowledge_base.py` — add more dicts to `FAQ_KNOWLEDGE_BASE`:
-
-```python
-{
-    "topic": "mobile app",
-    "question": "Is there a mobile app?",
-    "answer": "Yes! Orbitly is available on iOS and Android. Search 'Orbitly' in the App Store or Google Play.",
-},
-```
-
-In production, swap the static list for a vector store:
-```python
-from langchain_community.vectorstores import Chroma
-# ... embed your FAQ docs and query with similarity search
-```
-
----
-
 ## File Structure
 
 | File | Purpose |
 |------|---------|
 | `llm.py` | NVIDIA NIM LLM config — change model here |
 | `agents.py` | Single Orbitly Support Specialist agent |
-| `knowledge_base.py` | 6 hardcoded FAQ entries + text formatter |
+| `knowledge_base.yaml` | YAML file storing FAQ entries (data) |
+| `knowledge_base.py` | YAML loader + text formatter (logic) |
 | `tasks.py` | Single answer task with KB context and guidelines |
 | `crew.py` | Single-agent crew assembly |
 | `run.py` | CLI entry point (`argparse`) |
-| `requirements.txt` | Python dependencies |
+| `requirements.txt` | Python dependencies (includes PyYAML) |
 | `.env.example` | Template for LLM_API_KEY |
 
 ---

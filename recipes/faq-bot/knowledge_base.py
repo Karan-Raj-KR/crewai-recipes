@@ -1,75 +1,74 @@
 """
 FAQ Bot Recipe — knowledge_base.py
 
-In-memory FAQ for "Orbitly" — a fictional B2B project management SaaS.
+Loads FAQ entries from knowledge_base.yaml (or custom path via FAQ_KNOWLEDGE_BASE_PATH).
 Each entry has a topic, question, and answer.
-
-To extend: add more dicts to FAQ_KNOWLEDGE_BASE.
-In production, swap this for a vector store (Chroma, Pinecone, pgvector).
 """
 
-FAQ_KNOWLEDGE_BASE: list[dict[str, str]] = [
-    {
-        "topic": "pricing",
-        "question": "How much does Orbitly cost?",
-        "answer": (
-            "Orbitly offers three plans: Solo ($0/month, 1 user, 3 projects), "
-            "Team ($29/month per user, unlimited projects, priority support), "
-            "and Enterprise (custom pricing, SSO, dedicated SLA, audit logs). "
-            "Annual billing gives you 2 months free."
-        ),
-    },
-    {
-        "topic": "free trial",
-        "question": "Can I try Orbitly before paying?",
-        "answer": (
-            "Yes! The Solo plan is free forever for one user. For team features, "
-            "every account gets a 21-day free trial of the Team plan — no credit "
-            "card required. Your trial auto-converts to Solo if you don't upgrade."
-        ),
-    },
-    {
-        "topic": "data import",
-        "question": "Can I import my projects from Jira or Trello?",
-        "answer": (
-            "Absolutely. Go to Settings → Import and choose your source: "
-            "Jira (Cloud or Server), Trello, Asana, or CSV. The import wizard "
-            "maps fields automatically and lets you preview before confirming. "
-            "Large imports (500+ issues) run in the background and email you when done."
-        ),
-    },
-    {
-        "topic": "integrations",
-        "question": "Which tools does Orbitly integrate with?",
-        "answer": (
-            "Native integrations include Slack (notifications + /orbitly slash command), "
-            "GitHub (link commits to tasks), Figma (embed designs), Google Drive, "
-            "and Zapier (1,000+ apps). Webhooks and a REST API are available on "
-            "Team and Enterprise plans. Full API docs at docs.orbitly.example.com."
-        ),
-    },
-    {
-        "topic": "security",
-        "question": "Is my data secure? Is Orbitly GDPR compliant?",
-        "answer": (
-            "Yes. All data is encrypted in transit (TLS 1.3) and at rest (AES-256). "
-            "Orbitly is SOC 2 Type II certified and fully GDPR compliant. "
-            "EU customers' data is stored in EU data centres. "
-            "You can export or delete all your data at any time from Settings → Privacy."
-        ),
-    },
-    {
-        "topic": "cancellation and refunds",
-        "question": "What happens if I cancel? Do you offer refunds?",
-        "answer": (
-            "You can cancel anytime from Settings → Billing → Cancel Plan. "
-            "Access continues until the end of your current billing period — "
-            "we don't pro-rate or charge early cancellation fees. "
-            "Refund requests within 14 days of a charge are honoured in full; "
-            "after that, refunds are reviewed case-by-case. Email billing@orbitly.example.com."
-        ),
-    },
-]
+import os
+from pathlib import Path
+
+import yaml
+
+DEFAULT_YAML_PATH = Path(__file__).parent / "knowledge_base.yaml"
+
+
+def load_knowledge_base(path: str | Path | None = None) -> list[dict[str, str]]:
+    """Load and validate FAQ knowledge base entries from a YAML file.
+
+    Args:
+        path: Path to the YAML file. Defaults to FAQ_KNOWLEDGE_BASE_PATH env var
+            or knowledge_base.yaml beside this module.
+
+    Returns:
+        List of FAQ dict entries with topic, question, and answer strings.
+
+    Raises:
+        FileNotFoundError: If the YAML file does not exist.
+        ValueError: If YAML is malformed or entries miss topic/question/answer.
+    """
+    if path is None:
+        path = os.getenv("FAQ_KNOWLEDGE_BASE_PATH", DEFAULT_YAML_PATH)
+
+    yaml_path = Path(path)
+    if not yaml_path.exists():
+        raise FileNotFoundError(f"FAQ Knowledge Base YAML file not found: {yaml_path}")
+
+    try:
+        with open(yaml_path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+    except Exception as err:
+        raise ValueError(
+            f"Failed to parse FAQ Knowledge Base YAML from {yaml_path}: {err}"
+        ) from err
+
+    if not isinstance(data, list):
+        raise ValueError(
+            f"FAQ Knowledge Base in {yaml_path} must be a YAML list of entries."
+        )
+
+    validated: list[dict[str, str]] = []
+    for idx, entry in enumerate(data, 1):
+        if not isinstance(entry, dict):
+            raise ValueError(f"Entry {idx} in {yaml_path} is not a valid dict.")
+        for required_key in ("topic", "question", "answer"):
+            if required_key not in entry or not entry[required_key]:
+                raise ValueError(
+                    f"Entry {idx} in {yaml_path} is missing required field '{required_key}'."
+                )
+        validated.append(
+            {
+                "topic": str(entry["topic"]).strip(),
+                "question": str(entry["question"]).strip(),
+                "answer": str(entry["answer"]).strip(),
+            }
+        )
+
+    return validated
+
+
+# Global knowledge base list loaded at import time for backward compatibility
+FAQ_KNOWLEDGE_BASE: list[dict[str, str]] = load_knowledge_base()
 
 
 def get_knowledge_base_text() -> str:
