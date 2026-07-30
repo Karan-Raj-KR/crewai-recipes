@@ -43,12 +43,12 @@ def test_retries_on_transient_429_then_succeeds() -> None:
         with patch.dict(os.environ, env_mock):
             llm = get_llm()
             result = llm.call([{"role": "user", "content": "test"}])
-            assert "Mock completion response" in str(
-                result
-            ), f"Unexpected response: {result}"
-            assert (
-                MockOpenAIHandler.request_count == 3
-            ), f"Expected 3 HTTP attempts (2 retries + 1 success), got {MockOpenAIHandler.request_count}"
+            assert "Mock completion response" in str(result), (
+                f"Unexpected response: {result}"
+            )
+            assert MockOpenAIHandler.request_count == 3, (
+                f"Expected 3 HTTP attempts (2 retries + 1 success), got {MockOpenAIHandler.request_count}"
+            )
     finally:
         stop_mock_openai_server(server)
 
@@ -77,9 +77,9 @@ def test_exhausting_retries_raises_exception() -> None:
 
     assert failed, "Expected call to fail after exhausting all retries"
     expected_attempts = MAX_RETRIES + 1
-    assert (
-        MockOpenAIHandler.request_count == expected_attempts
-    ), f"Expected {expected_attempts} attempts before raising, got {MockOpenAIHandler.request_count}"
+    assert MockOpenAIHandler.request_count == expected_attempts, (
+        f"Expected {expected_attempts} attempts before raising, got {MockOpenAIHandler.request_count}"
+    )
 
 
 if __name__ == "__main__":
