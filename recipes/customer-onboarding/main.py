@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from crew import build_crew
+from crew import build_crew  # noqa: E402
 
 # ─── Sample Customer Signup Profiles ─────────────────────────────────────────
 # Complete profile (valid onboarding)

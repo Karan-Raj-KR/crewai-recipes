@@ -19,9 +19,9 @@ repo_root = recipe_dir.parent.parent
 sys.path.insert(0, str(repo_root))
 sys.path.insert(0, str(recipe_dir))
 
-from llm import MAX_RETRIES, get_llm
+from llm import MAX_RETRIES, get_llm  # noqa: E402
 
-from tests.shared_mock import (
+from tests.shared_mock import (  # noqa: E402
     MockOpenAIHandler,
     start_mock_openai_server,
     stop_mock_openai_server,

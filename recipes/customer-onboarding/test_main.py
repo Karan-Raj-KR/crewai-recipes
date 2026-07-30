@@ -5,8 +5,8 @@ from unittest.mock import patch
 
 os.environ["LLM_API_KEY"] = "nvapi-test"
 
-import main as recipe_main
-from crew import build_crew
+import main as recipe_main  # noqa: E402
+from crew import build_crew  # noqa: E402
 
 
 def test_crew_build_and_kickoff() -> None:
