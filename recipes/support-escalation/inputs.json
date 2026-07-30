@@ -1,0 +1,5 @@
+[
+  {"name": "ticket_text", "label": "Support Ticket Description"},
+  {"name": "customer_tier", "label": "Customer Plan Tier (free / pro / enterprise)"},
+  {"name": "previous_contacts", "label": "Previous Contact Attempts"}
+]
