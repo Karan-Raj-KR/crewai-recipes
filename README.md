@@ -134,7 +134,7 @@ docker run --rm --env-file recipes/lead-qualification/.env crewai-lead \
 | [faq-bot](./recipes/faq-bot/) | Single-agent support bot that answers questions from an in-memory FAQ knowledge base | ✅ Stable |
 | [appointment-booking](./recipes/appointment-booking/) | Agent crew that collects availability, checks a simulated calendar, and drafts a confirmation | ✅ Stable |
 | [whatsapp-action-sim](./recipes/whatsapp-action-sim/) | Classifies WhatsApp-style messages by intent and routes to the correct downstream action | 🚧 Scaffold |
-| customer-onboarding | End-to-end onboarding: data collection → validation → welcome email draft | 💡 Wanted |
+| [customer-onboarding](./recipes/customer-onboarding/) | End-to-end onboarding: data collection → validation → welcome email draft | ✅ Stable |
 | content-pipeline | Blog ideation → research → draft → SEO review — fully automated crew | 💡 Wanted |
 | support-escalation | Tier-1 auto-resolve → escalate to human with full context summary | 💡 Wanted |
 
@@ -158,7 +158,8 @@ crewai-recipes/
 │   │   └── README.md
 │   ├── faq-bot/
 │   ├── appointment-booking/
-│   └── whatsapp-action-sim/
+│   ├── whatsapp-action-sim/
+│   └── customer-onboarding/
 ├── playground/                  # Local web UI for testing recipes
 ├── docs/                        # Deep-dive guides and architecture notes
 ├── .github/
