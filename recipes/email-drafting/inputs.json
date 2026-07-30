@@ -1,0 +1,6 @@
+[
+  {"name": "recipient", "label": "Recipient (Name / Role)"},
+  {"name": "purpose", "label": "Email Purpose"},
+  {"name": "key_points", "label": "Key Points to Cover"},
+  {"name": "tone", "label": "Tone (professional / friendly / formal / direct)"}
+]
