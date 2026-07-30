@@ -25,8 +25,11 @@ jobs:
           # CrewAI requires Python >=3.10,<3.14. Pin to 3.12 for CI.
           python-version: "3.12"
 
+      # Pinned: an unpinned `ruff` lets a new upstream release change default
+      # lint rules and fail every open PR at once, unrelated to their diffs
+      # (see #112). Bump deliberately, verified against recipes/ first.
       - name: Install Ruff
-        run: pip install ruff
+        run: pip install "ruff==0.15.10"
 
       # Lint only the stable recipes. The scaffolds intentionally contain
       # TODO stubs (unused imports/vars) and are excluded until implemented.

@@ -1,5 +1,5 @@
 """
-faq-bot — llm.py
+content-pipeline — llm.py
 
 Central LLM configuration using OpenAI-compatible endpoints.
 Supports primary provider (LLM_API_KEY, LLM_MODEL, LLM_BASE_URL) and optional
