@@ -8,6 +8,7 @@ Defines the agents for the appointment booking crew.
 from crewai import Agent
 from llm import get_llm
 
+
 def build_agents() -> tuple[Agent, Agent, Agent]:
     """Build and return the appointment booking crew agents.
 
@@ -59,4 +60,3 @@ def build_agents() -> tuple[Agent, Agent, Agent]:
     )
 
     return intake_agent, availability_agent, confirmation_agent
-

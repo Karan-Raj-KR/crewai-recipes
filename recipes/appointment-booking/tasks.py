@@ -44,7 +44,6 @@ def build_tasks(
     """
     notes_str = notes if notes and notes.strip() else "None"
 
-
     intake_task = Task(
         description=(
             f"Process the following appointment booking request:\n\n"

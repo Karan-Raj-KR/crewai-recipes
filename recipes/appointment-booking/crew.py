@@ -47,4 +47,3 @@ def build_crew(
         process=Process.sequential,
         verbose=True,
     )
-
