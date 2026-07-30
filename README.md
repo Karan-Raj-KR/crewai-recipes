@@ -137,7 +137,7 @@ docker run --rm --env-file recipes/lead-qualification/.env crewai-lead \
 | [customer-onboarding](./recipes/customer-onboarding/) | End-to-end onboarding: data collection → validation → welcome email draft | ✅ Stable |
 | [email-drafting](./recipes/email-drafting/) | Three-agent crew that drafts, polishes, and formats professional emails | ✅ Stable |
 | [support-escalation](./recipes/support-escalation/) | Tier-1 auto-resolve → escalate to human with full context summary | ✅ Stable |
-| content-pipeline | Blog ideation → research → draft → SEO review — fully automated crew | 💡 Wanted |
+| [content-pipeline](./recipes/content-pipeline/) | Blog ideation → research → draft → SEO review — fully automated crew | ✅ Stable |
 
 > **Legend:** ✅ Stable (tested, production-ready) · 🚧 Scaffold (structure in place, contributions welcome) · 💡 Wanted (open for contributions!)
 
