@@ -664,3 +664,7 @@
 <!-- session: 2026-07-31-1 -->
 ## 2026-07-31 session 1
 - chore: format code with black
+
+<!-- session: 2026-07-31-2 -->
+## 2026-07-31 session 2
+- feat: support multi-agent workflow example
