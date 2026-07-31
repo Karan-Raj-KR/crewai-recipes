@@ -82,6 +82,40 @@ def get_recipe_description(recipe_dir: Path) -> str:
     return recipe_dir.name.replace("-", " ").title()
 
 
+def cleanup_recipe_modules(
+    recipe_dir: Path, keys_before: set[str] | None = None
+) -> None:
+    """Purge recipe-specific modules from sys.modules to prevent cross-recipe contamination (#63)."""
+    recipe_dir_resolved = recipe_dir.resolve()
+
+    local_module_names = {"recipe_crew"}
+    if recipe_dir.exists():
+        for item in recipe_dir.iterdir():
+            if item.suffix == ".py":
+                local_module_names.add(item.stem)
+            elif item.is_dir() and (item / "__init__.py").exists():
+                local_module_names.add(item.name)
+
+    for key in list(sys.modules.keys()):
+        if key in local_module_names:
+            sys.modules.pop(key, None)
+            continue
+
+        mod = sys.modules.get(key)
+        if mod is not None:
+            mod_file = getattr(mod, "__file__", None)
+            if mod_file and isinstance(mod_file, str):
+                try:
+                    if Path(mod_file).resolve().is_relative_to(recipe_dir_resolved):
+                        sys.modules.pop(key, None)
+                        continue
+                except Exception:
+                    pass
+
+        if keys_before is not None and key not in keys_before and "." not in key:
+            sys.modules.pop(key, None)
+
+
 @app.get("/recipes")
 def list_recipes():
     recipes = []
@@ -137,7 +171,9 @@ def run_recipe(req: RunRequest):
         raise HTTPException(status_code=404, detail="Recipe not found")
 
     original_sys_path = sys.path.copy()
+    keys_before = set(sys.modules.keys())
     sys.path.insert(0, str(recipe_dir))
+    cleanup_recipe_modules(recipe_dir)
 
     try:
         spec = importlib.util.spec_from_file_location("recipe_crew", crew_path)
@@ -175,6 +211,7 @@ def run_recipe(req: RunRequest):
 
     finally:
         sys.path = original_sys_path
+        cleanup_recipe_modules(recipe_dir, keys_before)
 
 
 def execute_recipe_stream(
@@ -200,7 +237,9 @@ def execute_recipe_stream(
         return
 
     original_sys_path = sys.path.copy()
+    keys_before = set(sys.modules.keys())
     sys.path.insert(0, str(recipe_dir))
+    cleanup_recipe_modules(recipe_dir)
 
     try:
         spec = importlib.util.spec_from_file_location("recipe_crew", crew_path)
@@ -290,6 +329,7 @@ def execute_recipe_stream(
 
     finally:
         sys.path = original_sys_path
+        cleanup_recipe_modules(recipe_dir, keys_before)
 
 
 @app.post("/run/stream")

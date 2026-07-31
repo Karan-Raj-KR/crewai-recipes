@@ -429,3 +429,17 @@ jobs:
           assert app.title == 'CrewAI Recipes Playground'
           print('✅ playground: FastAPI app imports and initializes OK')
           "
+
+      - name: Unit test — Playground SSE & WebSocket streaming
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd playground
+          python test_streaming_unit.py
+
+      - name: Regression test — Playground sys.modules cross-recipe contamination (#63)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd playground
+          python test_module_contamination.py
