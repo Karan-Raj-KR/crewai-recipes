@@ -680,3 +680,7 @@
 <!-- session: 2026-07-31-5 -->
 ## 2026-07-31 session 5
 - chore: update .gitignore entries
+
+<!-- session: 2026-07-31-6 -->
+## 2026-07-31 session 6
+- feat: add rate limiting example
