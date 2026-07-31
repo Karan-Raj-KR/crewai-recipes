@@ -1,4 +1,3 @@
-import os
 import subprocess
 import sys
 import time
@@ -14,7 +13,7 @@ def main():
         [sys.executable, "-m", "uvicorn", "main:app", "--port", "8000"],
         cwd=playground_dir,
     )
-    
+
     # Wait for server to start
     started = False
     for i in range(20):
@@ -26,33 +25,44 @@ def main():
         except requests.exceptions.ConnectionError:
             pass
         time.sleep(1)
-        
+
     if not started:
         print("Failed to start server")
         proc.terminate()
         sys.exit(1)
-        
+
     print("Server started. Recipes:")
     print(requests.get("http://127.0.0.1:8000/recipes").json())
-    
+
     print("\nTesting /run ...")
     payload = {
         "recipe": "faq-bot",
-        "inputs": {
-            "question": "How much does Orbitly cost?",
-            "customer_name": "Alex"
-        }
+        "inputs": {"question": "How much does Orbitly cost?", "customer_name": "Alex"},
     }
     res = requests.post("http://127.0.0.1:8000/run", json=payload)
     print("Run response status:", res.status_code)
     try:
         print("Run response JSON:", res.json())
-    except:
+    except Exception:
         print("Run response TEXT:", res.text)
-        
+
+    print("\nTesting /run/stream (SSE) ...")
+    res_stream = requests.post(
+        "http://127.0.0.1:8000/run/stream", json=payload, stream=True
+    )
+    print("Run stream status:", res_stream.status_code)
+    lines_received = 0
+    for line in res_stream.iter_lines():
+        if line:
+            lines_received += 1
+            print("Stream event line:", line.decode("utf-8"))
+            if lines_received >= 5:
+                break
+
     proc.terminate()
     proc.wait()
     print("Test finished.")
+
 
 if __name__ == "__main__":
     main()
