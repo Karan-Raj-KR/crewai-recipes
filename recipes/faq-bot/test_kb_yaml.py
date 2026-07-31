@@ -20,7 +20,9 @@ from knowledge_base import (  # noqa: E402
 def test_default_yaml_knowledge_base_loaded() -> None:
     """Test 1: Default YAML knowledge base contains 6 valid entries."""
     assert isinstance(FAQ_KNOWLEDGE_BASE, list)
-    assert len(FAQ_KNOWLEDGE_BASE) == 6, f"Expected 6 FAQ entries, got {len(FAQ_KNOWLEDGE_BASE)}"
+    assert len(FAQ_KNOWLEDGE_BASE) == 6, (
+        f"Expected 6 FAQ entries, got {len(FAQ_KNOWLEDGE_BASE)}"
+    )
 
     topics = [entry["topic"] for entry in FAQ_KNOWLEDGE_BASE]
     assert "pricing" in topics
@@ -42,7 +44,9 @@ def test_get_knowledge_base_text_formatting() -> None:
 
 def test_custom_yaml_path_env_var() -> None:
     """Test 3: Custom YAML path via FAQ_KNOWLEDGE_BASE_PATH environment variable."""
-    with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False, encoding="utf-8") as tmp:
+    with tempfile.NamedTemporaryFile(
+        "w", suffix=".yaml", delete=False, encoding="utf-8"
+    ) as tmp:
         tmp.write(
             "- topic: custom topic\n"
             "  question: Custom question?\n"
@@ -74,7 +78,9 @@ def test_missing_file_raises_file_not_found_error() -> None:
 
 def test_malformed_schema_raises_value_error() -> None:
     """Test 5: Missing required fields in YAML entry raises ValueError."""
-    with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False, encoding="utf-8") as tmp:
+    with tempfile.NamedTemporaryFile(
+        "w", suffix=".yaml", delete=False, encoding="utf-8"
+    ) as tmp:
         tmp.write("- topic: missing question\n  answer: No question field\n")
         tmp_path = tmp.name
 

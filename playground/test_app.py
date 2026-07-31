@@ -1,17 +1,19 @@
+import os
 import subprocess
-import time
-import requests
 import sys
-
+import time
 from pathlib import Path
 
+import requests
+
+
 def main():
-    playground_dir = Path(__file__).parent.resolve()
-    repo_root = playground_dir.parent.resolve()
-    python_bin = repo_root / ".venv" / "bin" / "python"
-    
+    playground_dir = Path(__file__).parent
     print("Starting uvicorn...")
-    proc = subprocess.Popen([str(python_bin), "-m", "uvicorn", "main:app", "--port", "8000"], cwd=str(playground_dir))
+    proc = subprocess.Popen(
+        [sys.executable, "-m", "uvicorn", "main:app", "--port", "8000"],
+        cwd=playground_dir,
+    )
     
     # Wait for server to start
     started = False

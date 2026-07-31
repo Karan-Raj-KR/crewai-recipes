@@ -9,6 +9,7 @@
 [![Python 3.10–3.12](https://img.shields.io/badge/python-3.10--3.12-blue.svg)](https://www.python.org/downloads/)
 [![CrewAI](https://img.shields.io/badge/CrewAI-latest-green.svg)](https://github.com/joaomdmoura/crewAI)
 [![NVIDIA NIM](https://img.shields.io/badge/LLM-NVIDIA%20NIM-76b900.svg)](https://build.nvidia.com/)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](./docs/docker.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 [![Good First Issues](https://img.shields.io/github/issues/Karan-Raj-KR/crewai-recipes/good%20first%20issue?color=7057ff&label=good%20first%20issues)](https://github.com/Karan-Raj-KR/crewai-recipes/labels/good%20first%20issue)
 [![Discussions](https://img.shields.io/badge/Discussions-join%20the%20conversation-blueviolet)](https://github.com/Karan-Raj-KR/crewai-recipes/discussions)
@@ -98,17 +99,45 @@ Then open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 
 ---
 
+## 🐳 Run with Docker
+
+No Python setup required. The easiest way is via Docker Compose — it starts the full **web playground** with one command:
+
+```bash
+# 1. Set your API key
+cp playground/.env.example playground/.env
+# Edit playground/.env: LLM_API_KEY=nvapi-your-key-here
+
+# 2. Start the playground (FastAPI + uvicorn on port 8000)
+docker compose up playground
+```
+
+Then open **[http://localhost:8000](http://localhost:8000)** — all recipes are available in the UI. 🎉
+
+Want to run a single recipe from the CLI instead?
+
+```bash
+docker build --build-arg MODE=recipe --build-arg RECIPE=lead-qualification -t crewai-lead .
+docker run --rm --env-file recipes/lead-qualification/.env crewai-lead \
+    --company "Acme Corp" --description "A 40-person B2B SaaS startup"
+```
+
+➡️ **Full Docker guide:** [docs/docker.md](./docs/docker.md)
+
+---
+
 ## 📚 Recipes
 
 | Recipe | Description | Status |
 |--------|-------------|--------|
 | [lead-qualification](./recipes/lead-qualification/) | Two-agent crew (Researcher + Scorer) that profiles a company and returns a 0-100 ICP score | ✅ Stable |
 | [faq-bot](./recipes/faq-bot/) | Single-agent support bot that answers questions from an in-memory FAQ knowledge base | ✅ Stable |
-| [appointment-booking](./recipes/appointment-booking/) | Agent crew that collects availability, checks a simulated calendar, and drafts a confirmation | 🚧 Scaffold |
-| [whatsapp-action-sim](./recipes/whatsapp-action-sim/) | Classifies WhatsApp-style messages by intent and routes to the correct downstream action | 🚧 Scaffold |
-| customer-onboarding | End-to-end onboarding: data collection → validation → welcome email draft | 💡 Wanted |
-| content-pipeline | Blog ideation → research → draft → SEO review — fully automated crew | 💡 Wanted |
-| support-escalation | Tier-1 auto-resolve → escalate to human with full context summary | 💡 Wanted |
+| [appointment-booking](./recipes/appointment-booking/) | Agent crew that collects availability, checks a simulated calendar, and drafts a confirmation | ✅ Stable |
+| [whatsapp-action-sim](./recipes/whatsapp-action-sim/) | Classifies WhatsApp-style messages by intent and routes to the correct downstream action | ✅ Stable |
+| [customer-onboarding](./recipes/customer-onboarding/) | End-to-end onboarding: data collection → validation → welcome email draft | ✅ Stable |
+| [email-drafting](./recipes/email-drafting/) | Three-agent crew that drafts, polishes, and formats professional emails | ✅ Stable |
+| [support-escalation](./recipes/support-escalation/) | Tier-1 auto-resolve → escalate to human with full context summary | ✅ Stable |
+| [content-pipeline](./recipes/content-pipeline/) | Blog ideation → research → draft → SEO review — fully automated crew | ✅ Stable |
 
 > **Legend:** ✅ Stable (tested, production-ready) · 🚧 Scaffold (structure in place, contributions welcome) · 💡 Wanted (open for contributions!)
 
@@ -130,7 +159,8 @@ crewai-recipes/
 │   │   └── README.md
 │   ├── faq-bot/
 │   ├── appointment-booking/
-│   └── whatsapp-action-sim/
+│   ├── whatsapp-action-sim/
+│   └── customer-onboarding/
 ├── playground/                  # Local web UI for testing recipes
 ├── docs/                        # Deep-dive guides and architecture notes
 ├── .github/

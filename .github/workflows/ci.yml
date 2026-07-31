@@ -25,16 +25,19 @@ jobs:
           # CrewAI requires Python >=3.10,<3.14. Pin to 3.12 for CI.
           python-version: "3.12"
 
+      # Pinned: an unpinned `ruff` lets a new upstream release change default
+      # lint rules and fail every open PR at once, unrelated to their diffs
+      # (see #112). Bump deliberately, verified against recipes/ first.
       - name: Install Ruff
-        run: pip install ruff
+        run: pip install "ruff==0.15.10"
 
       # Lint only the stable recipes. The scaffolds intentionally contain
       # TODO stubs (unused imports/vars) and are excluded until implemented.
       - name: Run Ruff check
-        run: ruff check recipes/lead-qualification/ recipes/faq-bot/
+        run: ruff check recipes/lead-qualification/ recipes/faq-bot/ recipes/appointment-booking/ recipes/customer-onboarding/ recipes/whatsapp-action-sim/ recipes/email-drafting/ recipes/support-escalation/ recipes/content-pipeline/
 
       - name: Run Ruff format check
-        run: ruff format --check recipes/lead-qualification/ recipes/faq-bot/
+        run: ruff format --check recipes/lead-qualification/ recipes/faq-bot/ recipes/appointment-booking/ recipes/customer-onboarding/ recipes/whatsapp-action-sim/ recipes/email-drafting/ recipes/support-escalation/ recipes/content-pipeline/
 
   import-check-lead-qualification:
     name: Import Check — lead-qualification
@@ -79,6 +82,13 @@ jobs:
           cd recipes/lead-qualification
           python test_main.py
 
+      - name: Regression test — LLM retries behavior (#109)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/lead-qualification
+          python test_llm_retries.py
+
   import-check-faq-bot:
     name: Import Check — faq-bot
     runs-on: ubuntu-latest
@@ -120,6 +130,276 @@ jobs:
         run: |
           cd recipes/faq-bot
           python test_main.py
+
+      - name: Regression test — LLM retries behavior (#109)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/faq-bot
+          python test_llm_retries.py
+
+  import-check-appointment-booking:
+    name: Import Check — appointment-booking
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install this recipe's dependencies
+        run: pip install -r recipes/appointment-booking/requirements.txt
+
+      - name: Check imports + LLM wiring (no API call)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/appointment-booking
+          python -c "
+          from tasks import build_tasks
+          from crew import build_crew
+          from llm import get_llm, MAX_RETRIES
+          llm = get_llm()
+          retries = llm._get_client_params()['max_retries']
+          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
+          print(f'✅ appointment-booking: imports + LLM wiring OK ({retries} retries)')
+          "
+
+      - name: Smoke test — main() with mocked LLM
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/appointment-booking
+          python test_main.py
+
+  import-check-customer-onboarding:
+    name: Import Check — customer-onboarding
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install this recipe's dependencies
+        run: pip install -r recipes/customer-onboarding/requirements.txt
+
+      - name: Check imports + LLM wiring (no API call)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/customer-onboarding
+          python -c "
+          from tasks import build_tasks
+          from crew import build_crew
+          from llm import get_llm, MAX_RETRIES
+          llm = get_llm()
+          retries = llm._get_client_params()['max_retries']
+          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
+          print(f'✅ customer-onboarding: imports + LLM wiring OK ({retries} retries)')
+          "
+
+      - name: Smoke test — main() with mocked LLM
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/customer-onboarding
+          python test_main.py
+
+      - name: Regression test — LLM retries behavior (#109)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/customer-onboarding
+          python test_llm_retries.py
+
+  import-check-whatsapp-action-sim:
+    name: Import Check — whatsapp-action-sim
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install this recipe's dependencies
+        run: pip install -r recipes/whatsapp-action-sim/requirements.txt
+
+      - name: Check imports + LLM wiring (no API call)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/whatsapp-action-sim
+          python -c "
+          from tasks import build_tasks
+          from crew import build_crew
+          from llm import get_llm, MAX_RETRIES
+          llm = get_llm()
+          retries = llm._get_client_params()['max_retries']
+          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
+          print(f'✅ whatsapp-action-sim: imports + LLM wiring OK ({retries} retries)')
+          "
+
+      - name: Smoke test — main() with mocked LLM
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/whatsapp-action-sim
+          python test_main.py
+
+      - name: Regression test — LLM retries behavior (#109)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/whatsapp-action-sim
+          python test_llm_retries.py
+
+  import-check-email-drafting:
+    name: Import Check — email-drafting
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install this recipe's dependencies
+        run: pip install -r recipes/email-drafting/requirements.txt
+
+      - name: Check imports + LLM wiring (no API call)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/email-drafting
+          python -c "
+          from tasks import build_tasks
+          from crew import build_crew
+          from llm import get_llm, MAX_RETRIES
+          llm = get_llm()
+          retries = llm._get_client_params()['max_retries']
+          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
+          print(f'✅ email-drafting: imports + LLM wiring OK ({retries} retries)')
+          "
+
+      - name: Smoke test — main() with mocked LLM
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/email-drafting
+          python test_main.py
+
+      - name: Regression test — LLM retries behavior (#109)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/email-drafting
+          python test_llm_retries.py
+
+  import-check-support-escalation:
+    name: Import Check — support-escalation
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install this recipe's dependencies
+        run: pip install -r recipes/support-escalation/requirements.txt
+
+      - name: Check imports + LLM wiring (no API call)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/support-escalation
+          python -c "
+          from tasks import build_tasks
+          from crew import build_crew
+          from llm import get_llm, MAX_RETRIES
+          llm = get_llm()
+          retries = llm._get_client_params()['max_retries']
+          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
+          print(f'✅ support-escalation: imports + LLM wiring OK ({retries} retries)')
+          "
+
+      - name: Smoke test — main() with mocked LLM
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/support-escalation
+          python test_main.py
+
+      - name: Regression test — LLM retries behavior (#109)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/support-escalation
+          python test_llm_retries.py
+
+  import-check-content-pipeline:
+    name: Import Check — content-pipeline
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install this recipe's dependencies
+        run: pip install -r recipes/content-pipeline/requirements.txt
+
+      - name: Check imports + LLM wiring (no API call)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/content-pipeline
+          python -c "
+          from tasks import build_tasks
+          from crew import build_crew
+          from llm import get_llm, MAX_RETRIES
+          llm = get_llm()
+          retries = llm._get_client_params()['max_retries']
+          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
+          print(f'✅ content-pipeline: imports + LLM wiring OK ({retries} retries)')
+          "
+
+      - name: Smoke test — main() with mocked LLM
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/content-pipeline
+          python test_main.py
+
+      - name: Regression test — LLM retries behavior (#109)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/content-pipeline
+          python test_llm_retries.py
 
   import-check-playground:
     name: Import Check — playground
