@@ -17,8 +17,7 @@ from pydantic import BaseModel
 load_dotenv()
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -106,15 +105,23 @@ def list_recipes():
 @app.post("/run")
 def run_recipe(req: RunRequest):
     start_time = time.time()
-    
+
     sanitized_inputs = {
-        k: ("***" if "key" in k.lower() or "secret" in k.lower() or "token" in k.lower() else v) 
+        k: (
+            "***"
+            if "key" in k.lower() or "secret" in k.lower() or "token" in k.lower()
+            else v
+        )
         for k, v in req.inputs.items()
     }
-    logger.info(f"Incoming request to run recipe '{req.recipe}' with inputs: {sanitized_inputs}")
+    logger.info(
+        f"Incoming request to run recipe '{req.recipe}' with inputs: {sanitized_inputs}"
+    )
 
     if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
-        logger.error(f"Recipe '{req.recipe}' failed: Missing API keys (Execution time: {time.time() - start_time:.2f}s)")
+        logger.error(
+            f"Recipe '{req.recipe}' failed: Missing API keys (Execution time: {time.time() - start_time:.2f}s)"
+        )
         raise HTTPException(
             status_code=401, detail="LLM_API_KEY is not set in the environment."
         )
@@ -124,7 +131,9 @@ def run_recipe(req: RunRequest):
         raise HTTPException(status_code=400, detail="Invalid recipe name")
     crew_path = recipe_dir / "crew.py"
     if not recipe_dir.exists() or not crew_path.exists():
-        logger.error(f"Recipe '{req.recipe}' failed: Not found (Execution time: {time.time() - start_time:.2f}s)")
+        logger.error(
+            f"Recipe '{req.recipe}' failed: Not found (Execution time: {time.time() - start_time:.2f}s)"
+        )
         raise HTTPException(status_code=404, detail="Recipe not found")
 
     original_sys_path = sys.path.copy()
@@ -136,7 +145,9 @@ def run_recipe(req: RunRequest):
         spec.loader.exec_module(module)
 
         if not hasattr(module, "build_crew"):
-            logger.error(f"Recipe '{req.recipe}' failed: Could not find build_crew in crew.py (Execution time: {time.time() - start_time:.2f}s)")
+            logger.error(
+                f"Recipe '{req.recipe}' failed: Could not find build_crew in crew.py (Execution time: {time.time() - start_time:.2f}s)"
+            )
             raise HTTPException(
                 status_code=500, detail="Could not find build_crew in crew.py"
             )
@@ -145,12 +156,16 @@ def run_recipe(req: RunRequest):
             crew.verbose = False
             result = crew.kickoff()
             exec_time = time.time() - start_time
-            logger.info(f"Recipe '{req.recipe}' completed successfully in {exec_time:.2f}s")
+            logger.info(
+                f"Recipe '{req.recipe}' completed successfully in {exec_time:.2f}s"
+            )
             return {"output": str(result)}
         except Exception as e:
             exec_time = time.time() - start_time
             err_str = str(e)
-            logger.error(f"Recipe '{req.recipe}' failed during execution in {exec_time:.2f}s. Error: {err_str}")
+            logger.error(
+                f"Recipe '{req.recipe}' failed during execution in {exec_time:.2f}s. Error: {err_str}"
+            )
             if "API_KEY is not set" in err_str:
                 raise HTTPException(
                     status_code=401,
@@ -162,13 +177,17 @@ def run_recipe(req: RunRequest):
         sys.path = original_sys_path
 
 
-def execute_recipe_stream(recipe_name: str, inputs: dict, push_event, stop_event: threading.Event):
+def execute_recipe_stream(
+    recipe_name: str, inputs: dict, push_event, stop_event: threading.Event
+):
     """Executes crew.kickoff() in a worker thread, capturing step/task callbacks and stdout logs."""
     if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
-        push_event({
-            "type": "error",
-            "error": "API Key is missing. Please check your .env file."
-        })
+        push_event(
+            {
+                "type": "error",
+                "error": "API Key is missing. Please check your .env file.",
+            }
+        )
         return
 
     recipe_dir = (RECIPES_DIR / recipe_name).resolve()
@@ -189,7 +208,9 @@ def execute_recipe_stream(recipe_name: str, inputs: dict, push_event, stop_event
         spec.loader.exec_module(module)
 
         if not hasattr(module, "build_crew"):
-            push_event({"type": "error", "error": "Could not find build_crew in crew.py"})
+            push_event(
+                {"type": "error", "error": "Could not find build_crew in crew.py"}
+            )
             return
 
         try:
@@ -204,36 +225,44 @@ def execute_recipe_stream(recipe_name: str, inputs: dict, push_event, stop_event
                 tool = getattr(step, "tool", None)
                 tool_input = getattr(step, "tool_input", None)
                 result = getattr(step, "result", None)
-                push_event({
-                    "type": "agent_step",
-                    "agent": str(agent_name),
-                    "thought": str(thought) if thought else "",
-                    "tool": str(tool) if tool else None,
-                    "tool_input": str(tool_input) if tool_input else None,
-                    "result": str(result) if result else None,
-                })
+                push_event(
+                    {
+                        "type": "agent_step",
+                        "agent": str(agent_name),
+                        "thought": str(thought) if thought else "",
+                        "tool": str(tool) if tool else None,
+                        "tool_input": str(tool_input) if tool_input else None,
+                        "result": str(result) if result else None,
+                    }
+                )
 
             def task_cb(task_output):
                 if stop_event.is_set():
                     raise InterruptedError("Client disconnected")
                 agent_name = getattr(task_output, "agent", None) or "Agent"
-                description = getattr(task_output, "description", "") or getattr(task_output, "name", "")
+                description = getattr(task_output, "description", "") or getattr(
+                    task_output, "name", ""
+                )
                 raw_output = getattr(task_output, "raw", "") or str(task_output)
-                push_event({
-                    "type": "task_complete",
-                    "agent": str(agent_name),
-                    "description": str(description),
-                    "output": str(raw_output),
-                })
+                push_event(
+                    {
+                        "type": "task_complete",
+                        "agent": str(agent_name),
+                        "description": str(description),
+                        "output": str(raw_output),
+                    }
+                )
 
             crew.step_callback = step_cb
             crew.task_callback = task_cb
 
             def log_cb(text):
-                push_event({
-                    "type": "log",
-                    "text": text,
-                })
+                push_event(
+                    {
+                        "type": "log",
+                        "text": text,
+                    }
+                )
 
             old_stdout = sys.stdout
             redirector = ThreadSafeStreamRedirector(old_stdout, log_cb)
@@ -250,10 +279,12 @@ def execute_recipe_stream(recipe_name: str, inputs: dict, push_event, stop_event
                 return
             err_str = str(e)
             if "API_KEY is not set" in err_str:
-                push_event({
-                    "type": "error",
-                    "error": "API Key is missing. Please check your .env file."
-                })
+                push_event(
+                    {
+                        "type": "error",
+                        "error": "API Key is missing. Please check your .env file.",
+                    }
+                )
             else:
                 push_event({"type": "error", "error": f"Execution error: {err_str}"})
 
@@ -273,7 +304,7 @@ async def run_recipe_stream(req: RunRequest, request: Request):
 
     async def event_generator():
         push_event({"type": "start", "recipe": req.recipe})
-        
+
         def worker():
             try:
                 execute_recipe_stream(req.recipe, req.inputs, push_event, stop_event)
@@ -359,4 +390,3 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="127.0.0.1", port=8000)
-

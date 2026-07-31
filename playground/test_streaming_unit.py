@@ -1,4 +1,3 @@
-import asyncio
 import json
 import os
 import sys
@@ -13,9 +12,10 @@ playground_dir = Path(__file__).parent.resolve()
 if str(playground_dir) not in sys.path:
     sys.path.insert(0, str(playground_dir))
 
-from main import app, execute_recipe_stream
+from main import app, execute_recipe_stream  # noqa: E402
 
 client = TestClient(app)
+
 
 def test_recipes_list():
     response = client.get("/recipes")
@@ -25,17 +25,25 @@ def test_recipes_list():
     assert len(data["recipes"]) > 0
     print("✓ test_recipes_list passed")
 
+
 def test_run_missing_api_key():
     with patch.dict(os.environ, {}, clear=True):
-        payload = {"recipe": "faq-bot", "inputs": {"question": "Hi", "customer_name": "Test"}}
+        payload = {
+            "recipe": "faq-bot",
+            "inputs": {"question": "Hi", "customer_name": "Test"},
+        }
         response = client.post("/run", json=payload)
         assert response.status_code == 401
         assert "LLM_API_KEY is not set" in response.json()["detail"]
     print("✓ test_run_missing_api_key passed")
 
+
 def test_stream_missing_api_key():
     with patch.dict(os.environ, {}, clear=True):
-        payload = {"recipe": "faq-bot", "inputs": {"question": "Hi", "customer_name": "Test"}}
+        payload = {
+            "recipe": "faq-bot",
+            "inputs": {"question": "Hi", "customer_name": "Test"},
+        }
         response = client.post("/run/stream", json=payload)
         assert response.status_code == 200
         lines = [line for line in response.text.split("\n\n") if line.strip()]
@@ -47,13 +55,16 @@ def test_stream_missing_api_key():
         assert "API Key is missing" in event2["error"]
     print("✓ test_stream_missing_api_key passed")
 
+
 def test_mock_execute_recipe_stream():
     events = []
     stop_event = threading.Event()
+
     def push_event(evt):
         events.append(evt)
 
     mock_crew = MagicMock()
+
     def mock_kickoff():
         step_mock = MagicMock()
         step_mock.agent = "Support Specialist"
@@ -79,13 +90,19 @@ def test_mock_execute_recipe_stream():
             mock_spec = MagicMock()
             mock_spec_from_file.return_value = mock_spec
             with patch("importlib.util.module_from_spec", return_value=mock_module):
-                execute_recipe_stream("faq-bot", {"question": "q", "customer_name": "c"}, push_event, stop_event)
+                execute_recipe_stream(
+                    "faq-bot",
+                    {"question": "q", "customer_name": "c"},
+                    push_event,
+                    stop_event,
+                )
 
     event_types = [e["type"] for e in events]
     assert "agent_step" in event_types
     assert "task_complete" in event_types
     assert "complete" in event_types
     print("✓ test_mock_execute_recipe_stream passed")
+
 
 def test_websocket_stream_missing_key():
     with patch.dict(os.environ, {}, clear=True):
@@ -96,6 +113,7 @@ def test_websocket_stream_missing_key():
             msg2 = websocket.receive_json()
             assert msg2["type"] == "error"
     print("✓ test_websocket_stream_missing_key passed")
+
 
 if __name__ == "__main__":
     test_recipes_list()
