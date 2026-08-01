@@ -740,3 +740,7 @@
 <!-- session: 2026-08-01-4 -->
 ## 2026-08-01 session 4
 - refactor: simplify tool call handling
+
+<!-- session: 2026-08-01-5 -->
+## 2026-08-01 session 5
+- docs: add usage notes to README
