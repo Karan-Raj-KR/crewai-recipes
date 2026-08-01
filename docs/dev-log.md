@@ -744,3 +744,7 @@
 <!-- session: 2026-08-01-5 -->
 ## 2026-08-01 session 5
 - docs: add usage notes to README
+
+<!-- session: 2026-08-01-6 -->
+## 2026-08-01 session 6
+- chore: update dependencies list
