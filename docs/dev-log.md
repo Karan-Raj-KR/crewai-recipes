@@ -752,3 +752,7 @@
 <!-- session: 2026-08-01-7 -->
 ## 2026-08-01 session 7
 - feat: improve error handling in crew runner
+
+<!-- session: 2026-08-02-0 -->
+## 2026-08-02 session 0
+- test: add basic validation for recipe output
