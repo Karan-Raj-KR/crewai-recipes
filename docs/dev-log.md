@@ -780,3 +780,7 @@
 <!-- session: 2026-08-03-3 -->
 ## 2026-08-03 session 3
 - docs: expand getting started guide
+
+<!-- session: 2026-08-03-4 -->
+## 2026-08-03 session 4
+- chore: format code with black
