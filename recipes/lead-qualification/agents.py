@@ -11,7 +11,7 @@ from crewai import Agent
 from llm import get_llm
 
 
-def build_agents() -> tuple[Agent, Agent]:
+def build_agents(verbose: bool = False) -> tuple[Agent, Agent]:
     """Build and return the Researcher and Scorer agents.
 
     Returns:
@@ -36,7 +36,7 @@ def build_agents() -> tuple[Agent, Agent]:
             "If something is unclear, you note the ambiguity explicitly."
         ),
         llm=llm,
-        verbose=True,
+        verbose=verbose,
         allow_delegation=False,
     )
 
@@ -57,7 +57,7 @@ def build_agents() -> tuple[Agent, Agent]:
             "there is clear evidence in the research, never on assumption."
         ),
         llm=llm,
-        verbose=True,
+        verbose=verbose,
         allow_delegation=False,
     )
 
