@@ -10,6 +10,7 @@ For help:
 """
 
 import argparse
+import json
 import os
 import sys
 import json
@@ -57,7 +58,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--json",
         action="store_true",
-        help="Output raw JSON instead of formatted text.",
+        help="Output the result as JSON only.",
     )
     return parser.parse_args()
 
@@ -72,11 +73,11 @@ def preflight(json_output: bool = False) -> None:
     if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
         if json_output:
             print(json.dumps({"error": "LLM_API_KEY is not set."}))
-            sys.exit(1)
-        print("❌  LLM_API_KEY is not set.")
-        print("   1. Copy .env.example → .env")
-        print("   2. Add your key: LLM_API_KEY=your-key-here")
-        print("   3. Get a free key at https://build.nvidia.com/")
+        else:
+            print("❌  LLM_API_KEY is not set.")
+            print("   1. Copy .env.example → .env")
+            print("   2. Add your key: LLM_API_KEY=your-key-here")
+            print("   3. Get a free key at https://build.nvidia.com/")
         sys.exit(1)
 
 
@@ -92,7 +93,10 @@ def main() -> None:
     description = args.description.strip()
 
     if not company or not description:
-        print("❌  Error: --company and --description cannot be empty.")
+        if args.json:
+            print(json.dumps({"error": "--company and --description cannot be empty."}))
+        else:
+            print("❌  Error: --company and --description cannot be empty.")
         sys.exit(1)
 
     if not args.json:
@@ -105,17 +109,11 @@ def main() -> None:
         print()
 
     try:
-        crew = build_crew(company=company, description=description, json_output=args.json, verbose=args.verbose)
+        crew = build_crew(company=company, description=description)
         result = crew.kickoff()
         
         if args.json:
-            if hasattr(result, "pydantic") and result.pydantic:
-                print(result.pydantic.model_dump_json())
-            elif hasattr(result, "json_dict") and result.json_dict:
-                print(json.dumps(result.json_dict))
-            else:
-                # Fallback if neither is populated but json output was requested
-                print(json.dumps({"raw_output": str(result)}))
+            print(json.dumps({"company": company, "raw_output": str(result)}))
         else:
             print()
             print("═" * 60)
