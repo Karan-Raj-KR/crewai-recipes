@@ -10,6 +10,7 @@ For help:
 """
 
 import argparse
+import json
 import os
 import sys
 
@@ -58,10 +59,15 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Enable verbose CrewAI execution trace.",
     )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Output the result as JSON only.",
+    )
     return parser.parse_args()
 
 
-def preflight() -> None:
+def preflight(json_output: bool = False) -> None:
     """Validate environment before running the crew."""
     if not os.getenv("CREWAI_RECIPES_SKIP_DOTENV"):
         from dotenv import load_dotenv
@@ -69,10 +75,13 @@ def preflight() -> None:
         load_dotenv()
 
     if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
-        print("❌  LLM_API_KEY is not set.")
-        print("   1. Copy .env.example → .env")
-        print("   2. Add your key: LLM_API_KEY=your-key-here")
-        print("   3. Get a free key at https://build.nvidia.com/")
+        if json_output:
+            print(json.dumps({"error": "LLM_API_KEY is not set."}))
+        else:
+            print("❌  LLM_API_KEY is not set.")
+            print("   1. Copy .env.example → .env")
+            print("   2. Add your key: LLM_API_KEY=your-key-here")
+            print("   3. Get a free key at https://build.nvidia.com/")
         sys.exit(1)
 
 
@@ -80,7 +89,7 @@ def main() -> None:
     """Run the lead qualification crew."""
     args = parse_args()
 
-    preflight()
+    preflight(json_output=args.json)
 
     from crew import build_crew
 
@@ -88,28 +97,48 @@ def main() -> None:
     description = args.description.strip()
 
     if not company or not description:
-        print("❌  Error: --company and --description cannot be empty.")
+        if args.json:
+            print(json.dumps({"error": "--company and --description cannot be empty."}))
+        else:
+            print("❌  Error: --company and --description cannot be empty.")
         sys.exit(1)
 
-    print()
-    print("🎯  Lead Qualification Crew — Starting")
-    print(f"   Company    : {company}")
-    print(f"   Description: {description[:80]}{'...' if len(description) > 80 else ''}")
-    print()
-    print("─" * 60)
-    print()
+    if not args.json:
+        print()
+        print("🎯  Lead Qualification Crew — Starting")
+        print(f"   Company    : {company}")
+        print(
+            f"   Description: {description[:80]}{'...' if len(description) > 80 else ''}"
+        )
+        print()
+        print("─" * 60)
+        print()
 
-    crew = build_crew(company=company, description=description, verbose=args.verbose)
-    result = crew.kickoff()
+    try:
+        crew = build_crew(
+            company=company,
+            description=description,
+            verbose=args.verbose,
+            json_output=args.json,
+        )
+        result = crew.kickoff()
 
-    print()
-    print("═" * 60)
-    print("📊  QUALIFICATION RESULT")
-    print("═" * 60)
-    # CrewAI returns a CrewOutput object — convert to string for display
-    print(str(result))
-    print("═" * 60)
-    print()
+        if args.json:
+            print(json.dumps({"company": company, "raw_output": str(result)}))
+        else:
+            print()
+            print("═" * 60)
+            print("📊  QUALIFICATION RESULT")
+            print("═" * 60)
+            print(str(result))
+            print("═" * 60)
+            print()
+    except Exception as e:
+        if args.json:
+            print(json.dumps({"error": str(e)}))
+            sys.exit(1)
+        else:
+            raise
 
 
 if __name__ == "__main__":

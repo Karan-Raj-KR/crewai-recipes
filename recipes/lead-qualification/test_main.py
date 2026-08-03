@@ -25,6 +25,38 @@ def test_main_runs() -> None:
         recipe_main.main()
 
 
+def test_crew_structure() -> None:
+    from crew import build_crew
+
+    company = "Acme Corp"
+    description = "A 40-person B2B SaaS startup..."
+    crew = build_crew(company=company, description=description)
+
+    assert len(crew.agents) == 2
+    research_agent = crew.agents[0]
+    scoring_agent = crew.agents[1]
+
+    assert research_agent.role == "Company Research Analyst"
+    assert scoring_agent.role == "ICP Scoring Specialist"
+
+    assert not research_agent.allow_delegation
+    assert not scoring_agent.allow_delegation
+
+    assert len(crew.tasks) == 2
+    research_task = crew.tasks[0]
+    scoring_task = crew.tasks[1]
+
+    # Verify context chaining
+    assert scoring_task.context is not None
+    assert research_task in scoring_task.context
+
+    # Verify placeholders are injected
+    assert company in research_task.description
+    assert description in research_task.description
+    assert company in scoring_task.description
+
+
 if __name__ == "__main__":
     test_main_runs()
-    print("✅ lead-qualification: main() smoke test passed")
+    test_crew_structure()
+    print("✅ lead-qualification: tests passed")
