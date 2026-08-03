@@ -10,7 +10,9 @@ from agents import build_agents
 from tasks import build_tasks
 
 
-def build_crew(question: str, customer_name: str = "there", verbose: bool = False) -> Crew:
+def build_crew(
+    question: str, customer_name: str = "there", verbose: bool = False
+) -> Crew:
     """Build and return the FAQ bot Crew.
 
     Args:
