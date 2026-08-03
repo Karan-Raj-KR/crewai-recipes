@@ -9,7 +9,7 @@ from crewai import Agent
 from llm import get_llm
 
 
-def build_agents() -> Agent:
+def build_agents(verbose: bool = False) -> Agent:
     """Build and return the FAQ support agent."""
     llm = get_llm()
 
@@ -30,7 +30,7 @@ def build_agents() -> Agent:
             "You write in a warm, professional tone — no corporate jargon."
         ),
         llm=llm,
-        verbose=True,
+        verbose=verbose,
         allow_delegation=False,
     )
 

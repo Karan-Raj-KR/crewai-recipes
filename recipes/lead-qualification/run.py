@@ -55,6 +55,11 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable verbose CrewAI execution trace.",
+    )
+    parser.add_argument(
         "--json",
         action="store_true",
         help="Output the result as JSON only.",
@@ -111,7 +116,10 @@ def main() -> None:
 
     try:
         crew = build_crew(
-            company=company, description=description, json_output=args.json
+            company=company,
+            description=description,
+            verbose=args.verbose,
+            json_output=args.json,
         )
         result = crew.kickoff()
 

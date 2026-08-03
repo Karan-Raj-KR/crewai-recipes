@@ -73,6 +73,7 @@ python run.py --company "COMPANY NAME" --description "SHORT DESCRIPTION"
 |------|----------|-------------|
 | `--company` | ✅ Yes | Company name (e.g. `"Acme Corp"`) |
 | `--description` | ✅ Yes | Description of the company — more detail = better score |
+| `--verbose` | No | Enable verbose CrewAI execution trace |
 | `--json` | No | Output result in JSON format |
 | `--help` | No | Show help and exit |
 
