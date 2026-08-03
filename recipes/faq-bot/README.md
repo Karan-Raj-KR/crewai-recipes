@@ -70,6 +70,7 @@ python run.py --question "CUSTOMER QUESTION" --name "Customer Name"
 |------|----------|---------|-------------|
 | `--question` | ✅ Yes | — | The customer's question (wrap in quotes) |
 | `--name` | No | `there` | Customer name for personalised greeting |
+| `--verbose` | No | `False` | Enable verbose CrewAI execution trace |
 | `--help` | No | — | Show help and exit |
 
 ### Examples
