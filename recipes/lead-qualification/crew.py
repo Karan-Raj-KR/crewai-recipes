@@ -21,7 +21,7 @@ def build_crew(company: str, description: str) -> Crew:
         A configured Crew instance ready to call .kickoff().
     """
     research_agent, scoring_agent = build_agents()
-    tasks = build_tasks(research_agent, scoring_agent, company, description)
+    tasks = build_tasks(research_agent, scoring_agent, company, description, json_output=json_output)
 
     return Crew(
         agents=[research_agent, scoring_agent],

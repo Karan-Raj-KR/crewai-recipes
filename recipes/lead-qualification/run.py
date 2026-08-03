@@ -12,6 +12,7 @@ For help:
 import argparse
 import os
 import sys
+import json
 
 # Reconfigure streams to support UTF-8 (for emojis) on Windows
 if sys.platform.startswith("win"):
@@ -53,10 +54,15 @@ def parse_args() -> argparse.Namespace:
             "and any context you have. More detail = better score."
         ),
     )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Output raw JSON instead of formatted text.",
+    )
     return parser.parse_args()
 
 
-def preflight() -> None:
+def preflight(json_output: bool = False) -> None:
     """Validate environment before running the crew."""
     if not os.getenv("CREWAI_RECIPES_SKIP_DOTENV"):
         from dotenv import load_dotenv
@@ -64,6 +70,9 @@ def preflight() -> None:
         load_dotenv()
 
     if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
+        if json_output:
+            print(json.dumps({"error": "LLM_API_KEY is not set."}))
+            sys.exit(1)
         print("❌  LLM_API_KEY is not set.")
         print("   1. Copy .env.example → .env")
         print("   2. Add your key: LLM_API_KEY=your-key-here")
@@ -75,7 +84,7 @@ def main() -> None:
     """Run the lead qualification crew."""
     args = parse_args()
 
-    preflight()
+    preflight(json_output=args.json)
 
     from crew import build_crew
 
@@ -86,25 +95,41 @@ def main() -> None:
         print("❌  Error: --company and --description cannot be empty.")
         sys.exit(1)
 
-    print()
-    print("🎯  Lead Qualification Crew — Starting")
-    print(f"   Company    : {company}")
-    print(f"   Description: {description[:80]}{'...' if len(description) > 80 else ''}")
-    print()
-    print("─" * 60)
-    print()
+    if not args.json:
+        print()
+        print("🎯  Lead Qualification Crew — Starting")
+        print(f"   Company    : {company}")
+        print(f"   Description: {description[:80]}{'...' if len(description) > 80 else ''}")
+        print()
+        print("─" * 60)
+        print()
 
-    crew = build_crew(company=company, description=description)
-    result = crew.kickoff()
-
-    print()
-    print("═" * 60)
-    print("📊  QUALIFICATION RESULT")
-    print("═" * 60)
-    # CrewAI returns a CrewOutput object — convert to string for display
-    print(str(result))
-    print("═" * 60)
-    print()
+    try:
+        crew = build_crew(company=company, description=description, json_output=args.json, verbose=args.verbose)
+        result = crew.kickoff()
+        
+        if args.json:
+            if hasattr(result, "pydantic") and result.pydantic:
+                print(result.pydantic.model_dump_json())
+            elif hasattr(result, "json_dict") and result.json_dict:
+                print(json.dumps(result.json_dict))
+            else:
+                # Fallback if neither is populated but json output was requested
+                print(json.dumps({"raw_output": str(result)}))
+        else:
+            print()
+            print("═" * 60)
+            print("📊  QUALIFICATION RESULT")
+            print("═" * 60)
+            print(str(result))
+            print("═" * 60)
+            print()
+    except Exception as e:
+        if args.json:
+            print(json.dumps({"error": str(e)}))
+            sys.exit(1)
+        else:
+            raise
 
 
 if __name__ == "__main__":

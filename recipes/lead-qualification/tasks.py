@@ -7,6 +7,22 @@ Two sequential tasks:
 """
 
 from crewai import Agent, Task
+from pydantic import BaseModel, Field
+
+
+class DimensionScore(BaseModel):
+    score: int = Field(description="Score out of 25")
+    rationale: str = Field(description="One sentence of reasoning")
+
+class LeadScorecard(BaseModel):
+    industry_fit: DimensionScore
+    company_size_fit: DimensionScore
+    pain_point_acuity: DimensionScore
+    budget_growth_signal: DimensionScore
+    total_score: int = Field(description="Total score out of 100")
+    verdict: str = Field(description="HOT, WARM, or COLD")
+    next_action: str = Field(description="Recommended next action")
+
 
 
 def build_tasks(
@@ -14,6 +30,7 @@ def build_tasks(
     scoring_agent: Agent,
     company: str,
     description: str,
+    json_output: bool = False,
 ) -> list[Task]:
     """Build the ordered task list for lead qualification.
 
@@ -69,12 +86,14 @@ def build_tasks(
             "Close with a recommended next action in one sentence."
         ),
         expected_output=(
+            "A JSON scorecard matching the required schema." if json_output else
             "A markdown scorecard with:\n"
             "- A table of 4 dimensions with scores and rationale\n"
             "- Total score out of 100\n"
             "- Verdict (HOT / WARM / COLD)\n"
             "- Recommended next action"
         ),
+        output_pydantic=LeadScorecard if json_output else None,
         agent=scoring_agent,
         context=[research_task],
     )
