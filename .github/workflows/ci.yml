@@ -55,6 +55,9 @@ jobs:
       - name: Install this recipe's dependencies
         run: pip install -r recipes/lead-qualification/requirements.txt
 
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock
+
       - name: Check imports + LLM wiring (no API call)
         env:
           # Dummy key so the module-level EnvironmentError isn't triggered.
@@ -75,19 +78,12 @@ jobs:
           print(f'✅ lead-qualification: imports + LLM wiring OK ({retries} retries)')
           "
 
-      - name: Smoke test — main() with mocked LLM
+      - name: Run tests with pytest
         env:
           LLM_API_KEY: nvapi-test
         run: |
           cd recipes/lead-qualification
-          python test_main.py
-
-      - name: Regression test — LLM retries behavior (#109)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/lead-qualification
-          python test_llm_retries.py
+          pytest -v
 
   import-check-faq-bot:
     name: Import Check — faq-bot
@@ -104,6 +100,9 @@ jobs:
 
       - name: Install this recipe's dependencies
         run: pip install -r recipes/faq-bot/requirements.txt
+
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock
 
       - name: Check knowledge base + LLM wiring (no API call)
         env:
@@ -124,19 +123,12 @@ jobs:
           print(f'✅ faq-bot: {len(FAQ_KNOWLEDGE_BASE)} KB entries + LLM wiring OK ({retries} retries)')
           "
 
-      - name: Smoke test — main() with mocked LLM
+      - name: Run tests with pytest
         env:
           LLM_API_KEY: nvapi-test
         run: |
           cd recipes/faq-bot
-          python test_main.py
-
-      - name: Regression test — LLM retries behavior (#109)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/faq-bot
-          python test_llm_retries.py
+          pytest -v
 
   import-check-appointment-booking:
     name: Import Check — appointment-booking
@@ -154,6 +146,9 @@ jobs:
       - name: Install this recipe's dependencies
         run: pip install -r recipes/appointment-booking/requirements.txt
 
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock
+
       - name: Check imports + LLM wiring (no API call)
         env:
           LLM_API_KEY: nvapi-test
@@ -169,12 +164,12 @@ jobs:
           print(f'✅ appointment-booking: imports + LLM wiring OK ({retries} retries)')
           "
 
-      - name: Smoke test — main() with mocked LLM
+      - name: Run tests with pytest
         env:
           LLM_API_KEY: nvapi-test
         run: |
           cd recipes/appointment-booking
-          python test_main.py
+          pytest -v
 
   import-check-customer-onboarding:
     name: Import Check — customer-onboarding
@@ -192,6 +187,9 @@ jobs:
       - name: Install this recipe's dependencies
         run: pip install -r recipes/customer-onboarding/requirements.txt
 
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock
+
       - name: Check imports + LLM wiring (no API call)
         env:
           LLM_API_KEY: nvapi-test
@@ -207,19 +205,12 @@ jobs:
           print(f'✅ customer-onboarding: imports + LLM wiring OK ({retries} retries)')
           "
 
-      - name: Smoke test — main() with mocked LLM
+      - name: Run tests with pytest
         env:
           LLM_API_KEY: nvapi-test
         run: |
           cd recipes/customer-onboarding
-          python test_main.py
-
-      - name: Regression test — LLM retries behavior (#109)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/customer-onboarding
-          python test_llm_retries.py
+          pytest -v
 
   import-check-whatsapp-action-sim:
     name: Import Check — whatsapp-action-sim
@@ -237,6 +228,9 @@ jobs:
       - name: Install this recipe's dependencies
         run: pip install -r recipes/whatsapp-action-sim/requirements.txt
 
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock
+
       - name: Check imports + LLM wiring (no API call)
         env:
           LLM_API_KEY: nvapi-test
@@ -252,19 +246,12 @@ jobs:
           print(f'✅ whatsapp-action-sim: imports + LLM wiring OK ({retries} retries)')
           "
 
-      - name: Smoke test — main() with mocked LLM
+      - name: Run tests with pytest
         env:
           LLM_API_KEY: nvapi-test
         run: |
           cd recipes/whatsapp-action-sim
-          python test_main.py
-
-      - name: Regression test — LLM retries behavior (#109)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/whatsapp-action-sim
-          python test_llm_retries.py
+          pytest -v
 
   import-check-email-drafting:
     name: Import Check — email-drafting
@@ -282,6 +269,9 @@ jobs:
       - name: Install this recipe's dependencies
         run: pip install -r recipes/email-drafting/requirements.txt
 
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock
+
       - name: Check imports + LLM wiring (no API call)
         env:
           LLM_API_KEY: nvapi-test
@@ -297,19 +287,12 @@ jobs:
           print(f'✅ email-drafting: imports + LLM wiring OK ({retries} retries)')
           "
 
-      - name: Smoke test — main() with mocked LLM
+      - name: Run tests with pytest
         env:
           LLM_API_KEY: nvapi-test
         run: |
           cd recipes/email-drafting
-          python test_main.py
-
-      - name: Regression test — LLM retries behavior (#109)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/email-drafting
-          python test_llm_retries.py
+          pytest -v
 
   import-check-support-escalation:
     name: Import Check — support-escalation
@@ -327,6 +310,9 @@ jobs:
       - name: Install this recipe's dependencies
         run: pip install -r recipes/support-escalation/requirements.txt
 
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock
+
       - name: Check imports + LLM wiring (no API call)
         env:
           LLM_API_KEY: nvapi-test
@@ -342,19 +328,12 @@ jobs:
           print(f'✅ support-escalation: imports + LLM wiring OK ({retries} retries)')
           "
 
-      - name: Smoke test — main() with mocked LLM
+      - name: Run tests with pytest
         env:
           LLM_API_KEY: nvapi-test
         run: |
           cd recipes/support-escalation
-          python test_main.py
-
-      - name: Regression test — LLM retries behavior (#109)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/support-escalation
-          python test_llm_retries.py
+          pytest -v
 
   import-check-content-pipeline:
     name: Import Check — content-pipeline
@@ -372,6 +351,9 @@ jobs:
       - name: Install this recipe's dependencies
         run: pip install -r recipes/content-pipeline/requirements.txt
 
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock
+
       - name: Check imports + LLM wiring (no API call)
         env:
           LLM_API_KEY: nvapi-test
@@ -387,19 +369,12 @@ jobs:
           print(f'✅ content-pipeline: imports + LLM wiring OK ({retries} retries)')
           "
 
-      - name: Smoke test — main() with mocked LLM
+      - name: Run tests with pytest
         env:
           LLM_API_KEY: nvapi-test
         run: |
           cd recipes/content-pipeline
-          python test_main.py
-
-      - name: Regression test — LLM retries behavior (#109)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/content-pipeline
-          python test_llm_retries.py
+          pytest -v
 
   import-check-playground:
     name: Import Check — playground
@@ -417,6 +392,9 @@ jobs:
       - name: Install playground dependencies
         run: pip install -r playground/requirements.txt
 
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock httpx
+
       - name: Verify FastAPI app imports and starts
         env:
           # Dummy key so env validation doesn't fail
@@ -429,3 +407,10 @@ jobs:
           assert app.title == 'CrewAI Recipes Playground'
           print('✅ playground: FastAPI app imports and initializes OK')
           "
+
+      - name: Run tests with pytest
+        env:
+          LLM_API_KEY: test-key
+        run: |
+          cd playground
+          pytest -v
