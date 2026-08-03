@@ -196,6 +196,18 @@ ruff format recipes/my-awesome-recipe/
 
 CI will block PRs that fail Ruff checks.
 
+### Testing
+
+We use `pytest` for unit and integration tests. Run tests locally from within the recipe directory:
+
+```bash
+pip install pytest pytest-mock
+cd recipes/my-awesome-recipe
+pytest -v
+```
+
+CI will block PRs if any test fails.
+
 ---
 
 ## Pull Request Process
