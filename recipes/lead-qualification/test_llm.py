@@ -18,15 +18,17 @@ def test_missing_key_raises_environment_error() -> None:
 
 
 @patch("llm.LLM")
-def test_nvidia_api_key_fallback_and_warning(mock_llm, capsys: pytest.CaptureFixture[str]) -> None:
+def test_nvidia_api_key_fallback_and_warning(
+    mock_llm, capsys: pytest.CaptureFixture[str]
+) -> None:
     env = {"NVIDIA_API_KEY": "nvapi-test"}
     with patch.dict(os.environ, env, clear=True):
         get_llm()
-        
+
         mock_llm.assert_called_once()
         kwargs = mock_llm.call_args.kwargs
         assert kwargs["api_key"] == "nvapi-test"
-        
+
         captured = capsys.readouterr()
         assert "WARNING: NVIDIA_API_KEY is deprecated" in captured.out
 
@@ -36,11 +38,11 @@ def test_overrides_apply(mock_llm) -> None:
     env = {
         "LLM_API_KEY": "test-key",
         "LLM_MODEL": "custom-model",
-        "LLM_BASE_URL": "http://custom-url"
+        "LLM_BASE_URL": "http://custom-url",
     }
     with patch.dict(os.environ, env, clear=True):
         get_llm()
-        
+
         mock_llm.assert_called_once()
         kwargs = mock_llm.call_args.kwargs
         assert kwargs["api_key"] == "test-key"
@@ -54,7 +56,7 @@ def test_model_prefix_applied(mock_llm) -> None:
     with patch.dict(os.environ, env, clear=True):
         get_llm()
         assert mock_llm.call_args.kwargs["model"] == "openai/llama-3.1"
-        
+
     mock_llm.reset_mock()
     env = {"LLM_API_KEY": "test-key", "LLM_MODEL": "openai/already-prefixed"}
     with patch.dict(os.environ, env, clear=True):
