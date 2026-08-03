@@ -43,7 +43,13 @@ def test_kb_shape() -> None:
 
 def test_kb_text_contains_entries() -> None:
     text = get_knowledge_base_text()
-    for entry in FAQ_KNOWLEDGE_BASE:
+
+    # Check headers and footers
+    assert "=== ORBITLY FAQ KNOWLEDGE BASE ===" in text
+    assert "=== END OF KNOWLEDGE BASE ===" in text
+
+    for i, entry in enumerate(FAQ_KNOWLEDGE_BASE, 1):
+        assert f"[{i}] Topic:" in text
         assert entry["topic"].upper() in text
         assert entry["question"] in text
         assert entry["answer"] in text
