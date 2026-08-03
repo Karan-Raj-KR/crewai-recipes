@@ -4,7 +4,7 @@ import os
 from unittest.mock import patch
 import pytest
 
-from llm import get_llm, DEFAULT_BASE_URL, DEFAULT_MODEL
+from llm import get_llm
 
 
 def test_missing_key_raises_environment_error() -> None:
