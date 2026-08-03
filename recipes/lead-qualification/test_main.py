@@ -35,10 +35,10 @@ def test_crew_structure() -> None:
     assert len(crew.agents) == 2
     research_agent = crew.agents[0]
     scoring_agent = crew.agents[1]
-    
+
     assert research_agent.role == "Company Research Analyst"
     assert scoring_agent.role == "ICP Scoring Specialist"
-    
+
     assert not research_agent.allow_delegation
     assert not scoring_agent.allow_delegation
 
