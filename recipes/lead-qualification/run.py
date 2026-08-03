@@ -13,7 +13,6 @@ import argparse
 import json
 import os
 import sys
-import json
 
 # Reconfigure streams to support UTF-8 (for emojis) on Windows
 if sys.platform.startswith("win"):
@@ -103,15 +102,19 @@ def main() -> None:
         print()
         print("🎯  Lead Qualification Crew — Starting")
         print(f"   Company    : {company}")
-        print(f"   Description: {description[:80]}{'...' if len(description) > 80 else ''}")
+        print(
+            f"   Description: {description[:80]}{'...' if len(description) > 80 else ''}"
+        )
         print()
         print("─" * 60)
         print()
 
     try:
-        crew = build_crew(company=company, description=description)
+        crew = build_crew(
+            company=company, description=description, json_output=args.json
+        )
         result = crew.kickoff()
-        
+
         if args.json:
             print(json.dumps({"company": company, "raw_output": str(result)}))
         else:
