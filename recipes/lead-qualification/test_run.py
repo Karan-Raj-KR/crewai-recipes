@@ -16,7 +16,10 @@ def test_missing_args_exits(capsys: pytest.CaptureFixture[str]) -> None:
             main()
         assert exc.value.code == 2
         captured = capsys.readouterr()
-        assert "the following arguments are required: --company, --description" in captured.err
+        assert (
+            "the following arguments are required: --company, --description"
+            in captured.err
+        )
 
 
 def test_whitespace_args_exits(capsys: pytest.CaptureFixture[str]) -> None:
