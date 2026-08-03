@@ -1,7 +1,7 @@
 import pytest
 import sys
 from unittest.mock import patch, MagicMock
-from run import main, parse_args, preflight
+from run import main, parse_args
 
 def test_missing_args(capsys):
     # Missing args should trigger argparse error and exit 2
