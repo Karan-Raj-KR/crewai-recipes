@@ -153,7 +153,6 @@ def run_recipe(req: RunRequest):
             )
         try:
             crew = module.build_crew(**req.inputs)
-            crew.verbose = False
             result = crew.kickoff()
             exec_time = time.time() - start_time
             logger.info(

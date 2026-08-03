@@ -53,6 +53,11 @@ def parse_args() -> argparse.Namespace:
             "and any context you have. More detail = better score."
         ),
     )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable verbose CrewAI execution trace.",
+    )
     return parser.parse_args()
 
 
@@ -94,7 +99,7 @@ def main() -> None:
     print("─" * 60)
     print()
 
-    crew = build_crew(company=company, description=description)
+    crew = build_crew(company=company, description=description, verbose=args.verbose)
     result = crew.kickoff()
 
     print()

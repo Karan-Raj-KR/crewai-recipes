@@ -51,6 +51,11 @@ def parse_args() -> argparse.Namespace:
         default="there",
         help="Customer name for a personalised reply (default: 'there').",
     )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable verbose CrewAI execution trace.",
+    )
     return parser.parse_args()
 
 
@@ -92,7 +97,7 @@ def main() -> None:
     print("─" * 60)
     print()
 
-    crew = build_crew(question=question, customer_name=name)
+    crew = build_crew(question=question, customer_name=name, verbose=args.verbose)
     result = crew.kickoff()
 
     print()
