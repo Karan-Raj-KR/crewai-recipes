@@ -43,11 +43,11 @@ def test_kb_shape() -> None:
 
 def test_kb_text_contains_entries() -> None:
     text = get_knowledge_base_text()
-    
+
     # Check headers and footers
     assert "=== ORBITLY FAQ KNOWLEDGE BASE ===" in text
     assert "=== END OF KNOWLEDGE BASE ===" in text
-    
+
     for i, entry in enumerate(FAQ_KNOWLEDGE_BASE, 1):
         assert f"[{i}] Topic:" in text
         assert entry["topic"].upper() in text
@@ -59,7 +59,7 @@ def test_kb_addition_flows_through() -> None:
     new_entry = {
         "topic": "test_topic",
         "question": "test_question?",
-        "answer": "test_answer!"
+        "answer": "test_answer!",
     }
     FAQ_KNOWLEDGE_BASE.append(new_entry)
     try:
@@ -76,9 +76,9 @@ def test_crew_structure() -> None:
     assert len(crew.agents) == 1
     assert len(crew.tasks) == 1
     assert crew.process == Process.sequential
-    
+
     assert "how do I refund?" in crew.tasks[0].description
     assert "there" in crew.tasks[0].description
-    
+
     crew_with_name = build_crew(question="how do I refund?", customer_name="Alice")
     assert "Alice" in crew_with_name.tasks[0].description
