@@ -832,3 +832,7 @@
 <!-- session: 2026-08-04-11 -->
 ## 2026-08-04 session 11
 - docs: update changelog
+
+<!-- session: 2026-08-04-12 -->
+## 2026-08-04 session 12
+- chore: clean up temp files
