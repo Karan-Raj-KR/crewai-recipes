@@ -876,3 +876,7 @@
 <!-- session: 2026-08-05-7 -->
 ## 2026-08-05 session 7
 - test: add basic validation for recipe output
+
+<!-- session: 2026-08-05-8 -->
+## 2026-08-05 session 8
+- docs: document new recipe patterns
