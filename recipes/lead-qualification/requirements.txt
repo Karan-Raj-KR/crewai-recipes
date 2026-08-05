@@ -1,4 +1,4 @@
 crewai>=1.15.5
-litellm>=1.94.0
-openai>=2.51.0
+litellm>=1.95.0
+openai>=2.52.0
 python-dotenv>=1.2.2
