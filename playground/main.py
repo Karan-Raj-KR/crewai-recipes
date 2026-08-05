@@ -6,6 +6,7 @@ import os
 import sys
 import threading
 import time
+from collections import OrderedDict
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -29,6 +30,45 @@ RECIPES_DIR = Path(__file__).parent.parent / "recipes"
 class RunRequest(BaseModel):
     recipe: str
     inputs: dict[str, str]
+    no_cache: bool = False
+    bypass_cache: bool = False
+
+
+class ResponseCache:
+    """Thread-safe, size-bounded LRU cache for recipe responses (#68)."""
+
+    def __init__(self, maxsize: int = 100):
+        self.maxsize = maxsize
+        self._cache: OrderedDict[str, str] = OrderedDict()
+        self._lock = threading.Lock()
+
+    @staticmethod
+    def make_key(recipe: str, inputs: dict[str, str]) -> str:
+        return json.dumps({"recipe": recipe, "inputs": inputs}, sort_keys=True)
+
+    def get(self, recipe: str, inputs: dict[str, str]) -> str | None:
+        key = self.make_key(recipe, inputs)
+        with self._lock:
+            if key in self._cache:
+                self._cache.move_to_end(key)
+                return self._cache[key]
+            return None
+
+    def set(self, recipe: str, inputs: dict[str, str], output: str) -> None:
+        key = self.make_key(recipe, inputs)
+        with self._lock:
+            if key in self._cache:
+                self._cache.move_to_end(key)
+            self._cache[key] = output
+            if len(self._cache) > self.maxsize:
+                self._cache.popitem(last=False)
+
+    def clear(self) -> None:
+        with self._lock:
+            self._cache.clear()
+
+
+response_cache = ResponseCache(maxsize=100)
 
 
 class ThreadSafeStreamRedirector:
@@ -152,6 +192,14 @@ def run_recipe(req: RunRequest):
         f"Incoming request to run recipe '{req.recipe}' with inputs: {sanitized_inputs}"
     )
 
+    if not (req.no_cache or req.bypass_cache):
+        cached_output = response_cache.get(req.recipe, req.inputs)
+        if cached_output is not None:
+            logger.info(
+                f"Recipe '{req.recipe}' returned cached result (bypassed LLM call)"
+            )
+            return {"output": cached_output, "cached": True}
+
     if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
         logger.error(
             f"Recipe '{req.recipe}' failed: Missing API keys (Execution time: {time.time() - start_time:.2f}s)"
@@ -190,11 +238,13 @@ def run_recipe(req: RunRequest):
         try:
             crew = module.build_crew(**req.inputs)
             result = crew.kickoff()
+            output_str = str(result)
+            response_cache.set(req.recipe, req.inputs, output_str)
             exec_time = time.time() - start_time
             logger.info(
                 f"Recipe '{req.recipe}' completed successfully in {exec_time:.2f}s"
             )
-            return {"output": str(result)}
+            return {"output": output_str, "cached": False}
         except Exception as e:
             exec_time = time.time() - start_time
             err_str = str(e)
@@ -307,8 +357,12 @@ def execute_recipe_stream(
             sys.stdout = redirector
             try:
                 result = crew.kickoff()
+                output_str = str(result)
+                response_cache.set(recipe_name, inputs, output_str)
                 if not stop_event.is_set():
-                    push_event({"type": "complete", "output": str(result)})
+                    push_event(
+                        {"type": "complete", "output": output_str, "cached": False}
+                    )
             finally:
                 sys.stdout = old_stdout
 
@@ -334,6 +388,20 @@ def execute_recipe_stream(
 @app.post("/run/stream")
 async def run_recipe_stream(req: RunRequest, request: Request):
     """Server-Sent Events (SSE) endpoint to stream CrewAI execution progress in real time."""
+    if not (req.no_cache or req.bypass_cache):
+        cached_output = response_cache.get(req.recipe, req.inputs)
+        if cached_output is not None:
+            logger.info(f"Recipe '{req.recipe}' SSE stream returned cached result")
+
+            async def cached_event_generator():
+                yield f"data: {json.dumps({'type': 'start', 'recipe': req.recipe, 'cached': True})}\n\n"
+                yield f"data: {json.dumps({'type': 'log', 'text': '⚡ Serving cached result (bypassed LLM call)'})}\n\n"
+                yield f"data: {json.dumps({'type': 'complete', 'output': cached_output, 'cached': True})}\n\n"
+
+            return StreamingResponse(
+                cached_event_generator(), media_type="text/event-stream"
+            )
+
     loop = asyncio.get_running_loop()
     queue = asyncio.Queue()
     stop_event = threading.Event()
@@ -389,6 +457,24 @@ async def run_recipe_ws(websocket: WebSocket):
         data = await websocket.receive_json()
         recipe = data.get("recipe", "")
         inputs = data.get("inputs", {})
+        no_cache = data.get("no_cache", False) or data.get("bypass_cache", False)
+
+        if not no_cache:
+            cached_output = response_cache.get(recipe, inputs)
+            if cached_output is not None:
+                await websocket.send_json(
+                    {"type": "start", "recipe": recipe, "cached": True}
+                )
+                await websocket.send_json(
+                    {
+                        "type": "log",
+                        "text": "⚡ Serving cached result (bypassed LLM call)",
+                    }
+                )
+                await websocket.send_json(
+                    {"type": "complete", "output": cached_output, "cached": True}
+                )
+                return
 
         push_event({"type": "start", "recipe": recipe})
 
