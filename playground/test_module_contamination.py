@@ -17,7 +17,7 @@ if str(playground_dir) not in sys.path:
 if "crewai" not in sys.modules:
     sys.modules["crewai"] = MagicMock()
 
-from main import app, cleanup_recipe_modules  # noqa: E402 (import after sys.path/mocks are set up)
+from main import app, cleanup_recipe_modules
 
 client = TestClient(app)
 
