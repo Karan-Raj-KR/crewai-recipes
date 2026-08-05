@@ -509,8 +509,12 @@
 
         <div id="dynamic-inputs"></div>
 
-        <div class="form-group" style="margin-top: 1.5rem; margin-bottom: 0;">
+        <div class="form-group" style="margin-top: 1.5rem; margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
             <button id="run-btn" disabled>Run Recipe</button>
+            <label style="font-size: 0.84rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 0.45rem; user-select: none;">
+                <input type="checkbox" id="bypass-cache-checkbox" style="cursor: pointer; accent-color: var(--primary);">
+                <span>Bypass Cache (Force fresh LLM run)</span>
+            </label>
         </div>
         
         <div id="error-msg" class="error"></div>
@@ -532,7 +536,10 @@
     </div>
 
     <div class="card" style="margin-top: 2rem;">
-        <label>Final Output</label>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <label style="margin-bottom: 0;">Final Output</label>
+            <span id="cached-badge" style="display: none; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; font-size: 0.75rem; padding: 0.25rem 0.65rem; border-radius: 9999px; font-weight: 600; align-items: center; gap: 0.35rem;">⚡ Cached Result</span>
+        </div>
         <div id="result" class="result-panel">Ready. Select a recipe and click Run.</div>
     </div>
 </div>
@@ -981,6 +988,8 @@
     });
 
     // ── Stream Progress UI Handlers ────────────────────────────────
+    const cachedBadge = document.getElementById('cached-badge');
+
     function appendStreamItem(type, contentHtml) {
         const item = document.createElement('div');
         item.className = `stream-item ${type}`;
@@ -992,8 +1001,11 @@
     function handleEvent(event) {
         switch (event.type) {
             case 'start':
-                activeAgentName.textContent = 'Starting Agents...';
+                activeAgentName.textContent = event.cached ? 'Serving Cached Result...' : 'Starting Agents...';
                 appendStreamItem('log', `🚀 Executing recipe: <strong>${escapeHTML(event.recipe)}</strong>`);
+                if (event.cached && cachedBadge) {
+                    cachedBadge.style.display = 'inline-flex';
+                }
                 break;
             case 'agent_step':
                 if (event.agent) {
@@ -1033,9 +1045,12 @@
                 break;
             case 'complete':
                 progressPulse.className = 'pulse-indicator completed';
-                activeAgentName.textContent = 'Crew Completed!';
-                appendStreamItem('task_complete', '✨ <strong>Execution Finished.</strong> Rendering final result below.');
+                activeAgentName.textContent = event.cached ? 'Cached Result Ready!' : 'Crew Completed!';
+                appendStreamItem('task_complete', event.cached ? '⚡ <strong>Serving Cached Result.</strong> Rendering output below.' : '✨ <strong>Execution Finished.</strong> Rendering final result below.');
                 resultPanel.textContent = event.output;
+                if (cachedBadge) {
+                    cachedBadge.style.display = event.cached ? 'inline-flex' : 'none';
+                }
                 break;
             case 'error':
                 progressPulse.className = 'pulse-indicator error';
@@ -1043,6 +1058,9 @@
                 appendStreamItem('error', `❌ <strong>Error:</strong> ${escapeHTML(event.error)}`);
                 showError(event.error);
                 resultPanel.textContent = "Failed.";
+                if (cachedBadge) {
+                    cachedBadge.style.display = 'none';
+                }
                 break;
         }
     }
@@ -1050,6 +1068,10 @@
     runBtn.addEventListener('click', async () => {
         const recipeId = select.value;
         if (!recipeId) return;
+
+        if (cachedBadge) {
+            cachedBadge.style.display = 'none';
+        }
 
         inputsContainer.querySelectorAll('.invalid-field').forEach(el => {
             el.classList.remove('invalid-field');
@@ -1083,6 +1105,8 @@
         }
         currentAbortController = new AbortController();
 
+        const bypassCache = document.getElementById('bypass-cache-checkbox')?.checked || false;
+
         errorMsg.style.display = 'none';
         progressCard.style.display = 'block';
         progressStream.innerHTML = '';
@@ -1095,7 +1119,7 @@
             const response = await fetch('/run/stream', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ recipe: recipeId, inputs }),
+                body: JSON.stringify({ recipe: recipeId, inputs, no_cache: bypassCache }),
                 signal: currentAbortController.signal
             });
 
