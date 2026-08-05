@@ -16,13 +16,13 @@ jobs:
     steps:
       - uses: actions/first-interaction@v3
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message: >
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: >
             👋 Thanks for opening your first issue in `crewai-recipes`! A maintainer will
             triage this soon. If you'd like to work on it yourself, just say so in a comment
             and we'll assign it to you — check [CONTRIBUTING.md](https://github.com/Karan-Raj-KR/crewai-recipes/blob/main/CONTRIBUTING.md)
             for the workflow.
-          pr-message: >
+          pr_message: >
             🎉 Thanks for your first pull request to `crewai-recipes`! A maintainer will review
             it soon (usually within 7 days). Make sure CI is green and the PR checklist is
             filled in — that speeds up review a lot.
