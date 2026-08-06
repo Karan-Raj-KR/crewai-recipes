@@ -940,3 +940,7 @@
 <!-- session: 2026-08-06-10 -->
 ## 2026-08-06 session 10
 - chore: pin dependency versions
+
+<!-- session: 2026-08-06-11 -->
+## 2026-08-06 session 11
+- feat: add streaming output example
