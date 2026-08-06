@@ -5,6 +5,8 @@ Loads FAQ entries from knowledge_base.yaml (or custom path via FAQ_KNOWLEDGE_BAS
 Each entry has a topic, question, and answer.
 """
 
+from __future__ import annotations
+
 import os
 from pathlib import Path
 
