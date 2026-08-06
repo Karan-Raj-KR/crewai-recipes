@@ -35,8 +35,6 @@ def check_env() -> None:
 
 def main() -> None:
     """Parse CLI arguments and run the email drafting crew."""
-    check_env()
-
     parser = argparse.ArgumentParser(
         description="Run Email Drafting Recipe with NVIDIA NIM"
     )
@@ -69,6 +67,7 @@ def main() -> None:
     )
 
     args = parser.parse_args()
+    check_env()
 
     print("\n📧  Email Drafting Workflow — Processing Brief\n")
     print(f"   Recipient  : {args.recipient}")
