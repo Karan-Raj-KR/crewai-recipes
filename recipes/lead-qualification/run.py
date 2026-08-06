@@ -15,6 +15,12 @@ import os
 import sys
 
 # Reconfigure streams to support UTF-8 (for emojis) on Windows
+# Input bounds at the CLI boundary (before any LLM call).
+MIN_DESCRIPTION_CHARS = 40
+MAX_DESCRIPTION_CHARS = 8_000
+MAX_COMPANY_CHARS = 120
+
+
 if sys.platform.startswith("win"):
     try:
         sys.stdout.reconfigure(encoding="utf-8")
@@ -101,6 +107,45 @@ def main() -> None:
             print(json.dumps({"error": "--company and --description cannot be empty."}))
         else:
             print("❌  Error: --company and --description cannot be empty.")
+        sys.exit(1)
+
+    if len(company) > MAX_COMPANY_CHARS:
+        msg = (
+            f"--company is too long ({len(company)} chars; max {MAX_COMPANY_CHARS}). "
+            "Use the common short name of the company."
+        )
+        if args.json:
+            print(json.dumps({"error": msg}))
+        else:
+            print(f"❌  {msg}")
+        sys.exit(1)
+
+    if len(description) < MIN_DESCRIPTION_CHARS:
+        msg = (
+            f"--description is too short ({len(description)} chars; "
+            f"need at least {MIN_DESCRIPTION_CHARS}). The scorer needs enough "
+            "detail to judge industry, size, and growth signals; try including "
+            "what they sell and roughly how big they are."
+        )
+        if args.json:
+            print(json.dumps({"error": msg}))
+        else:
+            print(f"❌  {msg}")
+            print("   1. Add industry / product context")
+            print("   2. Mention size or stage if you know it")
+            print("   3. Re-run with a fuller --description")
+        sys.exit(1)
+
+    if len(description) > MAX_DESCRIPTION_CHARS:
+        msg = (
+            f"--description is too long ({len(description)} chars; "
+            f"max {MAX_DESCRIPTION_CHARS}). Summarize the company instead of "
+            "pasting a full document."
+        )
+        if args.json:
+            print(json.dumps({"error": msg}))
+        else:
+            print(f"❌  {msg}")
         sys.exit(1)
 
     if not args.json:
