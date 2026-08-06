@@ -31,11 +31,182 @@
             justify-content: center;
         }
 
+        .app-layout {
+            display: flex;
+            width: 100%;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            box-sizing: border-box;
+            align-items: flex-start;
+        }
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            max-width: 780px;
+        }
+
         .container {
             width: 100%;
             max-width: 800px;
-            padding: 2rem;
+            padding: 0;
             box-sizing: border-box;
+        }
+
+        /* ── Session History Sidebar Styles (#71) ───────────────────── */
+        .history-sidebar {
+            width: 340px;
+            flex-shrink: 0;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            box-sizing: border-box;
+            position: sticky;
+            top: 1.5rem;
+            max-height: calc(100vh - 3rem);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .history-count-badge {
+            background-color: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            padding: 0.1rem 0.45rem;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .clear-history-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            width: auto;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        .clear-history-btn:hover {
+            background-color: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        .history-list {
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding-right: 0.2rem;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.83rem;
+            padding: 2rem 0.5rem;
+            line-height: 1.5;
+        }
+
+        .history-item {
+            background-color: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.85rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .history-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .history-item.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+            background-color: rgba(59, 130, 246, 0.08);
+        }
+
+        .history-item-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+        }
+
+        .history-item-recipe {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-color);
+        }
+
+        .history-item-meta {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .history-item-badge {
+            font-size: 0.68rem;
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+        }
+
+        .history-item-preview {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 900px) {
+            .app-layout {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .main-content {
+                max-width: 100%;
+            }
+            .history-sidebar {
+                width: 100%;
+                position: static;
+                max-height: none;
+            }
         }
 
         /* ── Header ─────────────────────────────────────────── */
@@ -479,62 +650,87 @@
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <div class="header-left">
-            <h1>🤖 CrewAI Recipes Playground</h1>
-            <p class="subtitle">Run recipes locally. Your API key never leaves your machine.</p>
-        </div>
+<div class="app-layout">
+    <div class="main-content">
+        <div class="container">
+            <header>
+                <div class="header-left">
+                    <h1>🤖 CrewAI Recipes Playground</h1>
+                    <p class="subtitle">Run recipes locally. Your API key never leaves your machine.</p>
+                </div>
 
-        <!-- ── Provider Selector ── -->
-        <div class="provider-selector">
-            <span class="provider-label">LLM Provider</span>
-            <div class="provider-pill-wrapper">
-                <select id="provider-select" title="Select LLM provider">
-                    <!-- populated by JS -->
-                </select>
-                <button class="provider-info-btn" id="provider-info-btn" title="View .env setup for this provider" aria-label="Provider setup instructions">ⓘ</button>
+                <!-- ── Provider Selector ── -->
+                <div class="provider-selector">
+                    <span class="provider-label">LLM Provider</span>
+                    <div class="provider-pill-wrapper">
+                        <select id="provider-select" title="Select LLM provider">
+                            <!-- populated by JS -->
+                        </select>
+                        <button class="provider-info-btn" id="provider-info-btn" title="View .env setup for this provider" aria-label="Provider setup instructions">ⓘ</button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="card">
+                <div class="form-group">
+                    <label for="recipe-select">Select a Recipe</label>
+                    <select id="recipe-select">
+                        <option value="">Loading recipes...</option>
+                    </select>
+                    <p id="recipe-desc" class="subtitle"></p>
+                </div>
+
+                <div id="dynamic-inputs"></div>
+
+                <div class="form-group" style="margin-top: 1.5rem; margin-bottom: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                    <button id="run-btn" disabled>Run Recipe</button>
+                    <label style="font-size: 0.84rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 0.45rem; user-select: none;">
+                        <input type="checkbox" id="bypass-cache-checkbox" style="cursor: pointer; accent-color: var(--primary);">
+                        <span>Bypass Cache (Force fresh LLM run)</span>
+                    </label>
+                </div>
+                
+                <div id="error-msg" class="error"></div>
+            </div>
+
+            <div class="card" id="progress-card" style="display: none;">
+                <div class="progress-header">
+                    <div class="progress-title-group">
+                        <span class="pulse-indicator" id="progress-pulse"></span>
+                        <span style="font-weight: 600;">Live Agent Progress</span>
+                    </div>
+                    <div class="active-agent-badge" id="active-agent-badge">
+                        <span class="agent-icon">🤖</span>
+                        <span id="active-agent-name">Initializing Crew...</span>
+                    </div>
+                </div>
+                
+                <div class="progress-stream" id="progress-stream"></div>
+            </div>
+
+            <div class="card" style="margin-top: 2rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                    <label style="margin-bottom: 0;">Final Output</label>
+                    <span id="cached-badge" style="display: none; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; font-size: 0.75rem; padding: 0.25rem 0.65rem; border-radius: 9999px; font-weight: 600; align-items: center; gap: 0.35rem;">⚡ Cached Result</span>
+                </div>
+                <div id="result" class="result-panel">Ready. Select a recipe and click Run.</div>
             </div>
         </div>
-    </header>
-
-    <div class="card">
-        <div class="form-group">
-            <label for="recipe-select">Select a Recipe</label>
-            <select id="recipe-select">
-                <option value="">Loading recipes...</option>
-            </select>
-            <p id="recipe-desc" class="subtitle"></p>
-        </div>
-
-        <div id="dynamic-inputs"></div>
-
-        <div class="form-group" style="margin-top: 1.5rem; margin-bottom: 0;">
-            <button id="run-btn" disabled>Run Recipe</button>
-        </div>
-        
-        <div id="error-msg" class="error"></div>
     </div>
 
-    <div class="card" id="progress-card" style="display: none;">
-        <div class="progress-header">
-            <div class="progress-title-group">
-                <span class="pulse-indicator" id="progress-pulse"></span>
-                <span style="font-weight: 600;">Live Agent Progress</span>
-            </div>
-            <div class="active-agent-badge" id="active-agent-badge">
-                <span class="agent-icon">🤖</span>
-                <span id="active-agent-name">Initializing Crew...</span>
-            </div>
+    <!-- ── Session History Sidebar (#71) ── -->
+    <aside class="history-sidebar" id="history-sidebar">
+        <div class="history-header">
+            <h2 class="history-title">
+                <span>📜 Session History</span>
+                <span class="history-count-badge" id="history-count">0</span>
+            </h2>
+            <button class="clear-history-btn" id="clear-history-btn" title="Clear all session history">Clear</button>
         </div>
-        
-        <div class="progress-stream" id="progress-stream"></div>
-    </div>
-
-    <div class="card" style="margin-top: 2rem;">
-        <label>Final Output</label>
-        <div id="result" class="result-panel">Ready. Select a recipe and click Run.</div>
-    </div>
+        <div class="history-list" id="history-list">
+            <div class="history-empty">No past runs in this session.<br>Run a recipe to record history.</div>
+        </div>
+    </aside>
 </div>
 
 <!-- ── Provider Modal ─────────────────────────────────────────── -->
@@ -938,8 +1134,7 @@
         }
     }
 
-    select.addEventListener('change', (e) => {
-        const recipeId = e.target.value;
+    function renderInputsForRecipe(recipeId) {
         const recipe = recipesData.find(r => r.id === recipeId);
         
         inputsContainer.innerHTML = '';
@@ -978,7 +1173,157 @@
             div.appendChild(field);
             inputsContainer.appendChild(div);
         });
+    }
+
+    select.addEventListener('change', (e) => {
+        renderInputsForRecipe(e.target.value);
     });
+
+    // ── Session History Handlers (#71) ──────────────────────────────────
+    let currentRunStartTime = 0;
+    let currentRunInputs = {};
+
+    const HISTORY_STORAGE_KEY = 'crewai_playground_history';
+    const MAX_HISTORY_ENTRIES = 10;
+
+    const historyList = document.getElementById('history-list');
+    const historyCount = document.getElementById('history-count');
+    const clearHistoryBtn = document.getElementById('clear-history-btn');
+
+    function getHistory() {
+        try {
+            const raw = sessionStorage.getItem(HISTORY_STORAGE_KEY);
+            return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+            console.error("Failed to read sessionStorage history", e);
+            return [];
+        }
+    }
+
+    function saveHistory(history) {
+        if (history.length > MAX_HISTORY_ENTRIES) {
+            history = history.slice(0, MAX_HISTORY_ENTRIES);
+        }
+
+        while (history.length > 0) {
+            try {
+                sessionStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+                break;
+            } catch (e) {
+                history.pop();
+            }
+        }
+    }
+
+    function addHistoryEntry(entry) {
+        const history = getHistory();
+        history.unshift(entry);
+        saveHistory(history);
+        renderHistory();
+    }
+
+    function clearHistory() {
+        try {
+            sessionStorage.removeItem(HISTORY_STORAGE_KEY);
+        } catch (e) {
+            console.error("Failed to clear sessionStorage", e);
+        }
+        renderHistory();
+    }
+
+    function renderHistory(selectedId = null) {
+        const history = getHistory();
+        if (historyCount) {
+            historyCount.textContent = history.length;
+        }
+
+        if (!historyList) return;
+
+        if (history.length === 0) {
+            historyList.innerHTML = '<div class="history-empty">No past runs in this session.<br>Run a recipe to record history.</div>';
+            return;
+        }
+
+        historyList.innerHTML = '';
+        history.forEach(item => {
+            const el = document.createElement('div');
+            el.className = `history-item${selectedId === item.id ? ' selected' : ''}`;
+            el.dataset.id = item.id;
+
+            const inputKeys = Object.keys(item.inputs || {});
+            const snippetKey = inputKeys[0] || '';
+            const snippetVal = snippetKey ? item.inputs[snippetKey] : '';
+            const previewText = snippetKey ? `${snippetKey}: "${snippetVal}"` : 'No inputs';
+
+            el.innerHTML = `
+                <div class="history-item-top">
+                    <span class="history-item-recipe">${escapeHTML(item.recipeName || item.recipeId)}</span>
+                    <div class="history-item-meta">
+                        ${item.cached ? '<span class="history-item-badge">⚡ Cached</span>' : ''}
+                        <span>${escapeHTML(item.duration || '')}</span>
+                    </div>
+                </div>
+                <div class="history-item-preview">${escapeHTML(previewText)}</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.3rem;">${escapeHTML(item.timestamp || '')}</div>
+            `;
+
+            el.addEventListener('click', () => {
+                restoreHistoryEntry(item.id);
+            });
+
+            historyList.appendChild(el);
+        });
+    }
+
+    function restoreHistoryEntry(id) {
+        const history = getHistory();
+        const item = history.find(entry => entry.id === id);
+        if (!item) return;
+
+        if (select && select.value !== item.recipeId) {
+            select.value = item.recipeId;
+            renderInputsForRecipe(item.recipeId);
+        }
+
+        setTimeout(() => {
+            if (inputsContainer) {
+                inputsContainer.querySelectorAll('input, textarea').forEach(inputEl => {
+                    const name = inputEl.dataset.name;
+                    if (name && item.inputs && item.inputs[name] !== undefined) {
+                        inputEl.value = item.inputs[name];
+                        inputEl.classList.remove('invalid-field');
+                        const err = inputEl.parentElement.querySelector('.field-error');
+                        if (err) err.remove();
+                    }
+                });
+            }
+        }, 50);
+
+        if (resultPanel) {
+            resultPanel.textContent = item.output || '';
+        }
+
+        if (cachedBadge) {
+            cachedBadge.style.display = item.cached ? 'inline-flex' : 'none';
+        }
+
+        if (progressCard) {
+            progressCard.style.display = 'none';
+        }
+
+        renderHistory(id);
+
+        if (window.innerWidth <= 900) {
+            const cardEl = document.querySelector('.card');
+            if (cardEl) cardEl.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', () => {
+            clearHistory();
+        });
+    }
 
     // ── Stream Progress UI Handlers ────────────────────────────────
     function appendStreamItem(type, contentHtml) {
@@ -992,8 +1337,11 @@
     function handleEvent(event) {
         switch (event.type) {
             case 'start':
-                activeAgentName.textContent = 'Starting Agents...';
+                activeAgentName.textContent = event.cached ? 'Serving Cached Result...' : 'Starting Agents...';
                 appendStreamItem('log', `🚀 Executing recipe: <strong>${escapeHTML(event.recipe)}</strong>`);
+                if (event.cached && cachedBadge) {
+                    cachedBadge.style.display = 'inline-flex';
+                }
                 break;
             case 'agent_step':
                 if (event.agent) {
@@ -1033,9 +1381,27 @@
                 break;
             case 'complete':
                 progressPulse.className = 'pulse-indicator completed';
-                activeAgentName.textContent = 'Crew Completed!';
-                appendStreamItem('task_complete', '✨ <strong>Execution Finished.</strong> Rendering final result below.');
+                activeAgentName.textContent = event.cached ? 'Cached Result Ready!' : 'Crew Completed!';
+                appendStreamItem('task_complete', event.cached ? '⚡ <strong>Serving Cached Result.</strong> Rendering output below.' : '✨ <strong>Execution Finished.</strong> Rendering final result below.');
                 resultPanel.textContent = event.output;
+                if (cachedBadge) {
+                    cachedBadge.style.display = event.cached ? 'inline-flex' : 'none';
+                }
+
+                // Record run in session history (#71)
+                const durationMs = currentRunStartTime ? (Date.now() - currentRunStartTime) : 0;
+                const selectedOpt = select ? select.options[select.selectedIndex] : null;
+                const recipeLabel = selectedOpt ? selectedOpt.textContent : select.value;
+                addHistoryEntry({
+                    id: 'run-' + Date.now(),
+                    recipeId: select ? select.value : '',
+                    recipeName: recipeLabel,
+                    inputs: { ...currentRunInputs },
+                    output: event.output,
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                    duration: durationMs ? (durationMs / 1000).toFixed(1) + 's' : '0.1s',
+                    cached: !!event.cached
+                });
                 break;
             case 'error':
                 progressPulse.className = 'pulse-indicator error';
@@ -1043,6 +1409,9 @@
                 appendStreamItem('error', `❌ <strong>Error:</strong> ${escapeHTML(event.error)}`);
                 showError(event.error);
                 resultPanel.textContent = "Failed.";
+                if (cachedBadge) {
+                    cachedBadge.style.display = 'none';
+                }
                 break;
         }
     }
@@ -1050,6 +1419,10 @@
     runBtn.addEventListener('click', async () => {
         const recipeId = select.value;
         if (!recipeId) return;
+
+        if (cachedBadge) {
+            cachedBadge.style.display = 'none';
+        }
 
         inputsContainer.querySelectorAll('.invalid-field').forEach(el => {
             el.classList.remove('invalid-field');
@@ -1083,6 +1456,11 @@
         }
         currentAbortController = new AbortController();
 
+        currentRunStartTime = Date.now();
+        currentRunInputs = { ...inputs };
+
+        const bypassCache = document.getElementById('bypass-cache-checkbox')?.checked || false;
+
         errorMsg.style.display = 'none';
         progressCard.style.display = 'block';
         progressStream.innerHTML = '';
@@ -1095,7 +1473,7 @@
             const response = await fetch('/run/stream', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ recipe: recipeId, inputs }),
+                body: JSON.stringify({ recipe: recipeId, inputs, no_cache: bypassCache }),
                 signal: currentAbortController.signal
             });
 
@@ -1121,15 +1499,7 @@
 
                 for (const part of parts) {
                     const line = part.trim();
-                    if (line.startswith && line.startswith('data: ')) {
-                        const jsonStr = line.slice(6).trim();
-                        try {
-                            const event = JSON.parse(jsonStr);
-                            handleEvent(event);
-                        } catch (err) {
-                            console.error("Failed to parse SSE event", err);
-                        }
-                    } else if (line.indexOf('data: ') === 0) {
+                    if (line.indexOf('data: ') === 0) {
                         const jsonStr = line.slice(6).trim();
                         try {
                             const event = JSON.parse(jsonStr);
@@ -1171,8 +1541,8 @@
     });
 
     loadRecipes();
+    renderHistory();
 </script>
 
 </body>
 </html>
-
