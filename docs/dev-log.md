@@ -928,3 +928,7 @@
 <!-- session: 2026-08-06-7 -->
 ## 2026-08-06 session 7
 - fix: correct agent role descriptions
+
+<!-- session: 2026-08-06-8 -->
+## 2026-08-06 session 8
+- refactor: move config to dedicated module
