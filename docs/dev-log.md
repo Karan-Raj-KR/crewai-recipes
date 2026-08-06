@@ -896,3 +896,7 @@
 <!-- session: 2026-08-05-12 -->
 ## 2026-08-05 session 12
 - refactor: extract helper functions
+
+<!-- session: 2026-08-06-0 -->
+## 2026-08-06 session 0
+- docs: expand getting started guide
