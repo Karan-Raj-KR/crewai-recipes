@@ -920,3 +920,7 @@
 <!-- session: 2026-08-06-5 -->
 ## 2026-08-06 session 5
 - chore: update .gitignore entries
+
+<!-- session: 2026-08-06-6 -->
+## 2026-08-06 session 6
+- feat: add rate limiting example
