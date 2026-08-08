@@ -1028,3 +1028,7 @@
 <!-- session: 2026-08-08-5 -->
 ## 2026-08-08 session 5
 - feat: support multi-agent workflow example
+
+<!-- session: 2026-08-08-6 -->
+## 2026-08-08 session 6
+- fix: handle empty task list gracefully
