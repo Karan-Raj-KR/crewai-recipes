@@ -1052,3 +1052,7 @@
 <!-- session: 2026-08-08-11 -->
 ## 2026-08-08 session 11
 - refactor: move config to dedicated module
+
+<!-- session: 2026-08-08-12 -->
+## 2026-08-08 session 12
+- docs: add troubleshooting section
