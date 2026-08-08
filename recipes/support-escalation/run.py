@@ -33,8 +33,6 @@ def check_env() -> None:
 
 def main() -> None:
     """Parse CLI arguments and run the support ticket escalation crew."""
-    check_env()
-
     parser = argparse.ArgumentParser(
         description="Run Support Ticket Escalation Recipe with NVIDIA NIM"
     )
@@ -66,6 +64,7 @@ def main() -> None:
     )
 
     args = parser.parse_args()
+    check_env()
 
     print("\n🎧  Support Ticket Workflow — Processing Ticket\n")
     print(f"   Ticket Text       : {args.ticket_text}")

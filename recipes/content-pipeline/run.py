@@ -35,8 +35,6 @@ def check_env() -> None:
 
 def main() -> None:
     """Parse CLI arguments and run the content production pipeline crew."""
-    check_env()
-
     parser = argparse.ArgumentParser(
         description="Run Automated Content Production Pipeline Recipe with NVIDIA NIM"
     )
@@ -63,6 +61,7 @@ def main() -> None:
     )
 
     args = parser.parse_args()
+    check_env()
 
     print("\n📝  Content Production Pipeline — Generating Article\n")
     print(f"   Topic           : {args.topic}")
