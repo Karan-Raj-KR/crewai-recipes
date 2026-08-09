@@ -187,7 +187,16 @@ Quick summary:
 - Include a `README.md`, `requirements.txt`, `run.py`, and `.env.example`
 - Open an issue first for major new recipes so we can align before you build
 
-New to the project? Start with an issue labeled **[good first issue](https://github.com/Karan-Raj-KR/crewai-recipes/labels/good%20first%20issue)** — each one is scoped to be a self-contained, mergeable PR.
+### 🌱 First time contributing to open source? Start here
+
+You do **not** need any prior open-source experience to land a PR here. Follow this path:
+
+1. Browse **[good first issues](https://github.com/Karan-Raj-KR/crewai-recipes/labels/good%20first%20issue)** — every one lists the exact files to touch and what "done" looks like.
+2. Comment on an issue to claim it — a bot will assign you within ~30 seconds and post the links you'll need.
+3. Follow the 10-step **[absolute-beginner path in CONTRIBUTING.md](./CONTRIBUTING.md#first-time-contributing-to-open-source-start-here)** — fork → branch → change → PR.
+4. Stuck? Comment on the issue or PR — asking is exactly what those threads are for.
+
+There's a soft cap of **2 open assignments per contributor** so nothing gets stuck; once one closes or has a PR up, you can claim another.
 
 ---
 

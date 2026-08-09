@@ -8,14 +8,64 @@ Please take a few minutes to read this guide before opening a PR.
 
 ## Table of Contents
 
-1. [Code of Conduct](#code-of-conduct)
-2. [How to Add a New Recipe](#how-to-add-a-new-recipe)
-3. [Recipe Structure](#recipe-structure)
-4. [Coding Style](#coding-style)
-5. [Running Recipes with Docker](#running-recipes-with-docker)
-6. [Pull Request Process](#pull-request-process)
-7. [Issue Labels](#issue-labels)
-8. [Improving Existing Recipes](#improving-existing-recipes)
+1. [First time contributing to open source? Start here](#first-time-contributing-to-open-source-start-here)
+2. [Code of Conduct](#code-of-conduct)
+3. [How to Add a New Recipe](#how-to-add-a-new-recipe)
+4. [Recipe Structure](#recipe-structure)
+5. [Coding Style](#coding-style)
+6. [Running Recipes with Docker](#running-recipes-with-docker)
+7. [Pull Request Process](#pull-request-process)
+8. [Issue Labels](#issue-labels)
+9. [Improving Existing Recipes](#improving-existing-recipes)
+
+---
+
+## First time contributing to open source? Start here
+
+Welcome — you're very much in the right place. This project is intentionally beginner-friendly, and you don't need any prior open-source experience to land your first PR. If you've never done this before, use the path below; every step is short and safe to try.
+
+### The absolute-beginner path (≈ 30 minutes end-to-end)
+
+1. **Pick an issue that says `good first issue`.** [Browse the list here.](https://github.com/Karan-Raj-KR/crewai-recipes/labels/good%20first%20issue) Read the whole issue — every `good first issue` in this repo lists the exact files to touch and what "done" looks like.
+2. **Comment on the issue to claim it** (something like "I'd like to try this — assigning myself"). A bot will assign you within ~30 seconds and drop a welcome comment with the links you'll need. You can only have **2 open assignments at a time** — this is a soft cap so nothing gets stuck.
+3. **Fork the repo** — click the "Fork" button at the top-right of the [repo page](https://github.com/Karan-Raj-KR/crewai-recipes). GitHub makes a copy under your own account that you're allowed to push to.
+4. **Clone your fork** and make a branch:
+   ```bash
+   git clone https://github.com/<your-username>/crewai-recipes.git
+   cd crewai-recipes
+   git checkout -b fix/issue-<number>-short-description
+   ```
+5. **Make the change.** Follow the "what to change" section of the issue. If you get stuck, comment on the issue — that's exactly what the comments are for, and nobody will judge a question.
+6. **Test it locally.** For a docs/typo fix, just re-read the file. For a code change, follow the "Test it end-to-end" step below (or the pytest snippet at the bottom of the issue if it has one).
+7. **Commit and push:**
+   ```bash
+   git add .
+   git commit -m "fix(<area>): short imperative summary"
+   git push -u origin fix/issue-<number>-short-description
+   ```
+8. **Open the pull request.** GitHub will show a big green button when you push — click it, and it'll open a PR draft against `Karan-Raj-KR/crewai-recipes:main`. Fill in the template — the `Closes #<number>` line is important: it auto-closes the issue when the PR merges.
+9. **CI will run automatically.** If something turns red, click the failing job to see the error — most first-time failures are ruff formatting (`ruff format recipes/<recipe>/` fixes it) or an unpinned dependency. A maintainer will help if it's not obvious.
+10. **A maintainer reviews within 7 days.** If they ask for changes, push another commit to the same branch — the PR updates itself. Nothing to re-open.
+
+That's the whole flow. Every open-source PR you ever ship will follow roughly the same 10 steps.
+
+### If you get stuck
+
+- **"I don't understand what the issue wants."** Comment on the issue — literally paste the sentence that confused you.
+- **"CI is red and I don't know why."** Post the failing job's error in the PR — a maintainer will unblock you.
+- **"My branch is behind main."** From your branch: `git fetch upstream main && git merge upstream/main` (`upstream` is the original repo — set with `git remote add upstream https://github.com/Karan-Raj-KR/crewai-recipes.git` once).
+- **"I opened a PR but want to change my mind."** Just comment on the PR saying so — closing it is one click, no explanation needed.
+
+### First-timer-friendly labels
+
+| Label | What it means |
+|-------|---------------|
+| `good first issue` | Fully scoped, small, safe to learn on. Start here. |
+| `ECSoC26-L1` | Absolute-beginner effort (docs, small edits, single-file changes). |
+| `ECSoC26-L2` | Intermediate (touches multiple files or needs reading existing code). |
+| `documentation` / `docs` | No Python needed — perfect for a first PR. |
+
+You do **not** need to read the whole contributing guide below to send your first PR. The next sections are for people writing new recipes or making larger changes — come back to them when you need them.
 
 ---
 

@@ -1,0 +1,125 @@
+name: Auto-assign contributor on comment
+
+# When someone comments on an unassigned issue, offer them the issue —
+# up to a soft cap of 2 open assignments per contributor. Keeps the
+# claim workflow low-friction for first-time contributors while stopping
+# any one person from stacking unfinished issues.
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+
+# Serialise per-issue so two rapid comments can't both pass the
+# "no assignee yet" check and race to assign the same issue twice.
+concurrency:
+  group: assign-on-comment-issue-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  maybe-assign:
+    runs-on: ubuntu-latest
+    # Skip PR comments (issue_comment fires for both), bot comments,
+    # and comments on closed issues — none of those should trigger a claim.
+    if: >-
+      github.event.issue.pull_request == null &&
+      github.event.issue.state == 'open' &&
+      github.event.comment.user.type != 'Bot'
+    steps:
+      - name: Evaluate claim and act
+        uses: actions/github-script@v7
+        env:
+          ACTIVE_LIMIT: "2"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const issue = context.payload.issue;
+            const commenter = context.payload.comment.user.login;
+            const activeLimit = parseInt(process.env.ACTIVE_LIMIT, 10);
+
+            // Rule 1: if the commenter is already this issue's assignee, do nothing.
+            const currentAssignees = (issue.assignees || []).map(a => a.login);
+            if (currentAssignees.includes(commenter)) {
+              core.info(`${commenter} is already assigned to #${issue.number}; nothing to do.`);
+              return;
+            }
+
+            // Rule 2: if the issue already has someone else assigned, do nothing.
+            //   (The other person owns the claim; a later comment isn't a takeover request.)
+            if (currentAssignees.length > 0) {
+              core.info(`#${issue.number} already assigned to ${currentAssignees.join(", ")}; skipping.`);
+              return;
+            }
+
+            // Rule 3: count how many open issues in THIS repo are currently
+            // assigned to the commenter (excluding PRs, and excluding this issue
+            // just in case). Use the Search API so a single request returns the
+            // count without paging through every open issue.
+            const searchQ = `repo:${owner}/${repo} is:issue is:open assignee:${commenter}`;
+            const search = await github.rest.search.issuesAndPullRequests({
+              q: searchQ,
+              per_page: 1,
+            });
+            const activeCount = search.data.total_count;
+            core.info(`${commenter} currently has ${activeCount} open issue(s) assigned in ${owner}/${repo}.`);
+
+            if (activeCount >= activeLimit) {
+              // At-cap: post a polite decline. No assignment.
+              const body =
+                `👋 Hi @${commenter} — thanks for offering to pick this up!\n\n` +
+                `You're currently at the **${activeLimit}-active-issue limit** in this repo. ` +
+                `Once one of your open assignments is closed or has a PR up for review, ` +
+                `you're welcome to claim this one — just leave another comment here and I'll assign it. ` +
+                `This cap keeps issues moving so nobody's blocked waiting on a claimed issue.\n\n` +
+                `Your currently open assignments: ` +
+                `[search link](https://github.com/${owner}/${repo}/issues?q=is%3Aopen+is%3Aissue+assignee%3A${commenter}).\n\n` +
+                `---\n` +
+                `_Automated by [.github/workflows/assign-on-comment.yml](https://github.com/${owner}/${repo}/blob/main/.github/workflows/assign-on-comment.yml)._`;
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: issue.number, body,
+              });
+              core.info(`Posted at-cap decline for ${commenter} on #${issue.number}.`);
+              return;
+            }
+
+            // Under-cap: assign + post a warm welcome with contributor-guide links.
+            try {
+              await github.rest.issues.addAssignees({
+                owner, repo, issue_number: issue.number, assignees: [commenter],
+              });
+            } catch (err) {
+              // Most common cause: commenter isn't a repo collaborator and GitHub
+              // silently drops the assignment. Post an explainer instead of failing silently.
+              const body =
+                `👋 Hi @${commenter} — I tried to assign this issue to you but GitHub wouldn't let me ` +
+                `(usually because the account isn't a repo collaborator yet). ` +
+                `A maintainer will assign it manually shortly. In the meantime, feel free to start on it — ` +
+                `the fix in your fork will still be linked back here via the PR.\n\n` +
+                `---\n` +
+                `_Automated by [.github/workflows/assign-on-comment.yml](https://github.com/${owner}/${repo}/blob/main/.github/workflows/assign-on-comment.yml)._`;
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: issue.number, body,
+              });
+              core.warning(`addAssignees failed for ${commenter} on #${issue.number}: ${err.message}`);
+              return;
+            }
+
+            const body =
+              `🎉 You've got it, @${commenter} — this issue is yours! ` +
+              `Fork the repo, branch from \`main\`, open a PR when you're ready, and link back to this issue in the PR body (\`Closes #${issue.number}\`).\n\n` +
+              `**New to open source or this repo?** Start here:\n` +
+              `- 📘 [CONTRIBUTING.md](https://github.com/${owner}/${repo}/blob/main/CONTRIBUTING.md) — repo conventions, recipe layout, coding style\n` +
+              `- 🌱 [Good first issues](https://github.com/${owner}/${repo}/labels/good%20first%20issue) — the full curated list, in case you want to browse more\n` +
+              `- 💬 [Discussions Q&A](https://github.com/${owner}/${repo}/discussions/categories/q-a) — stuck on setup? ask here\n\n` +
+              `No hard deadline, but if life gets in the way and you'd rather someone else take it, just say so here and we'll un-assign — no hard feelings. ` +
+              `Heads up: this repo has a soft cap of **${activeLimit} open assignments per contributor** to keep things moving; you're currently at **${activeCount + 1} / ${activeLimit}** after this one.\n\n` +
+              `Happy shipping! 🚀\n\n` +
+              `---\n` +
+              `_Automated by [.github/workflows/assign-on-comment.yml](https://github.com/${owner}/${repo}/blob/main/.github/workflows/assign-on-comment.yml)._`;
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: issue.number, body,
+            });
+            core.info(`Assigned #${issue.number} to ${commenter} and posted welcome.`);
