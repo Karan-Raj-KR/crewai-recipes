@@ -42,7 +42,7 @@ No boilerplate hunting. No stitching together random blog posts. Just clone → 
 
 ## Why crewai-recipes?
 
-| | Rolling your own | `crewai-recipe` |
+| | Rolling your own | `crewai-recipes` |
 |---|---|---|
 | **Time to first run** | Write agent, task, crew, and LLM config from scratch | `git clone` → `pip install` → set one env var → run |
 | **LLM / provider config** | Hardcode model, base URL, and API key in source | `LLM_API_KEY`, `LLM_MODEL`, `LLM_BASE_URL` env vars — swap providers without touching code |
