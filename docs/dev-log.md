@@ -1088,3 +1088,7 @@
 <!-- session: 2026-08-10-0 -->
 ## 2026-08-10 session 0
 - chore: clean up recipe structure
+
+<!-- session: 2026-08-10-1 -->
+## 2026-08-10 session 1
+- feat: add example prompt variations
