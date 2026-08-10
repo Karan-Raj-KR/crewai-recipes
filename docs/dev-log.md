@@ -1084,3 +1084,7 @@
 <!-- session: 2026-08-09-5 -->
 ## 2026-08-09 session 5
 - docs: update dev log with session notes
+
+<!-- session: 2026-08-10-0 -->
+## 2026-08-10 session 0
+- chore: clean up recipe structure
