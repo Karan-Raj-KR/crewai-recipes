@@ -18,19 +18,15 @@ def test_missing_key_raises_environment_error() -> None:
 
 
 @patch("llm.LLM")
-def test_nvidia_api_key_fallback_and_warning(
-    mock_llm, capsys: pytest.CaptureFixture[str]
-) -> None:
+def test_nvidia_api_key_fallback_and_warning(mock_llm) -> None:
     env = {"NVIDIA_API_KEY": "nvapi-test"}
     with patch.dict(os.environ, env, clear=True):
-        get_llm()
+        with pytest.warns(UserWarning, match="NVIDIA_API_KEY is deprecated"):
+            get_llm()
 
         mock_llm.assert_called_once()
         kwargs = mock_llm.call_args.kwargs
         assert kwargs["api_key"] == "nvapi-test"
-
-        captured = capsys.readouterr()
-        assert "WARNING: NVIDIA_API_KEY is deprecated" in captured.out
 
 
 @patch("llm.LLM")
