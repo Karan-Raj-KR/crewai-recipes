@@ -110,6 +110,6 @@ def test_agent_allow_delegation_disabled() -> None:
     """All agents have allow_delegation=False."""
     agents = build_agents()
     for agent in agents:
-        assert (
-            agent.allow_delegation is False
-        ), f"Agent {agent.role} should have allow_delegation=False"
+        assert agent.allow_delegation is False, (
+            f"Agent {agent.role} should have allow_delegation=False"
+        )
