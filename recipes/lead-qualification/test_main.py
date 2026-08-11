@@ -1,10 +1,17 @@
-"""Smoke test: main() runs without errors and build_crew signature is correct."""
+"""Smoke tests for the lead-qualification recipe (#82).
+
+Validates crew wiring, task context chaining, agent roles,
+and a mocked end-to-end run — all offline, no API calls.
+"""
 
 import os
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+# ── Windows cp1252 guard ─────────────────────────────────
+# main.py prints emoji; on Windows terminals that default
+# to cp1252 the print() would raise UnicodeEncodeError.
 if sys.platform.startswith("win"):
     try:
         sys.stdout.reconfigure(encoding="utf-8")
@@ -12,29 +19,40 @@ if sys.platform.startswith("win"):
     except AttributeError:
         pass
 
+# ── Environment & path setup (before any recipe imports) ─
 os.environ.setdefault("LLM_API_KEY", "nvapi-test")
 sys.path.insert(0, str(Path(__file__).parent))
 
-import main as recipe_main  # noqa: E402
 from agents import build_agents  # noqa: E402
 from crew import build_crew  # noqa: E402
+from main import main  # noqa: E402
 from tasks import build_tasks  # noqa: E402
 
 
+# ─── Tests ────────────────────────────────────────────────
+
+
 def test_main_runs() -> None:
-    """Smoke test executing main() with mocked crew kickoff output."""
+    """main() completes without error (mocked kickoff)."""
     mock_output = MagicMock()
-    mock_output.__str__ = lambda self: "WARM — 55/100\nFollow up within 48h."
+    mock_output.__str__ = lambda self: (
+        "WARM \u2014 55/100\nFollow up within 48h."
+    )
     with patch("crewai.Crew.kickoff", return_value=mock_output):
-        recipe_main.main()
+        main()
 
 
 def test_crew_structure() -> None:
-    """Assert build_crew returns a Crew with 2 agents, 2 tasks, and correct roles."""
+    """build_crew returns a sequential Crew with correct shape."""
+    from crewai import Process
+
     company = "Acme Corp"
     description = "Enterprise SaaS AI Platform"
-    crew = build_crew(company=company, description=description)
+    crew = build_crew(
+        company=company, description=description
+    )
 
+    # Two agents with the expected roles
     assert len(crew.agents) == 2
     research_agent = crew.agents[0]
     scoring_agent = crew.agents[1]
@@ -45,22 +63,25 @@ def test_crew_structure() -> None:
     assert not research_agent.allow_delegation
     assert not scoring_agent.allow_delegation
 
+    # Sequential process
+    assert crew.process == Process.sequential
+
+    # Two tasks, properly chained
     assert len(crew.tasks) == 2
     research_task = crew.tasks[0]
     scoring_task = crew.tasks[1]
 
-    # Verify context chaining
     assert scoring_task.context is not None
     assert research_task in scoring_task.context
 
-    # Verify placeholders are injected
+    # Placeholders injected into task descriptions
     assert company in research_task.description
     assert description in research_task.description
     assert company in scoring_task.description
 
 
 def test_task_context_chaining() -> None:
-    """Assert task context dependency chaining for agent handoff."""
+    """Scoring task receives research task via context."""
     research_agent, scoring_agent = build_agents()
     tasks = build_tasks(
         research_agent=research_agent,
@@ -74,16 +95,27 @@ def test_task_context_chaining() -> None:
     assert research_task in scoring_task.context
 
 
+def test_inputs_interpolated_in_tasks() -> None:
+    """Company and description reach task descriptions."""
+    research_agent, scoring_agent = build_agents()
+    company = "Acme Corp"
+    description = "Enterprise SaaS AI Platform"
+    tasks = build_tasks(
+        research_agent=research_agent,
+        scoring_agent=scoring_agent,
+        company=company,
+        description=description,
+    )
+    assert company in tasks[0].description
+    assert description in tasks[0].description
+    assert company in tasks[1].description
+
+
 def test_agent_allow_delegation_disabled() -> None:
-    """Assert allow_delegation is set to False for all agents."""
+    """All agents have allow_delegation=False."""
     agents = build_agents()
     for agent in agents:
-        assert agent.allow_delegation is False, f"Agent {agent.role} should have allow_delegation=False"
-
-
-if __name__ == "__main__":
-    test_main_runs()
-    test_crew_structure()
-    test_task_context_chaining()
-    test_agent_allow_delegation_disabled()
-    print("✅ lead-qualification: tests passed")
+        assert agent.allow_delegation is False, (
+            f"Agent {agent.role} should have"
+            " allow_delegation=False"
+        )
