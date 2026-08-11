@@ -33,8 +33,6 @@ def check_env() -> None:
 
 def main() -> None:
     """Parse CLI arguments and run the WhatsApp action simulation crew."""
-    check_env()
-
     parser = argparse.ArgumentParser(
         description="Run WhatsApp Action Simulation Recipe with NVIDIA NIM"
     )
@@ -57,6 +55,7 @@ def main() -> None:
     )
 
     args = parser.parse_args()
+    check_env()
 
     print("\n📱  WhatsApp Action Sim — Processing Message\n")
     print(f"   From    : {args.sender_name}")
