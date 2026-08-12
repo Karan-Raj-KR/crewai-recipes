@@ -18,10 +18,33 @@ improvements don't need this.)
 
 ---
 
-## 1. Start from an existing recipe
+## 1. Start from the template (recommended)
 
-Don't start from a blank folder — copy the closest working recipe and adapt it.
-Two good starting points:
+The easiest way to create a new recipe is to copy the template:
+
+```bash
+cp -r recipes/_template recipes/my-awesome-recipe
+cd recipes/my-awesome-recipe
+```
+
+The template includes:
+- ✅ All required files with correct structure
+- ✅ `llm.py` configured and ready to use (do not edit)
+- ✅ TODO comments marking exactly what to customize
+- ✅ A sample README with section headings
+- ✅ Example `build_crew()` signature with docstrings linking `inputs.json`
+
+**What to do next:**
+
+1. Replace the TODO comments in `agents.py`, `tasks.py`, `crew.py`, `run.py`, and `inputs.json` with your definitions
+2. Update `README.md` with your recipe name, what it does, and expected output
+3. Skip to [step 5](#5-run-it-from-a-fresh-virtual-environment) below
+
+---
+
+## (Alternative) Start from an existing recipe
+
+If you want to learn from an existing recipe instead of using the template:
 
 | If your recipe is… | Copy | Why |
 |--------------------|------|-----|
@@ -35,14 +58,13 @@ cd recipes/my-awesome-recipe
 
 ---
 
-## 2. Know the file layout
+## 2. (Alternative) Know the file layout
 
-Every recipe is **self-contained** — it owns all of its files and never imports
-from another recipe:
+If you're using an existing recipe as reference instead of the template, here's what each file does:
 
 | File | What it holds |
 |------|---------------|
-| `llm.py` | NVIDIA NIM config. **Copy this file as-is** — see step 3. |
+| `llm.py` | NVIDIA NIM config. **Copy this file as-is** — don't modify. |
 | `agents.py` | `Agent` objects (`role`, `goal`, `backstory`, `llm`) |
 | `tasks.py` | `Task` objects (`description`, `expected_output`, `agent`) |
 | `crew.py` | Assembles the `Crew` (agents + tasks + `process`) |
@@ -57,10 +79,10 @@ See [architecture.md](./architecture.md) for the reasoning behind this split.
 
 ## 3. Keep `llm.py` exactly as-is
 
-Every recipe uses the same `llm.py`: it defaults to `meta/llama-3.1-8b-instruct`,
-lets users pick a model via the `LLM_MODEL` env var, and sets `max_retries=3` so
-transient NIM timeouts/429s are retried with exponential backoff.
-**Copy it unchanged** — only adjust `temperature`/`max_tokens` if your task needs it.
+**Do not edit `llm.py`.** It carries the `openai/` model prefix and `max_retries` wiring that CrewAI's provider routing depends on. Every recipe uses the same `llm.py`:
+- Defaults to `meta/llama-3.1-8b-instruct`
+- Lets users pick a model via the `LLM_MODEL` env var
+- Sets `max_retries=3` so transient NIM timeouts/429s retry with exponential backoff
 
 ```python
 # in agents.py

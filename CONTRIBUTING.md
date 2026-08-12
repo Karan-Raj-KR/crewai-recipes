@@ -10,6 +10,7 @@ Please take a few minutes to read this guide before opening a PR.
 
 1. [Code of Conduct](#code-of-conduct)
 2. [How to Add a New Recipe](#how-to-add-a-new-recipe)
+   - [Quick Start: Use the Template](#quick-start-use-the-template)
 3. [Recipe Structure](#recipe-structure)
 4. [Coding Style](#coding-style)
 5. [Running Recipes with Docker](#running-recipes-with-docker)
@@ -46,28 +47,47 @@ cd crewai-recipes
 git checkout -b recipe/my-awesome-recipe
 ```
 
-### 3. Create your recipe directory
+### 3. Start from the template (recommended)
 
-```
-recipes/
-└── my-awesome-recipe/
-    ├── agents.py          # Agent definitions
-    ├── tasks.py           # Task definitions
-    ├── crew.py            # Crew assembly
-    ├── main.py            # Entry point
-    ├── tools/             # (optional) custom tools
-    │   └── my_tool.py
-    ├── knowledge/         # (optional) RAG documents, CSVs, etc.
-    ├── requirements.txt   # Pinned dependencies
-    ├── .env.example       # Required env vars (no real values!)
-    └── README.md          # Recipe-level documentation
+Use the template recipe to avoid missing files and boilerplate errors:
+
+```bash
+cp -r recipes/_template recipes/my-awesome-recipe
+cd recipes/my-awesome-recipe
 ```
 
-### 4. Write your recipe
+The template includes:
+- All required file structure (`agents.py`, `tasks.py`, `crew.py`, `llm.py`, `run.py`)
+- `llm.py` **configured and ready to use** (do not edit)
+- TODO comments marking exactly what to customize
+- A sample README with all required sections
+- Correct `build_crew()` signature shape with docstrings linking `inputs.json`
+
+Then simply replace the TODO comments with your agent/task definitions.
+
+See **[recipes/_template/README.md](./recipes/_template/README.md)** for the full template walkthrough.
+
+### 4. Customize your recipe
+
+Edit the files marked with `TODO` comments:
+- `agents.py` — define your agent(s)
+- `tasks.py` — define your task(s)
+- `crew.py` — update parameter names to match `inputs.json` keys
+- `run.py` — add CLI arguments matching your crew
+- `inputs.json` — define playground input descriptors
+- `README.md` — document your recipe
+
+**⚠️ Important:** Do NOT edit `llm.py`. It must remain exactly as copied. It carries the `openai/` model prefix and `max_retries` wiring that CrewAI's provider routing depends on.
+
+### 5. Write your recipe
 
 Follow the [Recipe Structure](#recipe-structure) and [Coding Style](#coding-style) sections below. For a full step-by-step walkthrough (copying an existing recipe, wiring up `llm.py`, running from a fresh venv), see **[docs/writing-a-recipe.md](./docs/writing-a-recipe.md)**.
 
-### 5. Test it end-to-end
+### 6. Test it end-to-end
+
+Follow the [Recipe Structure](#recipe-structure) and [Coding Style](#coding-style) sections below. For a full step-by-step walkthrough (copying an existing recipe, wiring up `llm.py`, running from a fresh venv), see **[docs/writing-a-recipe.md](./docs/writing-a-recipe.md)**.
+
+### 6. Test it end-to-end
 
 Run your recipe from a **fresh virtual environment** to make sure the `requirements.txt` is complete:
 
@@ -76,10 +96,10 @@ python -m venv test_venv
 source test_venv/bin/activate
 pip install -r recipes/my-awesome-recipe/requirements.txt
 cd recipes/my-awesome-recipe
-python main.py
+python run.py
 ```
 
-### 6. Open a Pull Request
+### 7. Open a Pull Request
 
 Push your branch and open a PR against `main`. Fill in the PR template completely.
 
