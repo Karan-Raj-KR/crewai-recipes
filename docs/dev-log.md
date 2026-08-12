@@ -1188,3 +1188,7 @@
 <!-- session: 2026-08-12-5 -->
 ## 2026-08-12 session 5
 - fix: improve token count estimation
+
+<!-- session: 2026-08-12-6 -->
+## 2026-08-12 session 6
+- docs: update changelog
