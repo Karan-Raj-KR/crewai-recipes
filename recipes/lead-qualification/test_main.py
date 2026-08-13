@@ -35,9 +35,7 @@ from tasks import build_tasks  # noqa: E402
 def test_main_runs() -> None:
     """main() completes without error (mocked kickoff)."""
     mock_output = MagicMock()
-    mock_output.__str__ = lambda self: (
-        "WARM \u2014 55/100\nFollow up within 48h."
-    )
+    mock_output.__str__ = lambda self: "WARM \u2014 55/100\nFollow up within 48h."
     with patch("crewai.Crew.kickoff", return_value=mock_output):
         main()
 
@@ -48,9 +46,7 @@ def test_crew_structure() -> None:
 
     company = "Acme Corp"
     description = "Enterprise SaaS AI Platform"
-    crew = build_crew(
-        company=company, description=description
-    )
+    crew = build_crew(company=company, description=description)
 
     # Two agents with the expected roles
     assert len(crew.agents) == 2
@@ -116,6 +112,5 @@ def test_agent_allow_delegation_disabled() -> None:
     agents = build_agents()
     for agent in agents:
         assert agent.allow_delegation is False, (
-            f"Agent {agent.role} should have"
-            " allow_delegation=False"
+            f"Agent {agent.role} should have allow_delegation=False"
         )
