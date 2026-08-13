@@ -55,6 +55,8 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: recipes/lead-qualification/requirements.txt
 
       - name: Install this recipe's dependencies
         run: pip install -r recipes/lead-qualification/requirements.txt
@@ -105,6 +107,8 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: recipes/faq-bot/requirements.txt
 
       - name: Install this recipe's dependencies
         run: pip install -r recipes/faq-bot/requirements.txt
@@ -154,6 +158,8 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: recipes/appointment-booking/requirements.txt
 
       - name: Install this recipe's dependencies
         run: pip install -r recipes/appointment-booking/requirements.txt
@@ -199,6 +205,8 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: recipes/customer-onboarding/requirements.txt
 
       - name: Install this recipe's dependencies
         run: pip install -r recipes/customer-onboarding/requirements.txt
@@ -244,6 +252,8 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: recipes/whatsapp-action-sim/requirements.txt
 
       - name: Install this recipe's dependencies
         run: pip install -r recipes/whatsapp-action-sim/requirements.txt
@@ -289,6 +299,8 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: recipes/email-drafting/requirements.txt
 
       - name: Install this recipe's dependencies
         run: pip install -r recipes/email-drafting/requirements.txt
@@ -334,6 +346,8 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: recipes/support-escalation/requirements.txt
 
       - name: Install this recipe's dependencies
         run: pip install -r recipes/support-escalation/requirements.txt
@@ -379,6 +393,8 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: recipes/content-pipeline/requirements.txt
 
       - name: Install this recipe's dependencies
         run: pip install -r recipes/content-pipeline/requirements.txt
@@ -424,6 +440,8 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: playground/requirements.txt
 
       - name: Install playground dependencies
         run: pip install -r playground/requirements.txt
