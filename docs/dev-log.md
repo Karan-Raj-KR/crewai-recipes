@@ -1300,3 +1300,7 @@
 <!-- session: 2026-08-14-3 -->
 ## 2026-08-14 session 3
 - chore: pin dependency versions
+
+<!-- session: 2026-08-14-4 -->
+## 2026-08-14 session 4
+- feat: add streaming output example
