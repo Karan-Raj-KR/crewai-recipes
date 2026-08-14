@@ -1336,3 +1336,7 @@
 <!-- session: 2026-08-14-12 -->
 ## 2026-08-14 session 12
 - fix: resolve edge case in agent loop
+
+<!-- session: 2026-08-14-13 -->
+## 2026-08-14 session 13
+- refactor: simplify tool call handling
