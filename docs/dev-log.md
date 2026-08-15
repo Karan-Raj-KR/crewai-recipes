@@ -1364,3 +1364,7 @@
 <!-- session: 2026-08-15-4 -->
 ## 2026-08-15 session 4
 - chore: remove unused imports
+
+<!-- session: 2026-08-15-5 -->
+## 2026-08-15 session 5
+- fix: correct typo in example output
