@@ -85,10 +85,6 @@ Follow the [Recipe Structure](#recipe-structure) and [Coding Style](#coding-styl
 
 ### 6. Test it end-to-end
 
-Follow the [Recipe Structure](#recipe-structure) and [Coding Style](#coding-style) sections below. For a full step-by-step walkthrough (copying an existing recipe, wiring up `llm.py`, running from a fresh venv), see **[docs/writing-a-recipe.md](./docs/writing-a-recipe.md)**.
-
-### 6. Test it end-to-end
-
 Run your recipe from a **fresh virtual environment** to make sure the `requirements.txt` is complete:
 
 ```bash

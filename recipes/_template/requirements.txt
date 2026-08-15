@@ -1,3 +1,2 @@
-crewai>=0.80.0
-langchain-community>=0.4.2
+crewai>=1.15.5
 python-dotenv>=1.2.2
