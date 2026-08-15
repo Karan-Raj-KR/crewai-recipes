@@ -50,13 +50,19 @@ def test_run_endpoint_caching_and_bypass() -> None:
     }
 
     def _exec_1(mod):
-        mod.build_crew = MagicMock(return_value=MagicMock(kickoff=MagicMock(return_value="Fresh Output #1")))
+        mod.build_crew = MagicMock(
+            return_value=MagicMock(kickoff=MagicMock(return_value="Fresh Output #1"))
+        )
 
     def _exec_3(mod):
-        mod.build_crew = MagicMock(return_value=MagicMock(kickoff=MagicMock(return_value="Fresh Output #3")))
+        mod.build_crew = MagicMock(
+            return_value=MagicMock(kickoff=MagicMock(return_value="Fresh Output #3"))
+        )
 
     with patch.dict(os.environ, env_mock):
-        with patch("importlib.machinery.SourceFileLoader.exec_module", side_effect=_exec_1):
+        with patch(
+            "importlib.machinery.SourceFileLoader.exec_module", side_effect=_exec_1
+        ):
             # 1. First run -> Fresh execution (cached: False)
             res1 = client.post("/run", json=payload)
             assert res1.status_code == 200
@@ -71,7 +77,9 @@ def test_run_endpoint_caching_and_bypass() -> None:
             assert data2["output"] == "Fresh Output #1"
             assert data2["cached"] is True
 
-        with patch("importlib.machinery.SourceFileLoader.exec_module", side_effect=_exec_3):
+        with patch(
+            "importlib.machinery.SourceFileLoader.exec_module", side_effect=_exec_3
+        ):
             # 3. Third run with bypass_cache: True -> Forces fresh execution
             payload_bypass = {**payload, "bypass_cache": True}
             res3 = client.post("/run", json=payload_bypass)

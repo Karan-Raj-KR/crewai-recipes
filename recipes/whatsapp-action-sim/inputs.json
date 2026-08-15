@@ -1,4 +1,4 @@
 [
-  {"name": "user_message", "label": "WhatsApp Message"},
-  {"name": "sender_name", "label": "Sender Name (optional)"}
+  {"name": "user_message", "label": "WhatsApp Message", "example": "Hey! Where's my order? It's been 3 days now 😤"},
+  {"name": "sender_name", "label": "Sender Name (optional)", "example": "Ravi"}
 ]
