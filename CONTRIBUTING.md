@@ -196,6 +196,11 @@ ruff format recipes/my-awesome-recipe/
 
 CI will block PRs that fail Ruff checks.
 
+All dev tools (including the exact Ruff version CI uses) are also pinned in **[`requirements-dev.txt`](./requirements-dev.txt)**:
+
+```bash
+pip install -r requirements-dev.txt
+```
 ### Testing
 
 We use `pytest` for unit and integration tests. Run tests locally from within the recipe directory:
@@ -207,6 +212,8 @@ pytest -v
 ```
 
 CI will block PRs if any test fails.
+
+Tip: `pip install -r requirements-dev.txt` (see **[`requirements-dev.txt`](./requirements-dev.txt)**) installs `pytest`, `pytest-mock`, `httpx`, and Ruff in one go, pinned to match CI.
 
 ---
 
