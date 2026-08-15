@@ -1,0 +1,5 @@
+# Pinned to match CI (.github/workflows/ci.yml). Bump both files together.
+ruff==0.15.10
+pytest
+pytest-mock
+httpx  # playground tests
