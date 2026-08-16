@@ -1167,8 +1167,15 @@
             
             field.id = `input-${input.name}`;
             field.dataset.name = input.name;
-            field.placeholder = `Enter ${input.label.toLowerCase()}`;
-            
+            field.placeholder = input.example || `Enter ${input.label.toLowerCase()}`;
+
+            // Static gallery (GitHub Pages) replays a recorded run, so the inputs
+            // are fixed to the ones that were actually recorded.
+            if (window.__STATIC_GALLERY__ && input.example) {
+                field.value = input.example;
+                field.readOnly = true;
+            }
+
             div.appendChild(label);
             div.appendChild(field);
             inputsContainer.appendChild(div);

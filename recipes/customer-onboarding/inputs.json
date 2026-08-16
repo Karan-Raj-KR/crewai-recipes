@@ -1,7 +1,7 @@
 [
-  {"name": "customer_name", "label": "Customer Name"},
-  {"name": "company", "label": "Company Name"},
-  {"name": "role", "label": "Job Role / Title"},
-  {"name": "use_case", "label": "Primary Use Case / Goal"},
-  {"name": "team_size", "label": "Team Size"}
+  {"name": "customer_name", "label": "Customer Name", "example": "Sarah Connor"},
+  {"name": "company", "label": "Company Name", "example": "Cyberdyne Systems"},
+  {"name": "role", "label": "Job Role / Title", "example": "Chief Security Officer"},
+  {"name": "use_case", "label": "Primary Use Case / Goal", "example": "Automating threat intelligence aggregation and incident response"},
+  {"name": "team_size", "label": "Team Size", "example": "50"}
 ]

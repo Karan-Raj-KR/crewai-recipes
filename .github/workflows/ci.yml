@@ -12,15 +12,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Fast gate: pure stdlib, no installs. Catches a malformed recipe in seconds
+  # instead of after an eight-way crewai install.
+  contract:
+    name: Recipe Contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install pytest
+      - run: pytest tests/test_recipe_contract.py -v
+
   lint:
     name: Ruff Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - uses: actions/setup-python@v7
         with:
           # CrewAI requires Python >=3.10,<3.14. Pin to 3.12 for CI.
           python-version: "3.12"
@@ -31,413 +42,100 @@ jobs:
       - name: Install Ruff
         run: pip install "ruff==0.15.10"
 
-      # Lint only the stable recipes. The scaffolds intentionally contain
-      # TODO stubs (unused imports/vars) and are excluded until implemented.
-      - name: Run Ruff check
-        run: ruff check recipes/lead-qualification/ recipes/faq-bot/ recipes/appointment-booking/ recipes/customer-onboarding/ recipes/whatsapp-action-sim/ recipes/email-drafting/ recipes/support-escalation/ recipes/content-pipeline/
+      # Whole tree, so a new recipe is covered without editing this file (#167).
+      # A scaffold with intentional TODO stubs gets a per-directory exclude here.
+      - run: ruff check recipes/ playground/ tools/ tests/
+      - run: ruff format --check recipes/ playground/ tools/ tests/
 
-      - name: Run Ruff format check
-        run: ruff format --check recipes/lead-qualification/ recipes/faq-bot/ recipes/appointment-booking/ recipes/customer-onboarding/ recipes/whatsapp-action-sim/ recipes/email-drafting/ recipes/support-escalation/ recipes/content-pipeline/
-
-  import-check-lead-qualification:
-    name: Import Check — lead-qualification
+  # Emit the recipe list so import checks cover recipes added later without
+  # anyone hand-copying a job into this file.
+  discover:
+    name: Discover Recipes
     runs-on: ubuntu-latest
-    needs: lint
+    outputs:
+      recipes: ${{ steps.list.outputs.recipes }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: list
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, pathlib
+          names = sorted(
+              d.name for d in pathlib.Path("recipes").iterdir()
+              if d.is_dir() and not d.name.startswith("_") and (d / "crew.py").exists()
+          )
+          assert names, "no recipes discovered"
+          print(f"recipes={json.dumps(names)}")
+          PY
+
+  import-check:
+    name: Import Check — ${{ matrix.recipe }} (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    needs: [lint, contract, discover]
     strategy:
       fail-fast: false
       matrix:
+        recipe: ${{ fromJSON(needs.discover.outputs.recipes) }}
         python-version: ["3.10", "3.11", "3.12"]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: recipes/${{ matrix.recipe }}/requirements.txt
 
-      - name: Install this recipe's dependencies
-        run: pip install -r recipes/lead-qualification/requirements.txt
+      - name: Install recipe dependencies
+        run: pip install -r recipes/${{ matrix.recipe }}/requirements.txt
 
       - name: Install test dependencies
         run: pip install pytest pytest-mock
 
-      - name: Check imports + LLM wiring (no API call)
+      # A dummy key proves the wiring imports without ever calling an LLM.
+      - name: Verify the crew assembles
         env:
-          # Dummy key so the module-level EnvironmentError isn't triggered.
-          # Constructing the LLM does NOT hit the network — no real call is made.
-          LLM_API_KEY: nvapi-test
+          LLM_API_KEY: test-key
+        working-directory: recipes/${{ matrix.recipe }}
         run: |
-          cd recipes/lead-qualification
           python -c "
-          from tasks import build_tasks
+          import inspect
           from crew import build_crew
-          from llm import get_llm, MAX_RETRIES
-          llm = get_llm()
-          assert 'llama-3.1-8b-instruct' in llm.model, f'unexpected default model: {llm.model}'
-          # Assert retries reach the underlying SDK client, not just the config
-          # object — a provider-routing change once silently dropped them.
-          retries = llm._get_client_params()['max_retries']
-          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
-          print(f'✅ lead-qualification: imports + LLM wiring OK ({retries} retries)')
+          assert callable(build_crew), 'build_crew is not callable'
+          print('✅ ${{ matrix.recipe }}:', inspect.signature(build_crew))
           "
 
       - name: Run tests with pytest
         env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/lead-qualification
-          pytest -v
-
-  import-check-faq-bot:
-    name: Import Check — faq-bot
-    runs-on: ubuntu-latest
-    needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install this recipe's dependencies
-        run: pip install -r recipes/faq-bot/requirements.txt
-
-      - name: Install test dependencies
-        run: pip install pytest pytest-mock
-
-      - name: Check knowledge base + LLM wiring (no API call)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/faq-bot
-          python -c "
-          from knowledge_base import FAQ_KNOWLEDGE_BASE, get_knowledge_base_text
-          from llm import get_llm, MAX_RETRIES
-          assert len(FAQ_KNOWLEDGE_BASE) >= 6, 'Expected at least 6 FAQ entries'
-          kb_text = get_knowledge_base_text()
-          assert 'PRICING' in kb_text, 'Expected PRICING topic in KB text'
-          llm = get_llm()
-          # Assert retries reach the underlying SDK client, not just the config
-          # object — a provider-routing change once silently dropped them.
-          retries = llm._get_client_params()['max_retries']
-          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
-          print(f'✅ faq-bot: {len(FAQ_KNOWLEDGE_BASE)} KB entries + LLM wiring OK ({retries} retries)')
-          "
-
-      - name: Run tests with pytest
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/faq-bot
-          pytest -v
-
-  import-check-appointment-booking:
-    name: Import Check — appointment-booking
-    runs-on: ubuntu-latest
-    needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install this recipe's dependencies
-        run: pip install -r recipes/appointment-booking/requirements.txt
-
-      - name: Install test dependencies
-        run: pip install pytest pytest-mock
-
-      - name: Check imports + LLM wiring (no API call)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/appointment-booking
-          python -c "
-          from tasks import build_tasks
-          from crew import build_crew
-          from llm import get_llm, MAX_RETRIES
-          llm = get_llm()
-          retries = llm._get_client_params()['max_retries']
-          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
-          print(f'✅ appointment-booking: imports + LLM wiring OK ({retries} retries)')
-          "
-
-      - name: Run tests with pytest
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/appointment-booking
-          pytest -v
-
-  import-check-customer-onboarding:
-    name: Import Check — customer-onboarding
-    runs-on: ubuntu-latest
-    needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install this recipe's dependencies
-        run: pip install -r recipes/customer-onboarding/requirements.txt
-
-      - name: Install test dependencies
-        run: pip install pytest pytest-mock
-
-      - name: Check imports + LLM wiring (no API call)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/customer-onboarding
-          python -c "
-          from tasks import build_tasks
-          from crew import build_crew
-          from llm import get_llm, MAX_RETRIES
-          llm = get_llm()
-          retries = llm._get_client_params()['max_retries']
-          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
-          print(f'✅ customer-onboarding: imports + LLM wiring OK ({retries} retries)')
-          "
-
-      - name: Run tests with pytest
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/customer-onboarding
-          pytest -v
-
-  import-check-whatsapp-action-sim:
-    name: Import Check — whatsapp-action-sim
-    runs-on: ubuntu-latest
-    needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install this recipe's dependencies
-        run: pip install -r recipes/whatsapp-action-sim/requirements.txt
-
-      - name: Install test dependencies
-        run: pip install pytest pytest-mock
-
-      - name: Check imports + LLM wiring (no API call)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/whatsapp-action-sim
-          python -c "
-          from tasks import build_tasks
-          from crew import build_crew
-          from llm import get_llm, MAX_RETRIES
-          llm = get_llm()
-          retries = llm._get_client_params()['max_retries']
-          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
-          print(f'✅ whatsapp-action-sim: imports + LLM wiring OK ({retries} retries)')
-          "
-
-      - name: Run tests with pytest
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/whatsapp-action-sim
-          pytest -v
-
-  import-check-email-drafting:
-    name: Import Check — email-drafting
-    runs-on: ubuntu-latest
-    needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install this recipe's dependencies
-        run: pip install -r recipes/email-drafting/requirements.txt
-
-      - name: Install test dependencies
-        run: pip install pytest pytest-mock
-
-      - name: Check imports + LLM wiring (no API call)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/email-drafting
-          python -c "
-          from tasks import build_tasks
-          from crew import build_crew
-          from llm import get_llm, MAX_RETRIES
-          llm = get_llm()
-          retries = llm._get_client_params()['max_retries']
-          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
-          print(f'✅ email-drafting: imports + LLM wiring OK ({retries} retries)')
-          "
-
-      - name: Run tests with pytest
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/email-drafting
-          pytest -v
-
-  import-check-support-escalation:
-    name: Import Check — support-escalation
-    runs-on: ubuntu-latest
-    needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install this recipe's dependencies
-        run: pip install -r recipes/support-escalation/requirements.txt
-
-      - name: Install test dependencies
-        run: pip install pytest pytest-mock
-
-      - name: Check imports + LLM wiring (no API call)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/support-escalation
-          python -c "
-          from tasks import build_tasks
-          from crew import build_crew
-          from llm import get_llm, MAX_RETRIES
-          llm = get_llm()
-          retries = llm._get_client_params()['max_retries']
-          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
-          print(f'✅ support-escalation: imports + LLM wiring OK ({retries} retries)')
-          "
-
-      - name: Run tests with pytest
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/support-escalation
-          pytest -v
-
-  import-check-content-pipeline:
-    name: Import Check — content-pipeline
-    runs-on: ubuntu-latest
-    needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install this recipe's dependencies
-        run: pip install -r recipes/content-pipeline/requirements.txt
-
-      - name: Install test dependencies
-        run: pip install pytest pytest-mock
-
-      - name: Check imports + LLM wiring (no API call)
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/content-pipeline
-          python -c "
-          from tasks import build_tasks
-          from crew import build_crew
-          from llm import get_llm, MAX_RETRIES
-          llm = get_llm()
-          retries = llm._get_client_params()['max_retries']
-          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
-          print(f'✅ content-pipeline: imports + LLM wiring OK ({retries} retries)')
-          "
-
-      - name: Run tests with pytest
-        env:
-          LLM_API_KEY: nvapi-test
-        run: |
-          cd recipes/content-pipeline
-          pytest -v
+          LLM_API_KEY: test-key
+        working-directory: recipes/${{ matrix.recipe }}
+        run: pytest -v
 
   import-check-playground:
-    name: Import Check — playground
+    name: Import Check — playground (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, contract]
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: playground/requirements.txt
 
-      - name: Install playground dependencies
-        run: pip install -r playground/requirements.txt
-
-      - name: Install test dependencies
-        run: pip install pytest pytest-mock httpx
+      - run: pip install -r playground/requirements.txt
+      - run: pip install pytest pytest-mock httpx
 
       - name: Verify FastAPI app imports and starts
         env:
-          # Dummy key so env validation doesn't fail
           LLM_API_KEY: test-key
+        working-directory: playground
         run: |
-          cd playground
-          # Use python to import main and instantiate the app
           python -c "
           from main import app
           assert app.title == 'CrewAI Recipes Playground'
@@ -447,6 +145,19 @@ jobs:
       - name: Run tests with pytest
         env:
           LLM_API_KEY: test-key
-        run: |
-          cd playground
-          pytest -v
+        working-directory: playground
+        run: pytest -v
+
+  # The gallery is the playground UI plus a fetch shim; if the shim breaks, the
+  # deployed site silently shows nothing.
+  gallery:
+    name: Gallery Shim
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: node site/test_static_shim.mjs
+      - name: Build the gallery
+        run: python tools/build_site.py

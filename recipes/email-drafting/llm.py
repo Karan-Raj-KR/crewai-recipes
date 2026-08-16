@@ -1,5 +1,5 @@
 """
-email-drafting — llm.py
+llm.py — identical in every recipe. Edit one, then run `python tools/sync_llm.py`.
 
 Central LLM configuration using OpenAI-compatible endpoints.
 Supports primary provider (LLM_API_KEY, LLM_MODEL, LLM_BASE_URL) and optional
@@ -7,6 +7,7 @@ secondary/fallback provider (LLM_FALLBACK_API_KEY, LLM_FALLBACK_MODEL, LLM_FALLB
 """
 
 import os
+import warnings
 from typing import Optional
 
 from crewai import LLM
@@ -54,8 +55,10 @@ def get_llm(provider: Optional[str] = None) -> LLM:
         if not api_key:
             api_key = os.getenv("NVIDIA_API_KEY")
             if api_key:
-                print(
-                    "WARNING: NVIDIA_API_KEY is deprecated. Please use LLM_API_KEY instead."
+                warnings.warn(
+                    "NVIDIA_API_KEY is deprecated. Please use LLM_API_KEY instead.",
+                    UserWarning,
+                    stacklevel=2,
                 )
 
         # Auto-fallback to secondary provider if primary key is missing but fallback key exists

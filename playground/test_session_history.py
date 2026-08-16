@@ -9,7 +9,7 @@ playground_dir = Path(__file__).parent.resolve()
 if str(playground_dir) not in sys.path:
     sys.path.insert(0, str(playground_dir))
 
-from main import app
+from main import app  # noqa: E402 (import after sys.path/mocks are set up)
 
 client = TestClient(app)
 
@@ -29,7 +29,10 @@ def test_index_html_contains_history_sidebar_elements() -> None:
     assert 'id="history-list"' in html
 
     # Verify sessionStorage JS functions
-    assert "sessionStorage.getItem(HISTORY_STORAGE_KEY)" in html or "sessionStorage.getItem" in html
+    assert (
+        "sessionStorage.getItem(HISTORY_STORAGE_KEY)" in html
+        or "sessionStorage.getItem" in html
+    )
     assert "sessionStorage.setItem" in html
     assert "sessionStorage.removeItem" in html
     assert "MAX_HISTORY_ENTRIES = 10" in html

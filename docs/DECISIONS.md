@@ -3,6 +3,67 @@
 Short log of deliberate choices about how this repo is run, so contributors
 (and future me) understand the *why*. Newest first.
 
+## The gallery replays recordings instead of running live (2026-08)
+
+The playground is the most persuasive thing in this repo — you watch the agents
+think — and it was only reachable by cloning, installing crewai, and getting a
+NIM key. So it now also ships as a public gallery on GitHub Pages.
+
+It replays recorded runs rather than executing live, for three reasons that are
+not fixable by tightening a config:
+
+1. **Cost.** `crew.kickoff()` bills the maintainer's key. A public Run button is
+   an open invitation to spend someone else's credits, unbounded (see #181).
+2. **Code execution.** The playground `exec_module()`s whatever is in `recipes/`.
+   Those files arrive by pull request. A public deploy makes every merge a
+   potential RCE on the host.
+3. **Shape.** Runs block for 5–60s; free tiers fall over on exactly that profile.
+
+`tools/record_runs.py` captures the same SSE events the live endpoint emits, and
+`site/static-shim.js` patches `fetch` so the *unmodified* playground UI reads
+them from JSON. One UI, two data sources — the deployed site cannot drift from
+the local app, because it is built from the same file.
+
+Recordings are real runs only: the recorder refuses to save a run that errored
+or never completed, and the gallery banner says plainly that inputs are fixed to
+what was recorded. Faking a trace would be the one thing that makes the whole
+premise worthless.
+
+**Live execution is deferred, not rejected.** Bring-your-own-key — the visitor
+pastes their own free NIM key, with per-IP rate limiting and a recipe allowlist —
+is the phase-2 design. Deferred until the gallery shows there's traffic worth
+paying a server for.
+
+## New recipes must not require editing CI (2026-08)
+
+`ci.yml` had grown to 452 lines: nine near-identical hand-copied jobs, one per
+recipe, plus the recipe list repeated three times in the lint step. Adding a
+recipe meant copying 50 lines of YAML, and forgetting to meant your recipe was
+never tested.
+
+Replaced with a `discover` job that lists `recipes/*/crew.py` and feeds a matrix
+(452 → 163 lines). The recipe list now lives in exactly one place: the
+filesystem.
+
+Paired with `tests/test_recipe_contract.py`, which walks the same directories and
+asserts the contract — required files, `inputs.json` well-formed, and crucially
+that `inputs.json` and the `build_crew` signature agree, since a mismatch there
+is a runtime 500 in the playground with no earlier warning. Stdlib only: no
+crewai, no API key, no install, so a contributor gets the verdict in seconds.
+
+## llm.py stays copied, but drift is now a CI failure (2026-08)
+
+Per-recipe isolation (#7 below) means `llm.py` is duplicated eight times, and it
+drifted — #191 and #193 were both "recipe N is out of sync with recipe M". The
+tempting fix is a shared module, which would break the property that makes a
+recipe copy-pasteable on its own.
+
+Kept the copies; made drift fail CI instead. `tools/sync_llm.py` propagates an
+edit to every recipe, `--check` reports drift, and the contract suite asserts all
+copies are byte-identical. The per-recipe name in the docstring — the only real
+difference between the eight files at the time — was replaced with a line telling
+you to run the sync tool.
+
 ## Contributor-experience conventions (adopted 2026-07)
 
 Surveyed a handful of well-run cookbook/template repos (openai-cookbook,

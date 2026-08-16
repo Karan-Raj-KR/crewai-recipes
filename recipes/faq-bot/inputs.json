@@ -1,4 +1,4 @@
 [
-  {"name": "question", "label": "Customer Question"},
-  {"name": "customer_name", "label": "Customer Name (optional)"}
+  {"name": "question", "label": "Customer Question", "example": "Do you offer a free trial? Do I need a credit card?"},
+  {"name": "customer_name", "label": "Customer Name (optional)", "example": "Rahul"}
 ]
