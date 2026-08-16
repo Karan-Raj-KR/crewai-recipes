@@ -1,5 +1,5 @@
 """
-content-pipeline — llm.py
+llm.py — identical in every recipe. Edit one, then run `python tools/sync_llm.py`.
 
 Central LLM configuration using OpenAI-compatible endpoints.
 Supports primary provider (LLM_API_KEY, LLM_MODEL, LLM_BASE_URL) and optional
