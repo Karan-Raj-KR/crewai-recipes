@@ -1,5 +1,5 @@
 [
-  {"name": "ticket_text", "label": "Support Ticket Description"},
-  {"name": "customer_tier", "label": "Customer Plan Tier (free / pro / enterprise)"},
-  {"name": "previous_contacts", "label": "Previous Contact Attempts"}
+  {"name": "ticket_text", "label": "Support Ticket Description", "example": "Our enterprise SAML SSO integration with Okta started failing with HTTP 500 error after certificate renewal."},
+  {"name": "customer_tier", "label": "Customer Plan Tier (free / pro / enterprise)", "example": "enterprise"},
+  {"name": "previous_contacts", "label": "Previous Contact Attempts", "example": "2"}
 ]

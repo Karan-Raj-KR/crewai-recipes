@@ -2,7 +2,13 @@
 
 # 🤖 crewai-recipes
 
-**A public library of ready-to-run CrewAI multi-agent workflows — powered by NVIDIA NIM (Llama 3.1 8B by default; swap to 70B with one env var: `LLM_MODEL`).**
+**See a multi-agent workflow run before you write one.**
+
+A gallery of ready-to-run CrewAI workflows you can watch execute in your browser — then clone and run yourself. Powered by NVIDIA NIM (Llama 3.1 8B by default; swap to 70B with one env var: `LLM_MODEL`).
+
+### ▶ [Watch a crew run →](https://karan-raj-kr.github.io/crewai-recipes/)
+
+No install, no API key — real recorded agent traces, replayed in the browser.
 
 [![CI](https://github.com/Karan-Raj-KR/crewai-recipes/actions/workflows/ci.yml/badge.svg)](https://github.com/Karan-Raj-KR/crewai-recipes/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
@@ -34,9 +40,36 @@ LLM_API_KEY=nvapi-YOUR_KEY python run.py --company "Acme Corp" --description "40
 
 ## What is this?
 
-`crewai-recipes` is a community-driven cookbook of **self-contained, production-ready multi-agent workflows** built with [CrewAI](https://github.com/joaomdmoura/crewAI) and [NVIDIA NIM](https://build.nvidia.com/). Recipes default to **Llama 3.1 8B Instruct** — fast and reliable on the NIM free tier — and you can switch to the larger 3.3 70B model with a single environment variable (`LLM_MODEL`). Each recipe is a standalone Python project you can clone, configure with a single API key, and run in minutes.
+Most multi-agent examples are a wall of code and a screenshot. You can't tell whether the thing actually works, or what the agents *say to each other*, until you've installed it.
 
-No boilerplate hunting. No stitching together random blog posts. Just clone → set key → run.
+`crewai-recipes` fixes the order. Every workflow here has been run for real, its full agent trace captured, and replayed on the [gallery](https://karan-raj-kr.github.io/crewai-recipes/) — so you watch two agents argue their way to an ICP score *first*, and decide *then* whether to clone it.
+
+What makes that possible is a small contract every recipe honours — `build_crew(**inputs)` plus an `inputs.json` describing them. Anything that satisfies it is automatically runnable from the CLI, from the local web playground, and in the gallery, with no glue code. See **[The recipe contract](#-the-recipe-contract)**.
+
+Recipes default to **Llama 3.1 8B Instruct** — fast and reliable on the NIM free tier — and switch to 3.3 70B with a single environment variable (`LLM_MODEL`). Each one is a standalone Python project: clone, set one API key, run.
+
+---
+
+## 📐 The recipe contract
+
+A recipe is any directory under `recipes/` with these files. Satisfy the contract and every tool in this repo picks your workflow up for free:
+
+| File | Contract |
+|---|---|
+| `crew.py` | Exposes `build_crew(**inputs) -> Crew`. The only entry point tooling calls. |
+| `inputs.json` | `[{"name", "label", "example"}, …]` — every field maps to a `build_crew` parameter. Drives the CLI flags, the playground form, and the gallery recording. |
+| `llm.py` | Byte-identical across all recipes. Edit one, run `python tools/sync_llm.py`. |
+| `agents.py` / `tasks.py` | Agent and task definitions. |
+| `run.py` | `argparse` CLI entry point. |
+| `requirements.txt`, `.env.example`, `README.md` | Self-contained setup. |
+
+`pytest tests/test_recipe_contract.py` enforces all of it — including that `inputs.json` and your `build_crew` signature actually agree, which is the mismatch that silently 500s the playground. It's pure stdlib, so it runs in seconds with nothing installed:
+
+```bash
+pip install pytest && pytest tests/test_recipe_contract.py -v
+```
+
+New recipes are discovered automatically. No CI file to edit, no list to update.
 
 ---
 
@@ -50,6 +83,7 @@ No boilerplate hunting. No stitching together random blog posts. Just clone → 
 | **CI validation** | Set up yourself | ruff lint, format check, and import-wiring assertions on every push to `main` |
 | **Entry points** | Write from scratch | `run.py` (argparse CLI) and `main.py` (edit-and-run sample) included per recipe |
 | **Local browser UI** | Build separately | `/playground` — FastAPI + HTML, runs locally, key never leaves your machine |
+| **Seeing it work first** | Install, then find out | [Gallery](https://karan-raj-kr.github.io/crewai-recipes/) — watch the real agent trace before you clone |
 
 ---
 
@@ -162,6 +196,9 @@ crewai-recipes/
 │   ├── whatsapp-action-sim/
 │   └── customer-onboarding/
 ├── playground/                  # Local web UI for testing recipes
+├── site/                        # The public gallery (playground UI + recorded runs)
+├── tools/                       # record_runs.py, build_site.py, sync_llm.py
+├── tests/                       # Recipe contract suite (stdlib only, no API key)
 ├── docs/                        # Deep-dive guides and architecture notes
 ├── .github/
 │   ├── ISSUE_TEMPLATE/          # Bug report & recipe request templates
@@ -182,10 +219,18 @@ crewai-recipes/
 Contributions are very welcome! Whether you're fixing a bug, improving docs, or submitting a brand-new recipe — please read **[CONTRIBUTING.md](./CONTRIBUTING.md)** first.
 
 Quick summary:
-- Each recipe lives in its own directory under `recipes/`
+- Each recipe lives in its own directory under `recipes/` and satisfies [the recipe contract](#-the-recipe-contract)
 - Must use CrewAI + NVIDIA NIM (default `meta/llama-3.1-8b-instruct`, 70B optional via `LLM_MODEL`); other models can be optional extras
-- Include a `README.md`, `requirements.txt`, `run.py`, and `.env.example`
 - Open an issue first for major new recipes so we can align before you build
+
+Before you push, run the checks CI runs — no API key needed for any of them:
+
+```bash
+pytest tests/test_recipe_contract.py   # your recipe satisfies the contract
+python tools/sync_llm.py --check       # llm.py hasn't drifted
+ruff check recipes/ playground/ tools/ tests/
+ruff format --check recipes/ playground/ tools/ tests/
+```
 
 New to the project? Start with an issue labeled **[good first issue](https://github.com/Karan-Raj-KR/crewai-recipes/labels/good%20first%20issue)** — each one is scoped to be a self-contained, mergeable PR.
 
@@ -212,6 +257,8 @@ New to the project? Start with an issue labeled **[good first issue](https://git
 Extended guides live in [`/docs`](./docs/):
 
 - [Writing a New Recipe](./docs/writing-a-recipe.md) — step-by-step contributor walkthrough
+- [The Gallery](./site/README.md) — how the public site records and replays runs
+- [Changelog](./CHANGELOG.md) — what changed, when
 - [Architecture Overview](./docs/architecture.md)
 - [Agent Design Patterns](./docs/agent-patterns.md)
 - [NVIDIA NIM + CrewAI Setup Guide](./docs/nim-setup.md)

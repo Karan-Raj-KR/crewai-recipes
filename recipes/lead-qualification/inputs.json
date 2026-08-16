@@ -1,4 +1,4 @@
 [
-  {"name": "company", "label": "Company Name"},
-  {"name": "description", "label": "Company Description"}
+  {"name": "company", "label": "Company Name", "example": "Acme SaaS Co."},
+  {"name": "description", "label": "Company Description", "example": "Inbound form submission. Jordan mentioned they're 'evaluating automation vendors' and their team has grown from 5 to 40 reps in the last 18 months. They're currently using spreadsheets for pipeline management. Series B, ~$12M raised."}
 ]

@@ -17,7 +17,7 @@ if str(playground_dir) not in sys.path:
 if "crewai" not in sys.modules:
     sys.modules["crewai"] = MagicMock()
 
-from main import app, cleanup_recipe_modules
+from main import app, cleanup_recipe_modules  # noqa: E402 (import after sys.path/mocks are set up)
 
 client = TestClient(app)
 
@@ -27,7 +27,10 @@ def test_cross_recipe_module_contamination() -> None:
     env_mock = {"LLM_API_KEY": "nvapi-test"}
 
     # Recipe 1: faq-bot (1 agent)
-    with patch.dict(os.environ, env_mock), patch("crewai.Crew.kickoff", return_value="Mocked FAQ reply"):
+    with (
+        patch.dict(os.environ, env_mock),
+        patch("crewai.Crew.kickoff", return_value="Mocked FAQ reply"),
+    ):
         res1 = client.post(
             "/run",
             json={
@@ -49,7 +52,10 @@ def test_cross_recipe_module_contamination() -> None:
 
     # Recipe 2: lead-qualification (2 agents)
     # Without fix, lead-qualification would resolve from faq-bot's cached 'agents' module
-    with patch.dict(os.environ, env_mock), patch("crewai.Crew.kickoff", return_value="Mocked Lead Report"):
+    with (
+        patch.dict(os.environ, env_mock),
+        patch("crewai.Crew.kickoff", return_value="Mocked Lead Report"),
+    ):
         res2 = client.post(
             "/run",
             json={
@@ -66,7 +72,10 @@ def test_cross_recipe_module_contamination() -> None:
     assert "tasks" not in sys.modules
 
     # Recipe 3: support-escalation (3 agents)
-    with patch.dict(os.environ, env_mock), patch("crewai.Crew.kickoff", return_value="Mocked Support Outcome"):
+    with (
+        patch.dict(os.environ, env_mock),
+        patch("crewai.Crew.kickoff", return_value="Mocked Support Outcome"),
+    ):
         res3 = client.post(
             "/run",
             json={

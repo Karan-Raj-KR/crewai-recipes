@@ -1,6 +1,6 @@
 [
-  {"name": "recipient", "label": "Recipient (Name / Role)"},
-  {"name": "purpose", "label": "Email Purpose"},
-  {"name": "key_points", "label": "Key Points to Cover"},
-  {"name": "tone", "label": "Tone (professional / friendly / formal / direct)"}
+  {"name": "recipient", "label": "Recipient (Name / Role)", "example": "Design Team Lead"},
+  {"name": "purpose", "label": "Email Purpose", "example": "Requesting design review for mobile checkout flow"},
+  {"name": "key_points", "label": "Key Points to Cover", "example": "New checkout mocks are ready in Figma, review needed by Wednesday EOD, priority on payment step UX"},
+  {"name": "tone", "label": "Tone (professional / friendly / formal / direct)", "example": "friendly"}
 ]

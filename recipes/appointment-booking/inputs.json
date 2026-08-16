@@ -1,7 +1,7 @@
 [
-  {"name": "name", "label": "Requester Name"},
-  {"name": "email", "label": "Requester Email"},
-  {"name": "meeting_type", "label": "Meeting Type"},
-  {"name": "preferred_times", "label": "Preferred Times"},
-  {"name": "notes", "label": "Notes (optional)"}
+  {"name": "name", "label": "Requester Name", "example": "Priya Sharma"},
+  {"name": "email", "label": "Requester Email", "example": "priya.sharma@example.com"},
+  {"name": "meeting_type", "label": "Meeting Type", "example": "Product Demo"},
+  {"name": "preferred_times", "label": "Preferred Times", "example": "Any morning slot this week, preferably before noon IST"},
+  {"name": "notes", "label": "Notes (optional)", "example": "Priya is evaluating our product for her 15-person team. 30-min demo requested."}
 ]

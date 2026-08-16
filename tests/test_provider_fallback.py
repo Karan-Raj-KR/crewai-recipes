@@ -10,8 +10,11 @@ from unittest.mock import MagicMock, patch
 # Mock crewai module if not installed in global environment
 if "crewai" not in sys.modules:
     mock_crewai = MagicMock()
+
     # Mock LLM constructor to return an object with assigned attributes
-    def mock_llm_init(model, base_url, api_key, temperature=0.2, max_tokens=2048, max_retries=3):
+    def mock_llm_init(
+        model, base_url, api_key, temperature=0.2, max_tokens=2048, max_retries=3
+    ):
         mock_obj = MagicMock()
         mock_obj.model = model
         mock_obj.base_url = base_url
@@ -59,7 +62,9 @@ def test_explicit_fallback_provider() -> None:
 
     # Also test explicit parameter kwarg override
     with patch.dict(
-        os.environ, {"LLM_API_KEY": "primary-key", "LLM_FALLBACK_API_KEY": "fallback-key"}, clear=True
+        os.environ,
+        {"LLM_API_KEY": "primary-key", "LLM_FALLBACK_API_KEY": "fallback-key"},
+        clear=True,
     ):
         llm_explicit = get_llm(provider="fallback")
         assert llm_explicit.api_key == "fallback-key"
