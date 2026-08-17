@@ -1274,7 +1274,10 @@
             <div class="card">
                 <div class="output-header-row">
                     <label class="output-label">Final Output</label>
-                    <span id="cached-badge" class="cached-badge">⚡ Cached Result</span>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span id="cached-badge" class="cached-badge">⚡ Cached Result</span>
+                        <button class="copy-btn" id="copy-result-btn" style="display: none;" title="Copy result to clipboard">Copy</button>
+                    </div>
                 </div>
                 <div id="result" class="result-panel">Ready. Select a recipe and click Run.</div>
             </div>
@@ -1501,6 +1504,7 @@
     const resultPanel     = document.getElementById('result');
     const errorMsg        = document.getElementById('error-msg');
     const cachedBadge     = document.getElementById('cached-badge');
+    const copyResultBtn   = document.getElementById('copy-result-btn');
 
     const progressCard      = document.getElementById('progress-card');
     const progressStream    = document.getElementById('progress-stream');
@@ -1602,6 +1606,35 @@
             copyBtn.textContent = 'Copy manually';
         }
     });
+
+    // ── Copy result button ───────────────────────────────────────
+    function hideCopyResultBtn() {
+        if (copyResultBtn) copyResultBtn.style.display = 'none';
+    }
+
+    function showCopyResultBtn() {
+        if (copyResultBtn) copyResultBtn.style.display = 'inline-block';
+    }
+
+    if (copyResultBtn) {
+        copyResultBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(resultPanel.textContent);
+                copyResultBtn.textContent = '✓ Copied!';
+                copyResultBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyResultBtn.textContent = 'Copy';
+                    copyResultBtn.classList.remove('copied');
+                }, 2000);
+            } catch {
+                copyResultBtn.textContent = 'Copy failed';
+                copyResultBtn.classList.remove('copied');
+                setTimeout(() => {
+                    copyResultBtn.textContent = 'Copy';
+                }, 2000);
+            }
+        });
+    }
 
     // ── Recipe loading ────────────────────────────────────────────
     let recipesData = [];
@@ -1800,6 +1833,12 @@
             resultPanel.textContent = item.output || '';
         }
 
+        if (item.output) {
+            showCopyResultBtn();
+        } else {
+            hideCopyResultBtn();
+        }
+
         if (cachedBadge) {
             cachedBadge.style.display = item.cached ? 'inline-flex' : 'none';
         }
@@ -1881,6 +1920,7 @@
                 activeAgentName.textContent = event.cached ? 'Cached Result Ready!' : 'Crew Completed!';
                 appendStreamItem('task_complete', event.cached ? '⚡ <strong>Serving Cached Result.</strong> Rendering output below.' : '✨ <strong>Execution Finished.</strong> Rendering final result below.');
                 resultPanel.textContent = event.output;
+                showCopyResultBtn();
                 if (cachedBadge) {
                     cachedBadge.style.display = event.cached ? 'inline-flex' : 'none';
                 }
@@ -1906,6 +1946,7 @@
                 appendStreamItem('error', `❌ <strong>Error:</strong> ${escapeHTML(event.error)}`);
                 showError(event.error);
                 resultPanel.textContent = "Failed.";
+                hideCopyResultBtn();
                 if (cachedBadge) {
                     cachedBadge.style.display = 'none';
                 }
@@ -1964,6 +2005,7 @@
         progressPulse.className = 'pulse-indicator';
         activeAgentName.textContent = 'Initializing Crew...';
         resultPanel.innerHTML = '<span class="loader"></span> Streaming agent progress in real-time...';
+        hideCopyResultBtn();
         runBtn.disabled = true;
 
         try {
@@ -1978,6 +2020,7 @@
                 const errData = await response.json().catch(() => ({ detail: 'Server error' }));
                 showError(errData.detail || 'Failed to start streaming execution.');
                 resultPanel.textContent = 'Failed.';
+                hideCopyResultBtn();
                 progressPulse.className = 'pulse-indicator error';
                 return;
             }
@@ -2014,6 +2057,7 @@
             } else {
                 showError("Network error while streaming progress. Is the backend running?");
                 resultPanel.textContent = "Failed.";
+                hideCopyResultBtn();
                 progressPulse.className = 'pulse-indicator error';
             }
         } finally {
