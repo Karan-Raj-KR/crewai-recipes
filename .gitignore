@@ -70,6 +70,7 @@ Thumbs.db
 
 # ─── IDEs ─────────────────────────────────────────────────────────────────────
 .vscode/
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
