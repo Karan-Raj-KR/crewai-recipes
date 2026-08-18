@@ -1416,3 +1416,7 @@
 <!-- session: 2026-08-18-0 -->
 ## 2026-08-18 session 0
 - docs: add troubleshooting section
+
+<!-- session: 2026-08-18-1 -->
+## 2026-08-18 session 1
+- chore: pin dependency versions
