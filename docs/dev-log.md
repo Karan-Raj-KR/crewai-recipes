@@ -1460,3 +1460,7 @@
 <!-- session: 2026-08-18-11 -->
 ## 2026-08-18 session 11
 - refactor: simplify tool call handling
+
+<!-- session: 2026-08-18-12 -->
+## 2026-08-18 session 12
+- docs: add usage notes to README
