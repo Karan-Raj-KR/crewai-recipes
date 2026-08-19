@@ -1476,3 +1476,7 @@
 <!-- session: 2026-08-19-1 -->
 ## 2026-08-19 session 1
 - test: add basic validation for recipe output
+
+<!-- session: 2026-08-19-2 -->
+## 2026-08-19 session 2
+- docs: document new recipe patterns
