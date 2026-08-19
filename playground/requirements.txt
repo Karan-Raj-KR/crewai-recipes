@@ -1,7 +1,7 @@
 fastapi>=0.141.1
-uvicorn>=0.52.1
+uvicorn>=0.52.3
 # Upper bound is crewai's, not ours: every crewai 1.15.x requires
-# pydantic<2.13,>=2.11.9, so the previous `>=2.13.4` floor was
+# pydantic>=2.13.4,<2.14, so the previous `>=2.13.4` floor was
 # unsatisfiable against any crewai release and CI could not resolve it.
 pydantic>=2.11.9,<2.13
 python-dotenv>=1.2.2
