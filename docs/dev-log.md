@@ -1500,3 +1500,7 @@
 <!-- session: 2026-08-19-7 -->
 ## 2026-08-19 session 7
 - docs: expand getting started guide
+
+<!-- session: 2026-08-19-8 -->
+## 2026-08-19 session 8
+- chore: format code with black
