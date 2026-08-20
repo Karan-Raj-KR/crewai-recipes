@@ -176,7 +176,7 @@ docker run --rm --env-file recipes/lead-qualification/.env crewai-lead \
 **Status legend**
 
 - ✅ **Stable** — tested, production-ready
-- 🏗️ **Scaffold** — structure in place, contributions welcome
+- 🚧 **Scaffold** — structure in place, contributions welcome
 - 💡 **Wanted** — open for contributions
 
 ---
