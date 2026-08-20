@@ -173,7 +173,11 @@ docker run --rm --env-file recipes/lead-qualification/.env crewai-lead \
 | [support-escalation](./recipes/support-escalation/) | Tier-1 auto-resolve → escalate to human with full context summary | ✅ Stable |
 | [content-pipeline](./recipes/content-pipeline/) | Blog ideation → research → draft → SEO review — fully automated crew | ✅ Stable |
 
-> **Legend:** ✅ Stable (tested, production-ready) · 🚧 Scaffold (structure in place, contributions welcome) · 💡 Wanted (open for contributions!)
+**Status legend**
+
+- ✅ **Stable** — tested, production-ready
+- 🚧 **Scaffold** — structure in place, contributions welcome
+- 💡 **Wanted** — open for contributions
 
 ---
 
