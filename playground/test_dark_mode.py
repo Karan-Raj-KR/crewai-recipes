@@ -89,7 +89,9 @@ def test_no_inline_colors_in_markup() -> None:
     for style_str in inline_styles:
         # Check for hardcoded hex colors or direct rgb/rgba values in inline styles
         hex_colors = re.findall(r"#[0-9a-fA-F]{3,8}", style_str)
-        assert not hex_colors, f"Found hardcoded hex color {hex_colors} in inline style: {style_str}"
+        assert not hex_colors, (
+            f"Found hardcoded hex color {hex_colors} in inline style: {style_str}"
+        )
 
         rgba_colors = re.findall(r"rgba?\(", style_str)
         assert not rgba_colors, f"Found hardcoded rgb/rgba in inline style: {style_str}"
