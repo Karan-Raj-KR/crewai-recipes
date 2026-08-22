@@ -1,0 +1,46 @@
+name: Re-record gallery traces
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r playground/requirements.txt
+          for f in recipes/*/requirements.txt; do
+            pip install -q -r "$f" || true
+          done
+
+      - name: Record real runs
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+        run: python tools/record_runs.py
+
+      - name: Commit new recordings
+        run: |
+          if git diff --quiet site/runs; then
+            echo "No recording changes — nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/runs
+          # no [skip ci]: this push must trigger pages.yml to redeploy the gallery
+          git commit -m "chore(site): refresh recorded agent traces"
+          git push
