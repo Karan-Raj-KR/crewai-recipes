@@ -1,0 +1,1568 @@
+{
+ "recipe": "customer-onboarding",
+ "description": "> ✅ **Status: Stable** — Fully working three-agent crew that structures signup data, audits profile completeness/consistency, and drafts a personalized welcome or follow-up email.",
+ "inputs": {
+  "customer_name": "Sarah Connor",
+  "company": "Cyberdyne Systems",
+  "role": "Chief Security Officer",
+  "use_case": "Automating threat intelligence aggregation and incident response",
+  "team_size": "50"
+ },
+ "model": "meta/llama-3.1-8b-instruct",
+ "recorded_at": "2026-08-22T07:37:43+00:00",
+ "duration_s": 3.4,
+ "events": [
+  {
+   "type": "start",
+   "recipe": "customer-onboarding",
+   "t": 0.0
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✨ Update Available ✨ ───────────────────────────╮",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  A new version of CrewAI is available!                                       │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  Current version: 1.15.14                                                    │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  Latest version:  1.15.17                                                    │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  To update, run: uv sync --upgrade-package crewai                            │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────── 🚀 Crew Execution Started ──────────────────────────╮",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  Crew Execution Started                                                      │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  Name: crew                                                                  │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  ID: 3ccc50e6-a5c4-440b-bd63-0653c8f53946                                    │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Process incoming customer signup details:                             │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  - Customer Name: Sarah Connor                                               │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  - Company: Cyberdyne Systems                                                │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  - Job Role / Title: Chief Security Officer                                  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  - Primary Use Case: Automating threat intelligence aggregation and          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  incident response                                                           │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  - Team Size: 50                                                             │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Organize these details into a standardized, structured customer profile     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  report. Highlight any fields that are blank, 'N/A', vague, or missing.      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  ID: 24a8aede-e2f3-40fa-b736-a51f9696eb1e                                    │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Customer Onboarding Data Collector                                   │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Process incoming customer signup details:                             │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  - Customer Name: Sarah Connor                                               │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  - Company: Cyberdyne Systems                                                │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  - Job Role / Title: Chief Security Officer                                  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  - Primary Use Case: Automating threat intelligence aggregation and          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  incident response                                                           │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  - Team Size: 50                                                             │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Organize these details into a standardized, structured customer profile     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  report. Highlight any fields that are blank, 'N/A', vague, or missing.      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "\u001b[35m[Finalize] todos_count=0, todos_with_results=0\u001b[0m",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Customer Onboarding Data Collector                                   │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  **Customer Profile Summary**                                                │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  - **Customer Name:** Sarah Connor                                           │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  - **Company:** Cyberdyne Systems                                            │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  - **Role:** Chief Security Officer                                          │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  - **Primary Use Case:** Automating threat intelligence aggregation and      │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  incident response                                                           │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  - **Team Size:** 50                                                         │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  - **Initial Observations:** None                                            │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  **Additional Notes:**                                                       │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  No missing or sparse fields were identified in the provided customer        │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  signup details. The information is comprehensive and well-structured,       │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│  allowing for a seamless onboarding process.                                 │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.83
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.83
+  },
+  {
+   "type": "task_complete",
+   "agent": "Customer Onboarding Data Collector",
+   "description": "Process incoming customer signup details:\n\n- Customer Name: Sarah Connor\n- Company: Cyberdyne Systems\n- Job Role / Title: Chief Security Officer\n- Primary Use Case: Automating threat intelligence aggregation and incident response\n- Team Size: 50\n\nOrganize these details into a standardized, structured customer profile report. Highlight any fields that are blank, 'N/A', vague, or missing.",
+   "output": "**Customer Profile Summary**\n\n- **Customer Name:** Sarah Connor\n- **Company:** Cyberdyne Systems\n- **Role:** Chief Security Officer\n- **Primary Use Case:** Automating threat intelligence aggregation and incident response\n- **Team Size:** 50\n- **Initial Observations:** None\n\n**Additional Notes:**\n\nNo missing or sparse fields were identified in the provided customer signup details. The information is comprehensive and well-structured, allowing for a seamless onboarding process.",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Process incoming customer signup details:                             │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  - Customer Name: Sarah Connor                                               │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  - Company: Cyberdyne Systems                                                │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  - Job Role / Title: Chief Security Officer                                  │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  - Primary Use Case: Automating threat intelligence aggregation and          │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  incident response                                                           │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  - Team Size: 50                                                             │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  Organize these details into a standardized, structured customer profile     │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  report. Highlight any fields that are blank, 'N/A', vague, or missing.      │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Customer Onboarding Data Collector                                   │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Audit the customer profile structured in the previous step.           │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  Validation Rules:                                                           │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  1. Check if all required details (name, company, role, use_case,            │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  team_size)    are provided and meaningful.                                  │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  2. Flag fields that are vague (e.g. 'stuff', 'test'), missing, or           │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  contradictory.                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  3. DO NOT invent or fabricate missing details.                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  4. Assign an Onboarding Status: READY (all essential data present and       │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  valid) or    INCOMPLETE (one or more essential fields missing or unclear).  │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  5. List specific missing/vague fields and recommended follow-up questions   │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  if INCOMPLETE.                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│  ID: 2d6338ab-3012-41b8-afe7-2358ece21598                                    │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.84
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Onboarding Data Validator                                            │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Audit the customer profile structured in the previous step.           │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  Validation Rules:                                                           │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  1. Check if all required details (name, company, role, use_case,            │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  team_size)    are provided and meaningful.                                  │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  2. Flag fields that are vague (e.g. 'stuff', 'test'), missing, or           │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  contradictory.                                                              │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  3. DO NOT invent or fabricate missing details.                              │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  4. Assign an Onboarding Status: READY (all essential data present and       │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  valid) or    INCOMPLETE (one or more essential fields missing or unclear).  │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  5. List specific missing/vague fields and recommended follow-up questions   │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│  if INCOMPLETE.                                                              │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.85
+  },
+  {
+   "type": "log",
+   "text": "\u001b[35m[Finalize] todos_count=0, todos_with_results=0\u001b[0m",
+   "t": 1.54
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Onboarding Data Validator                                            │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  **Onboarding Audit Report**                                                 │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  **Status:** READY                                                           │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  **Completeness Score:** High                                                │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  **Missing or Vague Fields:** None                                           │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  **Recommendation:** Proceed to onboarding                                   │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  The provided customer profile meets all essential onboarding requirements,  │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  and the information is comprehensive and well-structured. There are no      │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  missing or vague fields that require clarification. The customer has        │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  provided all necessary details, including name, company, role, primary use  │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  case, and team size. The onboarding process can proceed without requesting  │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  additional information.                                                     │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.55
+  },
+  {
+   "type": "task_complete",
+   "agent": "Onboarding Data Validator",
+   "description": "Audit the customer profile structured in the previous step.\n\nValidation Rules:\n1. Check if all required details (name, company, role, use_case, team_size)    are provided and meaningful.\n2. Flag fields that are vague (e.g. 'stuff', 'test'), missing, or contradictory.\n3. DO NOT invent or fabricate missing details.\n4. Assign an Onboarding Status: READY (all essential data present and valid) or    INCOMPLETE (one or more essential fields missing or unclear).\n5. List specific missing/vague fields and recommended follow-up questions if INCOMPLETE.",
+   "output": "**Onboarding Audit Report**\n\n**Status:** READY\n\n**Completeness Score:** High\n\n**Missing or Vague Fields:** None\n\n**Recommendation:** Proceed to onboarding\n\nThe provided customer profile meets all essential onboarding requirements, and the information is comprehensive and well-structured. There are no missing or vague fields that require clarification. The customer has provided all necessary details, including name, company, role, primary use case, and team size. The onboarding process can proceed without requesting additional information.",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Audit the customer profile structured in the previous step.           │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  Validation Rules:                                                           │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  1. Check if all required details (name, company, role, use_case,            │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  team_size)    are provided and meaningful.                                  │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  2. Flag fields that are vague (e.g. 'stuff', 'test'), missing, or           │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  contradictory.                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  3. DO NOT invent or fabricate missing details.                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  4. Assign an Onboarding Status: READY (all essential data present and       │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  valid) or    INCOMPLETE (one or more essential fields missing or unclear).  │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  5. List specific missing/vague fields and recommended follow-up questions   │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  if INCOMPLETE.                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Onboarding Data Validator                                            │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.55
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Draft an outbound onboarding email for the customer based on the      │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  audit results.                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  Composition Rules:                                                          │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  1. If Status is READY:                                                      │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Draft a warm, personalized welcome email addressed to the customer.    │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Reference their specific company, role, and use case.                  │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Provide relevant, tailored next steps (e.g. documentation, kickoff     │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  call, setup guide).                                                         │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  2. If Status is INCOMPLETE:                                                 │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Draft a polite, helpful email thanking them for signing up.            │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Clearly ask for the specific missing or vague information needed to    │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  complete onboarding.                                                        │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Keep the tone encouraging, professional, and supportive.               │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  Output ONLY the complete email (Subject line and Body) — no meta            │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  explanations or markdown tags.                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  ID: be8d1ca9-46ba-45e4-b776-0a1b59eeb633                                    │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Personalized Welcome Email Composer                                  │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Draft an outbound onboarding email for the customer based on the      │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  audit results.                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  Composition Rules:                                                          │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  1. If Status is READY:                                                      │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Draft a warm, personalized welcome email addressed to the customer.    │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Reference their specific company, role, and use case.                  │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Provide relevant, tailored next steps (e.g. documentation, kickoff     │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  call, setup guide).                                                         │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  2. If Status is INCOMPLETE:                                                 │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Draft a polite, helpful email thanking them for signing up.            │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Clearly ask for the specific missing or vague information needed to    │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  complete onboarding.                                                        │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│     - Keep the tone encouraging, professional, and supportive.               │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  Output ONLY the complete email (Subject line and Body) — no meta            │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│  explanations or markdown tags.                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.56
+  },
+  {
+   "type": "log",
+   "text": "\u001b[35m[Finalize] todos_count=0, todos_with_results=0\u001b[0m",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Personalized Welcome Email Composer                                  │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  Subject: Welcome to Cyberdyne Systems - Let's Get Started with Threat       │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  Intelligence Automation!                                                    │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  Dear Sarah,                                                                 │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  We're thrilled to welcome you and Cyberdyne Systems to our community of     │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  threat intelligence leaders! As Chief Security Officer, you're taking a     │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  crucial step in automating threat intelligence aggregation and incident     │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  response, and we're excited to support you on this journey.                 │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  Based on your company's specific needs, we've tailored a customized         │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  onboarding experience to ensure a seamless integration of our solution.     │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  Our team will guide you through the setup process, providing you with the   │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  necessary documentation and support to get started.                         │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  To begin, we recommend reviewing our comprehensive setup guide, which can   │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  be found in your dedicated onboarding portal. This resource will walk you   │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  through the key features and functionalities of our solution, ensuring      │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  you're well-prepared for our scheduled kickoff call.                        │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  During our kickoff call, we'll discuss your specific use case, address any  │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  questions you may have, and provide a detailed overview of our solution's   │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  capabilities. This call will also serve as an opportunity for you to share  │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  your team's experiences and challenges, allowing us to better understand    │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  your needs and provide targeted support.                                    │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  If you have any questions or concerns before our kickoff call, please       │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  don't hesitate to reach out to us. We're committed to ensuring your         │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  onboarding experience is smooth and successful.                             │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  Thank you for choosing our solution, and we look forward to working         │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  closely with you and the Cyberdyne Systems team.                            │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  Best regards,                                                               │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  [Your Name]                                                                 │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  Customer Success Manager                                                    │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│  [Your Company]                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.32
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 3.32
+  },
+  {
+   "type": "task_complete",
+   "agent": "Personalized Welcome Email Composer",
+   "description": "Draft an outbound onboarding email for the customer based on the audit results.\n\nComposition Rules:\n1. If Status is READY:\n   - Draft a warm, personalized welcome email addressed to the customer.\n   - Reference their specific company, role, and use case.\n   - Provide relevant, tailored next steps (e.g. documentation, kickoff call, setup guide).\n2. If Status is INCOMPLETE:\n   - Draft a polite, helpful email thanking them for signing up.\n   - Clearly ask for the specific missing or vague information needed to complete onboarding.\n   - Keep the tone encouraging, professional, and supportive.\n\nOutput ONLY the complete email (Subject line and Body) — no meta explanations or markdown tags.",
+   "output": "Subject: Welcome to Cyberdyne Systems - Let's Get Started with Threat Intelligence Automation!\n\nDear Sarah,\n\nWe're thrilled to welcome you and Cyberdyne Systems to our community of threat intelligence leaders! As Chief Security Officer, you're taking a crucial step in automating threat intelligence aggregation and incident response, and we're excited to support you on this journey.\n\nBased on your company's specific needs, we've tailored a customized onboarding experience to ensure a seamless integration of our solution. Our team will guide you through the setup process, providing you with the necessary documentation and support to get started.\n\nTo begin, we recommend reviewing our comprehensive setup guide, which can be found in your dedicated onboarding portal. This resource will walk you through the key features and functionalities of our solution, ensuring you're well-prepared for our scheduled kickoff call.\n\nDuring our kickoff call, we'll discuss your specific use case, address any questions you may have, and provide a detailed overview of our solution's capabilities. This call will also serve as an opportunity for you to share your team's experiences and challenges, allowing us to better understand your needs and provide targeted support.\n\nIf you have any questions or concerns before our kickoff call, please don't hesitate to reach out to us. We're committed to ensuring your onboarding experience is smooth and successful.\n\nThank you for choosing our solution, and we look forward to working closely with you and the Cyberdyne Systems team.\n\nBest regards,\n\n[Your Name]\nCustomer Success Manager\n[Your Company]",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Draft an outbound onboarding email for the customer based on the      │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  audit results.                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  Composition Rules:                                                          │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  1. If Status is READY:                                                      │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│     - Draft a warm, personalized welcome email addressed to the customer.    │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│     - Reference their specific company, role, and use case.                  │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│     - Provide relevant, tailored next steps (e.g. documentation, kickoff     │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  call, setup guide).                                                         │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  2. If Status is INCOMPLETE:                                                 │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│     - Draft a polite, helpful email thanking them for signing up.            │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│     - Clearly ask for the specific missing or vague information needed to    │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  complete onboarding.                                                        │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│     - Keep the tone encouraging, professional, and supportive.               │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  Output ONLY the complete email (Subject line and Body) — no meta            │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  explanations or markdown tags.                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Personalized Welcome Email Composer                                  │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────── Tracing Preference Saved ──────────────────────────╮",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  Info: Tracing has been disabled.                                            │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  Your preference has been saved. Future Crew/Flow executions will not        │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  collect traces.                                                             │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  To enable tracing later, do any one of these:                               │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  • Set tracing=True in your Crew/Flow code                                   │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  • Set CREWAI_TRACING_ENABLED=true in your project's .env file               │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│  • Run: crewai traces enable                                                 │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.33
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 3.33
+  },
+  {
+   "type": "complete",
+   "output": "Subject: Welcome to Cyberdyne Systems - Let's Get Started with Threat Intelligence Automation!\n\nDear Sarah,\n\nWe're thrilled to welcome you and Cyberdyne Systems to our community of threat intelligence leaders! As Chief Security Officer, you're taking a crucial step in automating threat intelligence aggregation and incident response, and we're excited to support you on this journey.\n\nBased on your company's specific needs, we've tailored a customized onboarding experience to ensure a seamless integration of our solution. Our team will guide you through the setup process, providing you with the necessary documentation and support to get started.\n\nTo begin, we recommend reviewing our comprehensive setup guide, which can be found in your dedicated onboarding portal. This resource will walk you through the key features and functionalities of our solution, ensuring you're well-prepared for our scheduled kickoff call.\n\nDuring our kickoff call, we'll discuss your specific use case, address any questions you may have, and provide a detailed overview of our solution's capabilities. This call will also serve as an opportunity for you to share your team's experiences and challenges, allowing us to better understand your needs and provide targeted support.\n\nIf you have any questions or concerns before our kickoff call, please don't hesitate to reach out to us. We're committed to ensuring your onboarding experience is smooth and successful.\n\nThank you for choosing our solution, and we look forward to working closely with you and the Cyberdyne Systems team.\n\nBest regards,\n\n[Your Name]\nCustomer Success Manager\n[Your Company]",
+   "cached": false,
+   "t": 3.33
+  }
+ ]
+}

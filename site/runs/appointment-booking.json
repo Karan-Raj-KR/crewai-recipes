@@ -1,0 +1,1693 @@
+{
+ "recipe": "appointment-booking",
+ "description": "A three-agent CrewAI crew that processes appointment booking requests, matches preferences against available calendar slots, and drafts a professional confirmation email — all powered by **NVIDIA NIM (Llama 3.1 8B Instruct)**.",
+ "inputs": {
+  "name": "Priya Sharma",
+  "email": "priya.sharma@example.com",
+  "meeting_type": "Product Demo",
+  "preferred_times": "Any morning slot this week, preferably before noon IST",
+  "notes": "Priya is evaluating our product for her 15-person team. 30-min demo requested."
+ },
+ "model": "meta/llama-3.1-8b-instruct",
+ "recorded_at": "2026-08-22T07:37:11+00:00",
+ "duration_s": 7.1,
+ "events": [
+  {
+   "type": "start",
+   "recipe": "appointment-booking",
+   "t": 0.0
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✨ Update Available ✨ ───────────────────────────╮",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│  A new version of CrewAI is available!                                       │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│  Current version: 1.15.14                                                    │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│  Latest version:  1.15.17                                                    │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│  To update, run: uv sync --upgrade-package crewai                            │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────── 🚀 Crew Execution Started ──────────────────────────╮",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│  Crew Execution Started                                                      │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│  Name: crew                                                                  │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│  ID: 5d08303c-f062-414a-90e9-65c351cf4913                                    │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.7
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Process the following appointment booking request:                    │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│    Name        : Priya Sharma                                                │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│    Email       : priya.sharma@example.com                                    │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│    Meeting Type: Product Demo                                                │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│    Preferred   : Any morning slot this week, preferably before noon IST      │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│    Notes       : Priya is evaluating our product for her 15-person team.     │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  30-min demo requested.                                                      │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  Validate that all required fields are present. If anything is ambiguous,    │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  note it clearly. Summarise the validated request in a structured format.    │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  ID: a8d45b12-9db1-4d53-adf3-b7a045214542                                    │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Appointment Intake Specialist                                        │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Process the following appointment booking request:                    │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│    Name        : Priya Sharma                                                │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│    Email       : priya.sharma@example.com                                    │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│    Meeting Type: Product Demo                                                │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│    Preferred   : Any morning slot this week, preferably before noon IST      │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│    Notes       : Priya is evaluating our product for her 15-person team.     │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  30-min demo requested.                                                      │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  Validate that all required fields are present. If anything is ambiguous,    │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│  note it clearly. Summarise the validated request in a structured format.    │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.71
+  },
+  {
+   "type": "log",
+   "text": "\u001b[35m[Finalize] todos_count=0, todos_with_results=0\u001b[0m",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Appointment Intake Specialist                                        │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  **Appointment Booking Request Summary**                                     │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  =====================================                                       │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  ### Requester Details                                                       │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  --------------------                                                        │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | Field        | Value                     | Validation Status |            │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  |--------------|---------------------------|--------------------|           │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | Name         | Priya Sharma               | COMPLETE           |          │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | Email        | priya.sharma@example.com  | COMPLETE           |           │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  ### Meeting Requirements                                                    │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  ----------------------                                                      │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | Field          | Value                     | Validation Status |          │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  |----------------|---------------------------|--------------------|         │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | Meeting Type   | Product Demo               | COMPLETE           |        │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | Duration       | 30 minutes                | COMPLETE           |         │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | Notes          | Priya is evaluating our product for her 15-person team.  │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | COMPLETE           |                                                      │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  ### Preferred Times                                                         │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  ------------------                                                          │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | Field          | Value                     | Validation Status |          │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  |----------------|---------------------------|--------------------|         │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | Preferred Time | Any morning slot this week, preferably before noon IST   │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  | NEEDS CLARIFICATION |                                                     │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  |                |                             |                     |      │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  ### Validation Status                                                       │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  -------------------                                                         │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  **COMPLETE / NEEDS CLARIFICATION**                                          │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  **NEEDS CLARIFICATION:**                                                    │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  * The preferred time slot is ambiguous. It would be helpful to clarify the  │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  specific days and time slots that Priya is available. For example, \"Monday  │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  to Friday, 8:00 AM - 12:00 PM IST\" would be more specific.                  │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  * Although the meeting type and duration are specified, it would be         │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  beneficial to confirm the exact duration of the meeting, as 30 minutes may  │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  not be sufficient for a product demo for a 15-person team.                  │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  * The notes section provides valuable context, but it would be helpful to   │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  clarify the specific product features or functionalities that Priya would   │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  like to see during the demo.                                                │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  **Requester Details**                                                       │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  --------------------                                                        │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  Priya Sharma                                                                │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  priya.sharma@example.com                                                    │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  **Meeting Requirements**                                                    │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  ----------------------                                                      │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  * Meeting Type: Product Demo                                                │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  * Duration: 30 minutes                                                      │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  * Notes: Priya is evaluating our product for her 15-person team.            │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  **Preferred Times**                                                         │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  ------------------                                                          │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  Any morning slot this week, preferably before noon IST                      │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  **Additional Comments**                                                     │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  ----------------------                                                      │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  Please confirm the specific days and time slots that Priya is available,    │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  and clarify the exact duration of the meeting. Additionally, please         │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  confirm the specific product features or functionalities that Priya would   │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│  like to see during the demo.                                                │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.41
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 4.41
+  },
+  {
+   "type": "task_complete",
+   "agent": "Appointment Intake Specialist",
+   "description": "Process the following appointment booking request:\n\n  Name        : Priya Sharma\n  Email       : priya.sharma@example.com\n  Meeting Type: Product Demo\n  Preferred   : Any morning slot this week, preferably before noon IST\n  Notes       : Priya is evaluating our product for her 15-person team. 30-min demo requested.\n\nValidate that all required fields are present. If anything is ambiguous, note it clearly. Summarise the validated request in a structured format.",
+   "output": "**Appointment Booking Request Summary**\n=====================================\n\n### Requester Details\n--------------------\n\n| Field        | Value                     | Validation Status |\n|--------------|---------------------------|--------------------|\n| Name         | Priya Sharma               | COMPLETE           |\n| Email        | priya.sharma@example.com  | COMPLETE           |\n\n### Meeting Requirements\n----------------------\n\n| Field          | Value                     | Validation Status |\n|----------------|---------------------------|--------------------|\n| Meeting Type   | Product Demo               | COMPLETE           |\n| Duration       | 30 minutes                | COMPLETE           |\n| Notes          | Priya is evaluating our product for her 15-person team. | COMPLETE           |\n\n### Preferred Times\n------------------\n\n| Field          | Value                     | Validation Status |\n|----------------|---------------------------|--------------------|\n| Preferred Time | Any morning slot this week, preferably before noon IST | NEEDS CLARIFICATION |\n|                |                             |                     |\n\n### Validation Status\n-------------------\n\n**COMPLETE / NEEDS CLARIFICATION**\n\n**NEEDS CLARIFICATION:**\n\n* The preferred time slot is ambiguous. It would be helpful to clarify the specific days and time slots that Priya is available. For example, \"Monday to Friday, 8:00 AM - 12:00 PM IST\" would be more specific.\n* Although the meeting type and duration are specified, it would be beneficial to confirm the exact duration of the meeting, as 30 minutes may not be sufficient for a product demo for a 15-person team.\n* The notes section provides valuable context, but it would be helpful to clarify the specific product features or functionalities that Priya would like to see during the demo.\n\n**Requester Details**\n--------------------\n\nPriya Sharma\npriya.sharma@example.com\n\n**Meeting Requirements**\n----------------------\n\n* Meeting Type: Product Demo\n* Duration: 30 minutes\n* Notes: Priya is evaluating our product for her 15-person team.\n\n**Preferred Times**\n------------------\n\nAny morning slot this week, preferably before noon IST\n\n**Additional Comments**\n----------------------\n\nPlease confirm the specific days and time slots that Priya is available, and clarify the exact duration of the meeting. Additionally, please confirm the specific product features or functionalities that Priya would like to see during the demo.",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Process the following appointment booking request:                    │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│    Name        : Priya Sharma                                                │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│    Email       : priya.sharma@example.com                                    │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│    Meeting Type: Product Demo                                                │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│    Preferred   : Any morning slot this week, preferably before noon IST      │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│    Notes       : Priya is evaluating our product for her 15-person team.     │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  30-min demo requested.                                                      │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  Validate that all required fields are present. If anything is ambiguous,    │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  note it clearly. Summarise the validated request in a structured format.    │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Appointment Intake Specialist                                        │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Using the validated booking request and the following list of         │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  currently available calendar slots, identify the best 2–3 options that      │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  match the requester's preferences:                                          │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│    • Monday 14 Jul 2026 — 10:00 AM IST (30 min)                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│    • Monday 14 Jul 2026 — 3:00 PM IST (30 min)                               │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│    • Tuesday 15 Jul 2026 — 11:00 AM IST (30 min)                             │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│    • Wednesday 16 Jul 2026 — 2:00 PM IST (30 min)                            │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│    • Thursday 17 Jul 2026 — 9:00 AM IST (30 min)                             │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  Prioritise slots that align with the requester's stated preferences. If no  │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  slot perfectly matches, explain the closest alternatives. Include the       │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  meeting duration in your suggestion.                                        │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│  ID: 50ff1298-ef3d-42bc-a262-18859067d9c0                                    │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 4.42
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Calendar & Availability Coordinator                                  │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Using the validated booking request and the following list of         │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│  currently available calendar slots, identify the best 2–3 options that      │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│  match the requester's preferences:                                          │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│    • Monday 14 Jul 2026 — 10:00 AM IST (30 min)                              │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│    • Monday 14 Jul 2026 — 3:00 PM IST (30 min)                               │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│    • Tuesday 15 Jul 2026 — 11:00 AM IST (30 min)                             │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│    • Wednesday 16 Jul 2026 — 2:00 PM IST (30 min)                            │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│    • Thursday 17 Jul 2026 — 9:00 AM IST (30 min)                             │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│  Prioritise slots that align with the requester's stated preferences. If no  │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│  slot perfectly matches, explain the closest alternatives. Include the       │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│  meeting duration in your suggestion.                                        │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 4.43
+  },
+  {
+   "type": "log",
+   "text": "\u001b[35m[Finalize] todos_count=0, todos_with_results=0\u001b[0m",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Calendar & Availability Coordinator                                  │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  **Suggested Meeting Slots**                                                 │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  ==========================                                                  │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  ### Ranked List of Suggested Slots                                          │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  1. **Thursday 17 Jul 2026 — 9:00 AM IST (30 min)**                          │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│     Reason: This slot aligns with the requester's stated preference for a    │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  morning slot this week, preferably before noon IST.                         │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  2. **Monday 14 Jul 2026 — 10:00 AM IST (30 min)**                           │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│     Reason: Although this slot is not before noon IST, it is still a         │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  morning slot and available this week, making it a suitable alternative.     │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  3. **Tuesday 15 Jul 2026 — 11:00 AM IST (30 min)**                          │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│     Reason: This slot is available this week, but it is not before noon      │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  IST. However, it is the closest alternative to the preferred time slot,     │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  considering the requester's ambiguity.                                      │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  ### Additional Comments                                                     │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  ----------------------                                                      │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  To further refine the suggested meeting slots, it would be beneficial to    │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  clarify the specific days and time slots that Priya is available, as well   │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  as the exact duration of the meeting. Additionally, confirming the          │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  specific product features or functionalities that Priya would like to see   │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│  during the demo would help ensure a productive and effective meeting.       │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.89
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 5.89
+  },
+  {
+   "type": "task_complete",
+   "agent": "Calendar & Availability Coordinator",
+   "description": "Using the validated booking request and the following list of currently available calendar slots, identify the best 2–3 options that match the requester's preferences:\n\n  • Monday 14 Jul 2026 — 10:00 AM IST (30 min)\n  • Monday 14 Jul 2026 — 3:00 PM IST (30 min)\n  • Tuesday 15 Jul 2026 — 11:00 AM IST (30 min)\n  • Wednesday 16 Jul 2026 — 2:00 PM IST (30 min)\n  • Thursday 17 Jul 2026 — 9:00 AM IST (30 min)\n\nPrioritise slots that align with the requester's stated preferences. If no slot perfectly matches, explain the closest alternatives. Include the meeting duration in your suggestion.",
+   "output": "**Suggested Meeting Slots**\n==========================\n\n### Ranked List of Suggested Slots\n\n1. **Thursday 17 Jul 2026 — 9:00 AM IST (30 min)**\n   Reason: This slot aligns with the requester's stated preference for a morning slot this week, preferably before noon IST.\n\n2. **Monday 14 Jul 2026 — 10:00 AM IST (30 min)**\n   Reason: Although this slot is not before noon IST, it is still a morning slot and available this week, making it a suitable alternative.\n\n3. **Tuesday 15 Jul 2026 — 11:00 AM IST (30 min)**\n   Reason: This slot is available this week, but it is not before noon IST. However, it is the closest alternative to the preferred time slot, considering the requester's ambiguity.\n\n### Additional Comments\n----------------------\n\nTo further refine the suggested meeting slots, it would be beneficial to clarify the specific days and time slots that Priya is available, as well as the exact duration of the meeting. Additionally, confirming the specific product features or functionalities that Priya would like to see during the demo would help ensure a productive and effective meeting.",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Using the validated booking request and the following list of         │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│  currently available calendar slots, identify the best 2–3 options that      │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│  match the requester's preferences:                                          │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│    • Monday 14 Jul 2026 — 10:00 AM IST (30 min)                              │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│    • Monday 14 Jul 2026 — 3:00 PM IST (30 min)                               │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│    • Tuesday 15 Jul 2026 — 11:00 AM IST (30 min)                             │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│    • Wednesday 16 Jul 2026 — 2:00 PM IST (30 min)                            │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│    • Thursday 17 Jul 2026 — 9:00 AM IST (30 min)                             │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│  Prioritise slots that align with the requester's stated preferences. If no  │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│  slot perfectly matches, explain the closest alternatives. Include the       │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│  meeting duration in your suggestion.                                        │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Calendar & Availability Coordinator                                  │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 5.9
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Draft a professional booking confirmation email to Priya Sharma       │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  (priya.sharma@example.com) presenting the suggested time slots. The email   │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  should:                                                                     │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  1. Open with a warm, personalised greeting.                                 │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  2. Briefly confirm the meeting type and purpose.                            │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  3. Present the 2–3 time slot options clearly.                               │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  4. Ask them to reply with their preferred slot.                             │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  5. Include a friendly closing and the host's signature line (use            │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  placeholder: [Host Name], [Title]).                                         │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  Keep it under 150 words. Professional but human.                            │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  ID: a12f94b5-64ae-4263-a5fb-d8c7f779206c                                    │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Booking Confirmation Specialist                                      │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Draft a professional booking confirmation email to Priya Sharma       │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  (priya.sharma@example.com) presenting the suggested time slots. The email   │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  should:                                                                     │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  1. Open with a warm, personalised greeting.                                 │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  2. Briefly confirm the meeting type and purpose.                            │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  3. Present the 2–3 time slot options clearly.                               │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  4. Ask them to reply with their preferred slot.                             │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  5. Include a friendly closing and the host's signature line (use            │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  placeholder: [Host Name], [Title]).                                         │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│  Keep it under 150 words. Professional but human.                            │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 5.91
+  },
+  {
+   "type": "log",
+   "text": "\u001b[35m[Finalize] todos_count=0, todos_with_results=0\u001b[0m",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Booking Confirmation Specialist                                      │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  Subject: Meeting Confirmation for Product Demo with Priya Sharma            │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  Dear Priya,                                                                 │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  Thank you for considering our product for your 15-person team. We are       │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  excited to schedule a 30-minute product demo to showcase our features and   │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  functionalities.                                                            │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  We have identified three potential time slots for the meeting:              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  1. Thursday, 17 Jul 2026, at 9:00 AM IST (30 minutes)                       │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  2. Monday, 14 Jul 2026, at 10:00 AM IST (30 minutes)                        │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  3. Tuesday, 15 Jul 2026, at 11:00 AM IST (30 minutes)                       │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  Please let us know which of these time slots suits you best by replying to  │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  this email. We will make sure to adjust our schedule accordingly.           │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  Looking forward to hearing back from you.                                   │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  Best regards,                                                               │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│  [Host Name], [Title]                                                        │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.0
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 7.0
+  },
+  {
+   "type": "task_complete",
+   "agent": "Booking Confirmation Specialist",
+   "description": "Draft a professional booking confirmation email to Priya Sharma (priya.sharma@example.com) presenting the suggested time slots. The email should:\n\n1. Open with a warm, personalised greeting.\n2. Briefly confirm the meeting type and purpose.\n3. Present the 2–3 time slot options clearly.\n4. Ask them to reply with their preferred slot.\n5. Include a friendly closing and the host's signature line (use placeholder: [Host Name], [Title]).\n\nKeep it under 150 words. Professional but human.",
+   "output": "Subject: Meeting Confirmation for Product Demo with Priya Sharma\n\nDear Priya,\n\nThank you for considering our product for your 15-person team. We are excited to schedule a 30-minute product demo to showcase our features and functionalities.\n\nWe have identified three potential time slots for the meeting:\n\n1. Thursday, 17 Jul 2026, at 9:00 AM IST (30 minutes)\n2. Monday, 14 Jul 2026, at 10:00 AM IST (30 minutes)\n3. Tuesday, 15 Jul 2026, at 11:00 AM IST (30 minutes)\n\nPlease let us know which of these time slots suits you best by replying to this email. We will make sure to adjust our schedule accordingly.\n\nLooking forward to hearing back from you.\n\nBest regards,\n[Host Name], [Title]",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Draft a professional booking confirmation email to Priya Sharma       │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  (priya.sharma@example.com) presenting the suggested time slots. The email   │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  should:                                                                     │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  1. Open with a warm, personalised greeting.                                 │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  2. Briefly confirm the meeting type and purpose.                            │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  3. Present the 2–3 time slot options clearly.                               │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  4. Ask them to reply with their preferred slot.                             │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  5. Include a friendly closing and the host's signature line (use            │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  placeholder: [Host Name], [Title]).                                         │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  Keep it under 150 words. Professional but human.                            │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Booking Confirmation Specialist                                      │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 7.01
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 7.01
+  },
+  {
+   "type": "complete",
+   "output": "Subject: Meeting Confirmation for Product Demo with Priya Sharma\n\nDear Priya,\n\nThank you for considering our product for your 15-person team. We are excited to schedule a 30-minute product demo to showcase our features and functionalities.\n\nWe have identified three potential time slots for the meeting:\n\n1. Thursday, 17 Jul 2026, at 9:00 AM IST (30 minutes)\n2. Monday, 14 Jul 2026, at 10:00 AM IST (30 minutes)\n3. Tuesday, 15 Jul 2026, at 11:00 AM IST (30 minutes)\n\nPlease let us know which of these time slots suits you best by replying to this email. We will make sure to adjust our schedule accordingly.\n\nLooking forward to hearing back from you.\n\nBest regards,\n[Host Name], [Title]",
+   "cached": false,
+   "t": 7.01
+  }
+ ]
+}

@@ -1,0 +1,1171 @@
+{
+ "recipe": "faq-bot",
+ "description": "Answer customer questions from a built-in knowledge base using a **single-agent CrewAI crew** powered by **NVIDIA NIM (Llama 3.1 8B Instruct)**.",
+ "inputs": {
+  "question": "Do you offer a free trial? Do I need a credit card?",
+  "customer_name": "Rahul"
+ },
+ "model": "meta/llama-3.1-8b-instruct",
+ "recorded_at": "2026-08-22T07:37:47+00:00",
+ "duration_s": 1.2,
+ "events": [
+  {
+   "type": "start",
+   "recipe": "faq-bot",
+   "t": 0.0
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Name: A customer named 'Rahul' has sent this question:                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│    \"Do you offer a free trial? Do I need a credit card?\"                     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Use the knowledge base below to find the answer.                            │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  === ORBITLY FAQ KNOWLEDGE BASE ===                                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [1] Topic: PRICING                                                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: How much does Orbitly cost?                                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: Orbitly offers three plans: Solo ($0/month, 1 user, 3 projects),     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Team ($29/month per user, unlimited projects, priority support), and        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Enterprise (custom pricing, SSO, dedicated SLA, audit logs). Annual         │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  billing gives you 2 months free.                                            │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [2] Topic: FREE TRIAL                                                       │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Can I try Orbitly before paying?                                     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: Yes! The Solo plan is free forever for one user. For team features,  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  every account gets a 21-day free trial of the Team plan — no credit card    │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  required. Your trial auto-converts to Solo if you don't upgrade.            │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [3] Topic: DATA IMPORT                                                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Can I import my projects from Jira or Trello?                        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: Absolutely. Go to Settings → Import and choose your source: Jira     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  (Cloud or Server), Trello, Asana, or CSV. The import wizard maps fields     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  automatically and lets you preview before confirming. Large imports (500+   │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  issues) run in the background and email you when done.                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [4] Topic: INTEGRATIONS                                                     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Which tools does Orbitly integrate with?                             │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: Native integrations include Slack (notifications + /orbitly slash    │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  command), GitHub (link commits to tasks), Figma (embed designs), Google     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Drive, and Zapier (1,000+ apps). Webhooks and a REST API are available on   │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Team and Enterprise plans. Full API docs at docs.orbitly.example.com.       │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [5] Topic: SECURITY                                                         │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Is my data secure? Is Orbitly GDPR compliant?                        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: Yes. All data is encrypted in transit (TLS 1.3) and at rest          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  (AES-256). Orbitly is SOC 2 Type II certified and fully GDPR compliant. EU  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  customers' data is stored in EU data centres. You can export or delete all  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  your data at any time from Settings → Privacy.                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [6] Topic: CANCELLATION AND REFUNDS                                         │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: What happens if I cancel? Do you offer refunds?                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: You can cancel anytime from Settings → Billing → Cancel Plan.        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Access continues until the end of your current billing period — we don't    │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  pro-rate or charge early cancellation fees. Refund requests within 14 days  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  of a charge are honoured in full; after that, refunds are reviewed          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  case-by-case. Email billing@orbitly.example.com.                            │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  === END OF KNOWLEDGE BASE ===                                               │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Reply guidelines:                                                           │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  1. Start with 'Hi Rahul,' (use their name).                                 │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  2. Answer directly from the knowledge base — do not guess.                  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  3. If no entry matches, say so honestly and suggest they email              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  support@orbitly.example.com or start a chat on the website.                 │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  4. End with: 'Is there anything else I can help with?'                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  5. Keep the reply under 120 words.                                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  6. Plain text only — no markdown.                                           │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  ID: 40698a57-1487-4304-844f-96c953388b5a                                    │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Orbitly Customer Support Specialist                                  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Task: A customer named 'Rahul' has sent this question:                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│    \"Do you offer a free trial? Do I need a credit card?\"                     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Use the knowledge base below to find the answer.                            │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  === ORBITLY FAQ KNOWLEDGE BASE ===                                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [1] Topic: PRICING                                                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: How much does Orbitly cost?                                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: Orbitly offers three plans: Solo ($0/month, 1 user, 3 projects),     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Team ($29/month per user, unlimited projects, priority support), and        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Enterprise (custom pricing, SSO, dedicated SLA, audit logs). Annual         │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  billing gives you 2 months free.                                            │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [2] Topic: FREE TRIAL                                                       │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Can I try Orbitly before paying?                                     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: Yes! The Solo plan is free forever for one user. For team features,  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  every account gets a 21-day free trial of the Team plan — no credit card    │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  required. Your trial auto-converts to Solo if you don't upgrade.            │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [3] Topic: DATA IMPORT                                                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Can I import my projects from Jira or Trello?                        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: Absolutely. Go to Settings → Import and choose your source: Jira     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  (Cloud or Server), Trello, Asana, or CSV. The import wizard maps fields     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  automatically and lets you preview before confirming. Large imports (500+   │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  issues) run in the background and email you when done.                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [4] Topic: INTEGRATIONS                                                     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Which tools does Orbitly integrate with?                             │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: Native integrations include Slack (notifications + /orbitly slash    │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  command), GitHub (link commits to tasks), Figma (embed designs), Google     │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Drive, and Zapier (1,000+ apps). Webhooks and a REST API are available on   │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Team and Enterprise plans. Full API docs at docs.orbitly.example.com.       │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [5] Topic: SECURITY                                                         │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Is my data secure? Is Orbitly GDPR compliant?                        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: Yes. All data is encrypted in transit (TLS 1.3) and at rest          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  (AES-256). Orbitly is SOC 2 Type II certified and fully GDPR compliant. EU  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  customers' data is stored in EU data centres. You can export or delete all  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  your data at any time from Settings → Privacy.                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  [6] Topic: CANCELLATION AND REFUNDS                                         │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      Q: What happens if I cancel? Do you offer refunds?                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│      A: You can cancel anytime from Settings → Billing → Cancel Plan.        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Access continues until the end of your current billing period — we don't    │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  pro-rate or charge early cancellation fees. Refund requests within 14 days  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  of a charge are honoured in full; after that, refunds are reviewed          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  case-by-case. Email billing@orbitly.example.com.                            │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  === END OF KNOWLEDGE BASE ===                                               │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Reply guidelines:                                                           │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  1. Start with 'Hi Rahul,' (use their name).                                 │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  2. Answer directly from the knowledge base — do not guess.                  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  3. If no entry matches, say so honestly and suggest they email              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  support@orbitly.example.com or start a chat on the website.                 │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  4. End with: 'Is there anything else I can help with?'                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  5. Keep the reply under 120 words.                                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  6. Plain text only — no markdown.                                           │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Orbitly Customer Support Specialist                                  │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│  Hi Rahul,                                                                   │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│  Yes, we offer a free trial. You can try Orbitly without a credit card. The  │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│  Solo plan is free forever for one user, and every account gets a 21-day     │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│  free trial of the Team plan. Your trial auto-converts to Solo if you don't  │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│  upgrade.                                                                    │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│  Is there anything else I can help with?                                     │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.13
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.13
+  },
+  {
+   "type": "task_complete",
+   "agent": "Orbitly Customer Support Specialist",
+   "description": "A customer named 'Rahul' has sent this question:\n\n  \"Do you offer a free trial? Do I need a credit card?\"\n\nUse the knowledge base below to find the answer.\n\n=== ORBITLY FAQ KNOWLEDGE BASE ===\n\n[1] Topic: PRICING\n    Q: How much does Orbitly cost?\n    A: Orbitly offers three plans: Solo ($0/month, 1 user, 3 projects), Team ($29/month per user, unlimited projects, priority support), and Enterprise (custom pricing, SSO, dedicated SLA, audit logs). Annual billing gives you 2 months free.\n\n[2] Topic: FREE TRIAL\n    Q: Can I try Orbitly before paying?\n    A: Yes! The Solo plan is free forever for one user. For team features, every account gets a 21-day free trial of the Team plan — no credit card required. Your trial auto-converts to Solo if you don't upgrade.\n\n[3] Topic: DATA IMPORT\n    Q: Can I import my projects from Jira or Trello?\n    A: Absolutely. Go to Settings → Import and choose your source: Jira (Cloud or Server), Trello, Asana, or CSV. The import wizard maps fields automatically and lets you preview before confirming. Large imports (500+ issues) run in the background and email you when done.\n\n[4] Topic: INTEGRATIONS\n    Q: Which tools does Orbitly integrate with?\n    A: Native integrations include Slack (notifications + /orbitly slash command), GitHub (link commits to tasks), Figma (embed designs), Google Drive, and Zapier (1,000+ apps). Webhooks and a REST API are available on Team and Enterprise plans. Full API docs at docs.orbitly.example.com.\n\n[5] Topic: SECURITY\n    Q: Is my data secure? Is Orbitly GDPR compliant?\n    A: Yes. All data is encrypted in transit (TLS 1.3) and at rest (AES-256). Orbitly is SOC 2 Type II certified and fully GDPR compliant. EU customers' data is stored in EU data centres. You can export or delete all your data at any time from Settings → Privacy.\n\n[6] Topic: CANCELLATION AND REFUNDS\n    Q: What happens if I cancel? Do you offer refunds?\n    A: You can cancel anytime from Settings → Billing → Cancel Plan. Access continues until the end of your current billing period — we don't pro-rate or charge early cancellation fees. Refund requests within 14 days of a charge are honoured in full; after that, refunds are reviewed case-by-case. Email billing@orbitly.example.com.\n\n=== END OF KNOWLEDGE BASE ===\n\nReply guidelines:\n1. Start with 'Hi Rahul,' (use their name).\n2. Answer directly from the knowledge base — do not guess.\n3. If no entry matches, say so honestly and suggest they email    support@orbitly.example.com or start a chat on the website.\n4. End with: 'Is there anything else I can help with?'\n5. Keep the reply under 120 words.\n6. Plain text only — no markdown.",
+   "output": "Hi Rahul,\n\nYes, we offer a free trial. You can try Orbitly without a credit card. The Solo plan is free forever for one user, and every account gets a 21-day free trial of the Team plan. Your trial auto-converts to Solo if you don't upgrade.\n\nIs there anything else I can help with?",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  Name: A customer named 'Rahul' has sent this question:                      │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│    \"Do you offer a free trial? Do I need a credit card?\"                     │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  Use the knowledge base below to find the answer.                            │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  === ORBITLY FAQ KNOWLEDGE BASE ===                                          │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  [1] Topic: PRICING                                                          │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      Q: How much does Orbitly cost?                                          │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      A: Orbitly offers three plans: Solo ($0/month, 1 user, 3 projects),     │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  Team ($29/month per user, unlimited projects, priority support), and        │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  Enterprise (custom pricing, SSO, dedicated SLA, audit logs). Annual         │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  billing gives you 2 months free.                                            │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  [2] Topic: FREE TRIAL                                                       │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Can I try Orbitly before paying?                                     │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      A: Yes! The Solo plan is free forever for one user. For team features,  │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  every account gets a 21-day free trial of the Team plan — no credit card    │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  required. Your trial auto-converts to Solo if you don't upgrade.            │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  [3] Topic: DATA IMPORT                                                      │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Can I import my projects from Jira or Trello?                        │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      A: Absolutely. Go to Settings → Import and choose your source: Jira     │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  (Cloud or Server), Trello, Asana, or CSV. The import wizard maps fields     │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  automatically and lets you preview before confirming. Large imports (500+   │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  issues) run in the background and email you when done.                      │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  [4] Topic: INTEGRATIONS                                                     │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Which tools does Orbitly integrate with?                             │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      A: Native integrations include Slack (notifications + /orbitly slash    │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  command), GitHub (link commits to tasks), Figma (embed designs), Google     │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  Drive, and Zapier (1,000+ apps). Webhooks and a REST API are available on   │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  Team and Enterprise plans. Full API docs at docs.orbitly.example.com.       │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  [5] Topic: SECURITY                                                         │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      Q: Is my data secure? Is Orbitly GDPR compliant?                        │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      A: Yes. All data is encrypted in transit (TLS 1.3) and at rest          │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  (AES-256). Orbitly is SOC 2 Type II certified and fully GDPR compliant. EU  │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  customers' data is stored in EU data centres. You can export or delete all  │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  your data at any time from Settings → Privacy.                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  [6] Topic: CANCELLATION AND REFUNDS                                         │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      Q: What happens if I cancel? Do you offer refunds?                      │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│      A: You can cancel anytime from Settings → Billing → Cancel Plan.        │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  Access continues until the end of your current billing period — we don't    │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  pro-rate or charge early cancellation fees. Refund requests within 14 days  │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  of a charge are honoured in full; after that, refunds are reviewed          │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  case-by-case. Email billing@orbitly.example.com.                            │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  === END OF KNOWLEDGE BASE ===                                               │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  Reply guidelines:                                                           │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  1. Start with 'Hi Rahul,' (use their name).                                 │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  2. Answer directly from the knowledge base — do not guess.                  │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  3. If no entry matches, say so honestly and suggest they email              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  support@orbitly.example.com or start a chat on the website.                 │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  4. End with: 'Is there anything else I can help with?'                      │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  5. Keep the reply under 120 words.                                          │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  6. Plain text only — no markdown.                                           │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Orbitly Customer Support Specialist                                  │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.14
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────── Tracing Preference Saved ──────────────────────────╮",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│  Info: Tracing has been disabled.                                            │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│  Your preference has been saved. Future Crew/Flow executions will not        │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│  collect traces.                                                             │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│  To enable tracing later, do any one of these:                               │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│  • Set tracing=True in your Crew/Flow code                                   │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│  • Set CREWAI_TRACING_ENABLED=true in your project's .env file               │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│  • Run: crewai traces enable                                                 │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 1.15
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 1.15
+  },
+  {
+   "type": "complete",
+   "output": "Hi Rahul,\n\nYes, we offer a free trial. You can try Orbitly without a credit card. The Solo plan is free forever for one user, and every account gets a 21-day free trial of the Team plan. Your trial auto-converts to Solo if you don't upgrade.\n\nIs there anything else I can help with?",
+   "cached": false,
+   "t": 1.15
+  }
+ ]
+}

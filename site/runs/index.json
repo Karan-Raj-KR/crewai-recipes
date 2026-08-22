@@ -1,0 +1,198 @@
+{
+ "recipes": [
+  {
+   "id": "appointment-booking",
+   "description": "A three-agent CrewAI crew that processes appointment booking requests, matches preferences against available calendar slots, and drafts a professional confirmation email — all powered by **NVIDIA NIM (Llama 3.1 8B Instruct)**.",
+   "inputs": [
+    {
+     "name": "name",
+     "label": "Requester Name",
+     "example": "Priya Sharma"
+    },
+    {
+     "name": "email",
+     "label": "Requester Email",
+     "example": "priya.sharma@example.com"
+    },
+    {
+     "name": "meeting_type",
+     "label": "Meeting Type",
+     "example": "Product Demo"
+    },
+    {
+     "name": "preferred_times",
+     "label": "Preferred Times",
+     "example": "Any morning slot this week, preferably before noon IST"
+    },
+    {
+     "name": "notes",
+     "label": "Notes (optional)",
+     "example": "Priya is evaluating our product for her 15-person team. 30-min demo requested."
+    }
+   ],
+   "recorded_at": "2026-08-22T07:37:11+00:00",
+   "model": "meta/llama-3.1-8b-instruct"
+  },
+  {
+   "id": "content-pipeline",
+   "description": "> ✅ **Status: Stable** — Fully working 4-agent crew that automates blog ideation, section outlining, short-form drafting, and actionable SEO review.",
+   "inputs": [
+    {
+     "name": "topic",
+     "label": "Blog Topic",
+     "example": "Why Multi-Agent Systems are Replacing Single Prompt AI Workflows"
+    },
+    {
+     "name": "target_audience",
+     "label": "Target Audience",
+     "example": "Senior Engineering Managers & Developers"
+    },
+    {
+     "name": "keywords",
+     "label": "Target Keywords (comma-separated)",
+     "example": "Multi-Agent Systems, CrewAI, LLM Orchestration"
+    }
+   ],
+   "recorded_at": "2026-08-22T07:37:40+00:00",
+   "model": "meta/llama-3.1-8b-instruct"
+  },
+  {
+   "id": "customer-onboarding",
+   "description": "> ✅ **Status: Stable** — Fully working three-agent crew that structures signup data, audits profile completeness/consistency, and drafts a personalized welcome or follow-up email.",
+   "inputs": [
+    {
+     "name": "customer_name",
+     "label": "Customer Name",
+     "example": "Sarah Connor"
+    },
+    {
+     "name": "company",
+     "label": "Company Name",
+     "example": "Cyberdyne Systems"
+    },
+    {
+     "name": "role",
+     "label": "Job Role / Title",
+     "example": "Chief Security Officer"
+    },
+    {
+     "name": "use_case",
+     "label": "Primary Use Case / Goal",
+     "example": "Automating threat intelligence aggregation and incident response"
+    },
+    {
+     "name": "team_size",
+     "label": "Team Size",
+     "example": "50"
+    }
+   ],
+   "recorded_at": "2026-08-22T07:37:43+00:00",
+   "model": "meta/llama-3.1-8b-instruct"
+  },
+  {
+   "id": "email-drafting",
+   "description": "> ✅ **Status: Stable** — Fully working 2-agent crew that drafts complete emails from a brief and audits them for conciseness, tone matching, and key point inclusion.",
+   "inputs": [
+    {
+     "name": "recipient",
+     "label": "Recipient (Name / Role)",
+     "example": "Design Team Lead"
+    },
+    {
+     "name": "purpose",
+     "label": "Email Purpose",
+     "example": "Requesting design review for mobile checkout flow"
+    },
+    {
+     "name": "key_points",
+     "label": "Key Points to Cover",
+     "example": "New checkout mocks are ready in Figma, review needed by Wednesday EOD, priority on payment step UX"
+    },
+    {
+     "name": "tone",
+     "label": "Tone (professional / friendly / formal / direct)",
+     "example": "friendly"
+    }
+   ],
+   "recorded_at": "2026-08-22T07:37:46+00:00",
+   "model": "meta/llama-3.1-8b-instruct"
+  },
+  {
+   "id": "faq-bot",
+   "description": "Answer customer questions from a built-in knowledge base using a **single-agent CrewAI crew** powered by **NVIDIA NIM (Llama 3.1 8B Instruct)**.",
+   "inputs": [
+    {
+     "name": "question",
+     "label": "Customer Question",
+     "example": "Do you offer a free trial? Do I need a credit card?"
+    },
+    {
+     "name": "customer_name",
+     "label": "Customer Name (optional)",
+     "example": "Rahul"
+    }
+   ],
+   "recorded_at": "2026-08-22T07:37:47+00:00",
+   "model": "meta/llama-3.1-8b-instruct"
+  },
+  {
+   "id": "lead-qualification",
+   "description": "Score and profile inbound sales leads using a two-agent CrewAI crew powered by **NVIDIA NIM** (defaults to `meta/llama-3.1-8b-instruct`; set `LLM_MODEL` for 70B).",
+   "inputs": [
+    {
+     "name": "company",
+     "label": "Company Name",
+     "example": "Acme SaaS Co."
+    },
+    {
+     "name": "description",
+     "label": "Company Description",
+     "example": "Inbound form submission. Jordan mentioned they're 'evaluating automation vendors' and their team has grown from 5 to 40 reps in the last 18 months. They're currently using spreadsheets for pipeline management. Series B, ~$12M raised."
+    }
+   ],
+   "recorded_at": "2026-08-22T07:37:52+00:00",
+   "model": "meta/llama-3.1-8b-instruct"
+  },
+  {
+   "id": "support-escalation",
+   "description": "> ✅ **Status: Stable** — Fully working 3-agent crew that triages tickets, attempts conservative Tier-1 auto-resolution against an in-memory knowledge base, or generates a structured human handoff summary for complex issues.",
+   "inputs": [
+    {
+     "name": "ticket_text",
+     "label": "Support Ticket Description",
+     "example": "Our enterprise SAML SSO integration with Okta started failing with HTTP 500 error after certificate renewal."
+    },
+    {
+     "name": "customer_tier",
+     "label": "Customer Plan Tier (free / pro / enterprise)",
+     "example": "enterprise"
+    },
+    {
+     "name": "previous_contacts",
+     "label": "Previous Contact Attempts",
+     "example": "2"
+    }
+   ],
+   "recorded_at": "2026-08-22T07:37:57+00:00",
+   "model": "meta/llama-3.1-8b-instruct"
+  },
+  {
+   "id": "whatsapp-action-sim",
+   "description": "> ✅ **Status: Stable** — Fully working three-agent crew with intent classification, simulated action routing, and WhatsApp response composition.",
+   "inputs": [
+    {
+     "name": "user_message",
+     "label": "WhatsApp Message",
+     "example": "Hey! Where's my order? It's been 3 days now 😤"
+    },
+    {
+     "name": "sender_name",
+     "label": "Sender Name (optional)",
+     "example": "Ravi"
+    }
+   ],
+   "recorded_at": "2026-08-22T07:38:00+00:00",
+   "model": "meta/llama-3.1-8b-instruct"
+  }
+ ]
+}

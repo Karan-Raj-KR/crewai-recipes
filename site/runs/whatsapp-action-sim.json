@@ -1,0 +1,1645 @@
+{
+ "recipe": "whatsapp-action-sim",
+ "description": "> ✅ **Status: Stable** — Fully working three-agent crew with intent classification, simulated action routing, and WhatsApp response composition.",
+ "inputs": {
+  "user_message": "Hey! Where's my order? It's been 3 days now 😤",
+  "sender_name": "Ravi"
+ },
+ "model": "meta/llama-3.1-8b-instruct",
+ "recorded_at": "2026-08-22T07:38:00+00:00",
+ "duration_s": 3.5,
+ "events": [
+  {
+   "type": "start",
+   "recipe": "whatsapp-action-sim",
+   "t": 0.0
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✨ Update Available ✨ ───────────────────────────╮",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  A new version of CrewAI is available!                                       │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  Current version: 1.15.14                                                    │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  Latest version:  1.15.17                                                    │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  To update, run: uv sync --upgrade-package crewai                            │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────── 🚀 Crew Execution Started ──────────────────────────╮",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  Crew Execution Started                                                      │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  Name: crew                                                                  │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│  ID: b89ffcd1-6d9e-45ee-aad3-f39fb52036b1                                    │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.1
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Incoming WhatsApp message from Ravi:                                  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│    \"Hey! Where's my order? It's been 3 days now 😤\"                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Classify the primary intent into EXACTLY ONE of: ORDER_STATUS,              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  BOOK_APPOINTMENT, FAQ, COMPLAINT, FEEDBACK, HUMAN_ESCALATION, UNKNOWN.      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Rules:                                                                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  1. Output the intent as a single word in ALL CAPS.                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  2. Include a confidence level: HIGH, MEDIUM, or LOW.                        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  3. If confidence is LOW or intent is UNKNOWN, note what    additional info  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  would resolve the ambiguity.                                                │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  4. Extract any key entities (order IDs, dates, product names, etc.).        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  ID: dad2ec28-9047-4f4f-ab33-899a1516d6a5                                    │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: WhatsApp Intent Classifier                                           │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Incoming WhatsApp message from Ravi:                                  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│    \"Hey! Where's my order? It's been 3 days now 😤\"                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Classify the primary intent into EXACTLY ONE of: ORDER_STATUS,              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  BOOK_APPOINTMENT, FAQ, COMPLAINT, FEEDBACK, HUMAN_ESCALATION, UNKNOWN.      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  Rules:                                                                      │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  1. Output the intent as a single word in ALL CAPS.                          │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  2. Include a confidence level: HIGH, MEDIUM, or LOW.                        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  3. If confidence is LOW or intent is UNKNOWN, note what    additional info  │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  would resolve the ambiguity.                                                │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│  4. Extract any key entities (order IDs, dates, product names, etc.).        │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.11
+  },
+  {
+   "type": "log",
+   "text": "\u001b[35m[Finalize] todos_count=0, todos_with_results=0\u001b[0m",
+   "t": 0.9
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: WhatsApp Intent Classifier                                           │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  **Classification Report:**                                                  │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  - **Intent:** ORDER_STATUS                                                  │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  - **Confidence:** HIGH                                                      │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  - **Entities:**                                                             │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│    - Order status inquiry                                                    │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│    - Timeframe: 3 days                                                       │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  - **Notes:** None                                                           │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  The message from Ravi is inquiring about the status of his order, which     │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  has been delayed for 3 days. The use of the frustrated face emoji 😤        │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  emphasizes his concern about the order's status. This is a clear            │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  indication of the ORDER_STATUS intent.                                      │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.91
+  },
+  {
+   "type": "task_complete",
+   "agent": "WhatsApp Intent Classifier",
+   "description": "Incoming WhatsApp message from Ravi:\n\n  \"Hey! Where's my order? It's been 3 days now 😤\"\n\nClassify the primary intent into EXACTLY ONE of: ORDER_STATUS, BOOK_APPOINTMENT, FAQ, COMPLAINT, FEEDBACK, HUMAN_ESCALATION, UNKNOWN.\n\nRules:\n1. Output the intent as a single word in ALL CAPS.\n2. Include a confidence level: HIGH, MEDIUM, or LOW.\n3. If confidence is LOW or intent is UNKNOWN, note what    additional info would resolve the ambiguity.\n4. Extract any key entities (order IDs, dates, product names, etc.).",
+   "output": "**Classification Report:**\n\n- **Intent:** ORDER_STATUS\n- **Confidence:** HIGH\n- **Entities:** \n  - Order status inquiry\n  - Timeframe: 3 days\n- **Notes:** None\n\nThe message from Ravi is inquiring about the status of his order, which has been delayed for 3 days. The use of the frustrated face emoji 😤 emphasizes his concern about the order's status. This is a clear indication of the ORDER_STATUS intent.",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Incoming WhatsApp message from Ravi:                                  │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│    \"Hey! Where's my order? It's been 3 days now 😤\"                          │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  Classify the primary intent into EXACTLY ONE of: ORDER_STATUS,              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  BOOK_APPOINTMENT, FAQ, COMPLAINT, FEEDBACK, HUMAN_ESCALATION, UNKNOWN.      │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  Rules:                                                                      │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  1. Output the intent as a single word in ALL CAPS.                          │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  2. Include a confidence level: HIGH, MEDIUM, or LOW.                        │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  3. If confidence is LOW or intent is UNKNOWN, note what    additional info  │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  would resolve the ambiguity.                                                │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  4. Extract any key entities (order IDs, dates, product names, etc.).        │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: WhatsApp Intent Classifier                                           │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.91
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Using the classified intent from the previous task, determine the     │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  correct downstream action and simulate its execution.                       │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  The action registry returned the following simulated payload for reference  │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  (your actual routing should be based on the classified intent, not          │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  hard-coded to this example):                                                │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  ```json                                                                     │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  {                                                                           │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│    \"action\": \"GET_ORDER_STATUS\",                                             │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│    \"status\": \"success\",                                                      │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│    \"payload\": {                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│      \"order_id\": \"ORD-78421\",                                                │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│      \"status\": \"Out for Delivery\"                                            │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│    },                                                                        │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│    \"next_step\": \"Send order status to user\"                                  │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  }                                                                           │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  ```                                                                         │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  Based on the actual classified intent, describe:                            │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  1. Which action was triggered.                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  2. What parameters were passed.                                             │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  3. What the simulated response payload contains.                            │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  4. The recommended next step.                                               │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  ID: 7bd9ac6a-2048-44d5-8fbf-26f2ce39b584                                    │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Action Router & Dispatcher                                           │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Using the classified intent from the previous task, determine the     │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  correct downstream action and simulate its execution.                       │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  The action registry returned the following simulated payload for reference  │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  (your actual routing should be based on the classified intent, not          │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  hard-coded to this example):                                                │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  ```json                                                                     │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  {                                                                           │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│    \"action\": \"GET_ORDER_STATUS\",                                             │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│    \"status\": \"success\",                                                      │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│    \"payload\": {                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│      \"order_id\": \"ORD-78421\",                                                │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│      \"status\": \"Out for Delivery\"                                            │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│    },                                                                        │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│    \"next_step\": \"Send order status to user\"                                  │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  }                                                                           │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  ```                                                                         │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  Based on the actual classified intent, describe:                            │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  1. Which action was triggered.                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  2. What parameters were passed.                                             │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  3. What the simulated response payload contains.                            │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│  4. The recommended next step.                                               │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.92
+  },
+  {
+   "type": "log",
+   "text": "\u001b[35m[Finalize] todos_count=0, todos_with_results=0\u001b[0m",
+   "t": 2.19
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Action Router & Dispatcher                                           │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  **Routing Report**                                                          │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  ================                                                            │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  ### Action Triggered                                                        │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  -----------------                                                           │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  The action triggered is **GET_ORDER_STATUS**.                               │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  ### Parameters                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  -------------                                                               │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  The parameters passed to the action are:                                    │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  * `order_id`: Not explicitly mentioned in the classified intent, but        │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  inferred from the context of the message. However, since the actual order   │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  ID is not provided, we will assume it is not passed as a parameter.         │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  * `timeframe`: 3 days, which is an entity extracted from the classified     │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  intent.                                                                     │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  ### Response Payload                                                        │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  -----------------                                                           │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  ```json                                                                     │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  {                                                                           │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│    \"action\": \"GET_ORDER_STATUS\",                                             │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│    \"status\": \"success\",                                                      │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│    \"payload\": {                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│      \"order_id\": \"ORD-78421\",                                                │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│      \"status\": \"Out for Delivery\"                                            │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│    },                                                                        │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│    \"next_step\": \"Send order status to user\"                                  │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  }                                                                           │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  ```                                                                         │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  ### Next Step                                                               │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  -------------                                                               │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  The recommended next step is to **Send order status to user**. This is      │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  based on the simulated response payload, which suggests that the order      │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  status is \"Out for Delivery\". The next step would be to inform the user     │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│  about the status of their order.                                            │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.2
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 2.2
+  },
+  {
+   "type": "task_complete",
+   "agent": "Action Router & Dispatcher",
+   "description": "Using the classified intent from the previous task, determine the correct downstream action and simulate its execution.\n\nThe action registry returned the following simulated payload for reference (your actual routing should be based on the classified intent, not hard-coded to this example):\n\n```json\n{\n  \"action\": \"GET_ORDER_STATUS\",\n  \"status\": \"success\",\n  \"payload\": {\n    \"order_id\": \"ORD-78421\",\n    \"status\": \"Out for Delivery\"\n  },\n  \"next_step\": \"Send order status to user\"\n}\n```\n\nBased on the actual classified intent, describe:\n1. Which action was triggered.\n2. What parameters were passed.\n3. What the simulated response payload contains.\n4. The recommended next step.",
+   "output": "**Routing Report**\n================\n\n### Action Triggered\n-----------------\n\nThe action triggered is **GET_ORDER_STATUS**.\n\n### Parameters\n-------------\n\nThe parameters passed to the action are:\n\n* `order_id`: Not explicitly mentioned in the classified intent, but inferred from the context of the message. However, since the actual order ID is not provided, we will assume it is not passed as a parameter.\n* `timeframe`: 3 days, which is an entity extracted from the classified intent.\n\n### Response Payload\n-----------------\n\n```json\n{\n  \"action\": \"GET_ORDER_STATUS\",\n  \"status\": \"success\",\n  \"payload\": {\n    \"order_id\": \"ORD-78421\",\n    \"status\": \"Out for Delivery\"\n  },\n  \"next_step\": \"Send order status to user\"\n}\n```\n\n### Next Step\n-------------\n\nThe recommended next step is to **Send order status to user**. This is based on the simulated response payload, which suggests that the order status is \"Out for Delivery\". The next step would be to inform the user about the status of their order.",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Using the classified intent from the previous task, determine the     │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  correct downstream action and simulate its execution.                       │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  The action registry returned the following simulated payload for reference  │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  (your actual routing should be based on the classified intent, not          │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  hard-coded to this example):                                                │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  ```json                                                                     │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  {                                                                           │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│    \"action\": \"GET_ORDER_STATUS\",                                             │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│    \"status\": \"success\",                                                      │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│    \"payload\": {                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│      \"order_id\": \"ORD-78421\",                                                │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│      \"status\": \"Out for Delivery\"                                            │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│    },                                                                        │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│    \"next_step\": \"Send order status to user\"                                  │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  }                                                                           │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  ```                                                                         │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  Based on the actual classified intent, describe:                            │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  1. Which action was triggered.                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  2. What parameters were passed.                                             │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  3. What the simulated response payload contains.                            │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  4. The recommended next step.                                               │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Action Router & Dispatcher                                           │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Compose a WhatsApp reply to Ravi based on the action result from the  │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  previous task.                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  Composition rules:                                                          │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  1. Open with the sender's name if known.                                    │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  2. Deliver the core information from the action payload clearly.            │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  3. Use 1–2 relevant emojis to add warmth (not excessive).                   │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  4. Include a clear call-to-action or next step.                             │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  5. Keep the total message under 200 characters if possible.                 │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  6. Use line breaks (\\n) to improve readability on mobile.                   │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  Output ONLY the WhatsApp message — no explanations or markdown.             │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│  ID: eef261a6-60b9-4554-a9ab-f094a937e94c                                    │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 2.21
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: WhatsApp Response Composer                                           │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Compose a WhatsApp reply to Ravi based on the action result from the  │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  previous task.                                                              │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  Composition rules:                                                          │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  1. Open with the sender's name if known.                                    │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  2. Deliver the core information from the action payload clearly.            │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  3. Use 1–2 relevant emojis to add warmth (not excessive).                   │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  4. Include a clear call-to-action or next step.                             │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  5. Keep the total message under 200 characters if possible.                 │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  6. Use line breaks (\\n) to improve readability on mobile.                   │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│  Output ONLY the WhatsApp message — no explanations or markdown.             │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 2.22
+  },
+  {
+   "type": "log",
+   "text": "\u001b[35m[Finalize] todos_count=0, todos_with_results=0\u001b[0m",
+   "t": 3.41
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: WhatsApp Response Composer                                           │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Hi Ravi 😊                                                                  │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Your order status is Out for Delivery. We're sorry again for the delay.     │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  We'll send you a confirmation once it's delivered.                          │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 3.42
+  },
+  {
+   "type": "task_complete",
+   "agent": "WhatsApp Response Composer",
+   "description": "Compose a WhatsApp reply to Ravi based on the action result from the previous task.\n\nComposition rules:\n1. Open with the sender's name if known.\n2. Deliver the core information from the action payload clearly.\n3. Use 1–2 relevant emojis to add warmth (not excessive).\n4. Include a clear call-to-action or next step.\n5. Keep the total message under 200 characters if possible.\n6. Use line breaks (\\n) to improve readability on mobile.\n\nOutput ONLY the WhatsApp message — no explanations or markdown.",
+   "output": "Hi Ravi 😊\n\nYour order status is Out for Delivery. We're sorry again for the delay. We'll send you a confirmation once it's delivered.",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Compose a WhatsApp reply to Ravi based on the action result from the  │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  previous task.                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Composition rules:                                                          │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  1. Open with the sender's name if known.                                    │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  2. Deliver the core information from the action payload clearly.            │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  3. Use 1–2 relevant emojis to add warmth (not excessive).                   │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  4. Include a clear call-to-action or next step.                             │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  5. Keep the total message under 200 characters if possible.                 │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  6. Use line breaks (\\n) to improve readability on mobile.                   │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Output ONLY the WhatsApp message — no explanations or markdown.             │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: WhatsApp Response Composer                                           │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────── Tracing Preference Saved ──────────────────────────╮",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Info: Tracing has been disabled.                                            │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  Your preference has been saved. Future Crew/Flow executions will not        │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  collect traces.                                                             │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  To enable tracing later, do any one of these:                               │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  • Set tracing=True in your Crew/Flow code                                   │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  • Set CREWAI_TRACING_ENABLED=true in your project's .env file               │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│  • Run: crewai traces enable                                                 │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 3.42
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 3.42
+  },
+  {
+   "type": "complete",
+   "output": "Hi Ravi 😊\n\nYour order status is Out for Delivery. We're sorry again for the delay. We'll send you a confirmation once it's delivered.",
+   "cached": false,
+   "t": 3.42
+  }
+ ]
+}

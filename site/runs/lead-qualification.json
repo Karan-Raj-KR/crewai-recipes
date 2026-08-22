@@ -1,0 +1,1253 @@
+{
+ "recipe": "lead-qualification",
+ "description": "Score and profile inbound sales leads using a two-agent CrewAI crew powered by **NVIDIA NIM** (defaults to `meta/llama-3.1-8b-instruct`; set `LLM_MODEL` for 70B).",
+ "inputs": {
+  "company": "Acme SaaS Co.",
+  "description": "Inbound form submission. Jordan mentioned they're 'evaluating automation vendors' and their team has grown from 5 to 40 reps in the last 18 months. They're currently using spreadsheets for pipeline management. Series B, ~$12M raised."
+ },
+ "model": "meta/llama-3.1-8b-instruct",
+ "recorded_at": "2026-08-22T07:37:52+00:00",
+ "duration_s": 4.3,
+ "events": [
+  {
+   "type": "start",
+   "recipe": "lead-qualification",
+   "t": 0.0
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Company Name: Acme SaaS Co.                                           │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Description: Inbound form submission. Jordan mentioned they're 'evaluating  │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  automation vendors' and their team has grown from 5 to 40 reps in the last  │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  18 months. They're currently using spreadsheets for pipeline management.    │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Series B, ~$12M raised.                                                     │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Using ONLY the information provided above (do not hallucinate external      │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  data), extract and summarise the following signals:                         │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  1. **Industry & Vertical** — what sector is this company in?                │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  2. **Business Model** — B2B, B2C, marketplace, SaaS, services?              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  3. **Company Size Estimate** — startup / SMB / mid-market / enterprise?     │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  4. **Growth Stage** — pre-product, early-stage, scaling, mature?            │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  5. **Likely Pain Points** — top 3 operational or strategic pains    this    │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  type of company typically faces.                                            │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  6. **Budget & Tech Signal** — any clues about spending power or             │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  technical sophistication?                                                   │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Be concise. Use bullet points. Flag any ambiguity clearly.                  │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  ID: 14fc5d93-50fc-408c-84e8-03621ae29554                                    │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Company Research Analyst                                             │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Company Name: Acme SaaS Co.                                           │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Description: Inbound form submission. Jordan mentioned they're 'evaluating  │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  automation vendors' and their team has grown from 5 to 40 reps in the last  │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  18 months. They're currently using spreadsheets for pipeline management.    │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Series B, ~$12M raised.                                                     │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Using ONLY the information provided above (do not hallucinate external      │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  data), extract and summarise the following signals:                         │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  1. **Industry & Vertical** — what sector is this company in?                │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  2. **Business Model** — B2B, B2C, marketplace, SaaS, services?              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  3. **Company Size Estimate** — startup / SMB / mid-market / enterprise?     │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  4. **Growth Stage** — pre-product, early-stage, scaling, mature?            │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  5. **Likely Pain Points** — top 3 operational or strategic pains    this    │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  type of company typically faces.                                            │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  6. **Budget & Tech Signal** — any clues about spending power or             │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  technical sophistication?                                                   │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│  Be concise. Use bullet points. Flag any ambiguity clearly.                  │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 0.13
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Company Research Analyst                                             │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  **Company Research Summary: Acme SaaS Co.**                                 │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  =============================================                               │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  ### 1. **Industry & Vertical**                                              │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  * The company is likely in the sales or customer-facing industry, given     │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  the mention of reps and pipeline management.                                │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  ### 2. **Business Model**                                                   │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  * B2B: The company is evaluating automation vendors, suggesting a           │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  business-to-business model.                                                 │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  * SaaS: The company is a SaaS vendor itself, as indicated by the \"Acme      │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  SaaS Co.\" name.                                                             │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  ### 3. **Company Size Estimate**                                            │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  * Mid-market: The company has grown from 5 to 40 reps in 18 months,         │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  indicating significant growth and a mid-market size estimate.               │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  ### 4. **Growth Stage**                                                     │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  * Scaling: The company has received Series B funding (~$12M) and has        │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  experienced rapid growth, indicating a scaling growth stage.                │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  ### 5. **Likely Pain Points**                                               │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  * Top 3 operational or strategic pains this type of company typically       │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  faces:                                                                      │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│    * **Pain Point 1**: Managing rapid growth and scaling efficiently.        │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│    * **Pain Point 2**: Implementing effective sales automation and pipeline  │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  management.                                                                 │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│    * **Pain Point 3**: Maintaining sales performance and rep productivity.   │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  ### 6. **Budget & Tech Signal**                                             │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  * **Budget Signal**: The company has received Series B funding (~$12M),     │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  indicating a significant budget for investments.                            │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  * **Tech Signal**: The company is currently using spreadsheets for          │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│  pipeline management, suggesting a relatively basic technical setup.         │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.74
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 2.74
+  },
+  {
+   "type": "task_complete",
+   "agent": "Company Research Analyst",
+   "description": "Company Name: Acme SaaS Co.\nDescription: Inbound form submission. Jordan mentioned they're 'evaluating automation vendors' and their team has grown from 5 to 40 reps in the last 18 months. They're currently using spreadsheets for pipeline management. Series B, ~$12M raised.\n\nUsing ONLY the information provided above (do not hallucinate external data), extract and summarise the following signals:\n\n1. **Industry & Vertical** — what sector is this company in?\n2. **Business Model** — B2B, B2C, marketplace, SaaS, services?\n3. **Company Size Estimate** — startup / SMB / mid-market / enterprise?\n4. **Growth Stage** — pre-product, early-stage, scaling, mature?\n5. **Likely Pain Points** — top 3 operational or strategic pains    this type of company typically faces.\n6. **Budget & Tech Signal** — any clues about spending power or    technical sophistication?\n\nBe concise. Use bullet points. Flag any ambiguity clearly.",
+   "output": "**Company Research Summary: Acme SaaS Co.**\n=============================================\n\n### 1. **Industry & Vertical**\n* The company is likely in the sales or customer-facing industry, given the mention of reps and pipeline management.\n\n### 2. **Business Model**\n* B2B: The company is evaluating automation vendors, suggesting a business-to-business model.\n* SaaS: The company is a SaaS vendor itself, as indicated by the \"Acme SaaS Co.\" name.\n\n### 3. **Company Size Estimate**\n* Mid-market: The company has grown from 5 to 40 reps in 18 months, indicating significant growth and a mid-market size estimate.\n\n### 4. **Growth Stage**\n* Scaling: The company has received Series B funding (~$12M) and has experienced rapid growth, indicating a scaling growth stage.\n\n### 5. **Likely Pain Points**\n* Top 3 operational or strategic pains this type of company typically faces:\n  * **Pain Point 1**: Managing rapid growth and scaling efficiently.\n  * **Pain Point 2**: Implementing effective sales automation and pipeline management.\n  * **Pain Point 3**: Maintaining sales performance and rep productivity.\n\n### 6. **Budget & Tech Signal**\n* **Budget Signal**: The company has received Series B funding (~$12M), indicating a significant budget for investments.\n* **Tech Signal**: The company is currently using spreadsheets for pipeline management, suggesting a relatively basic technical setup.",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Company Name: Acme SaaS Co.                                           │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  Description: Inbound form submission. Jordan mentioned they're 'evaluating  │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  automation vendors' and their team has grown from 5 to 40 reps in the last  │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  18 months. They're currently using spreadsheets for pipeline management.    │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  Series B, ~$12M raised.                                                     │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  Using ONLY the information provided above (do not hallucinate external      │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  data), extract and summarise the following signals:                         │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  1. **Industry & Vertical** — what sector is this company in?                │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  2. **Business Model** — B2B, B2C, marketplace, SaaS, services?              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  3. **Company Size Estimate** — startup / SMB / mid-market / enterprise?     │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  4. **Growth Stage** — pre-product, early-stage, scaling, mature?            │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  5. **Likely Pain Points** — top 3 operational or strategic pains    this    │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  type of company typically faces.                                            │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  6. **Budget & Tech Signal** — any clues about spending power or             │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  technical sophistication?                                                   │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  Be concise. Use bullet points. Flag any ambiguity clearly.                  │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: Company Research Analyst                                             │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 📋 Task Started ───────────────────────────────╮",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  Task Started                                                                │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Using the research summary for **Acme SaaS Co.**, score this lead     │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  against our ICP. Apply the following rubric:                                │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  | Dimension            | Max pts | Scoring Guide |                          │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  |----------------------|---------|---------------|                          │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  | Industry Fit         | 25      | How well does the industry match a       │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  typical B2B SaaS buyer? |                                                   │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  | Company Size Fit     | 25      | Does the size fit an SMB-to-mid-market   │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  sweet spot? |                                                               │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  | Pain Point Acuity    | 25      | How acute and urgent are their           │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  identified pain points? |                                                   │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  | Budget/Growth Signal | 25      | Do signals suggest willingness and       │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  ability to spend? |                                                         │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  For each dimension: state the score (e.g. '18 / 25') and one sentence of    │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  reasoning. Then compute the total and give a verdict.                       │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  **Verdict thresholds:** HOT = 75-100, WARM = 40-74, COLD = 0-39             │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  Close with a recommended next action in one sentence.                       │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│  ID: d9f369f7-ba5a-4462-8ba6-31b57387f99c                                    │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 2.75
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────────── 🤖 Agent Started ──────────────────────────────╮",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: ICP Scoring Specialist                                               │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  Task: Using the research summary for **Acme SaaS Co.**, score this lead     │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  against our ICP. Apply the following rubric:                                │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  | Dimension            | Max pts | Scoring Guide |                          │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  |----------------------|---------|---------------|                          │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  | Industry Fit         | 25      | How well does the industry match a       │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  typical B2B SaaS buyer? |                                                   │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  | Company Size Fit     | 25      | Does the size fit an SMB-to-mid-market   │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  sweet spot? |                                                               │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  | Pain Point Acuity    | 25      | How acute and urgent are their           │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  identified pain points? |                                                   │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  | Budget/Growth Signal | 25      | Do signals suggest willingness and       │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  ability to spend? |                                                         │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  For each dimension: state the score (e.g. '18 / 25') and one sentence of    │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  reasoning. Then compute the total and give a verdict.                       │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  **Verdict thresholds:** HOT = 75-100, WARM = 40-74, COLD = 0-39             │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│  Close with a recommended next action in one sentence.                       │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 2.76
+  },
+  {
+   "type": "log",
+   "text": "╭─────────────────────────── ✅ Agent Final Answer ────────────────────────────╮",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: ICP Scoring Specialist                                               │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  Final Answer:                                                               │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  **Acme SaaS Co. ICP Scorecard**                                             │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  ================================                                            │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  | Dimension            | Score / 25 | Rationale |                           │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  |----------------------|-------------|-----------|                          │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  | Industry Fit         | 20 / 25     | The company's sales or               │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  customer-facing industry aligns well with typical B2B SaaS buyers, but the  │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  specific vertical is unclear. |                                             │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  | Company Size Fit     | 22 / 25     | The company's mid-market size        │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  estimate (40 reps) fits the SMB-to-mid-market sweet spot, indicating a      │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  good fit. |                                                                 │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  | Pain Point Acuity    | 18 / 25     | The company's identified pain        │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  points (growth, sales automation, and rep productivity) are significant     │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  but not extremely urgent, indicating moderate acuity. |                     │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  | Budget/Growth Signal | 23 / 25     | The company's Series B funding       │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  (~$12M) and rapid growth suggest a strong budget and growth signal,         │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  indicating a high willingness and ability to spend. |                       │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  **Total Score:** 83 / 100                                                   │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  **Verdict:** HOT                                                            │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  **Recommended next action:** Schedule a discovery call to discuss how Acme  │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  SaaS Co. can leverage automation to scale efficiently and maintain sales    │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│  performance.                                                                │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.22
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 4.22
+  },
+  {
+   "type": "task_complete",
+   "agent": "ICP Scoring Specialist",
+   "description": "Using the research summary for **Acme SaaS Co.**, score this lead against our ICP. Apply the following rubric:\n\n| Dimension            | Max pts | Scoring Guide |\n|----------------------|---------|---------------|\n| Industry Fit         | 25      | How well does the industry match a typical B2B SaaS buyer? |\n| Company Size Fit     | 25      | Does the size fit an SMB-to-mid-market sweet spot? |\n| Pain Point Acuity    | 25      | How acute and urgent are their identified pain points? |\n| Budget/Growth Signal | 25      | Do signals suggest willingness and ability to spend? |\n\nFor each dimension: state the score (e.g. '18 / 25') and one sentence of reasoning. Then compute the total and give a verdict.\n\n**Verdict thresholds:** HOT = 75-100, WARM = 40-74, COLD = 0-39\n\nClose with a recommended next action in one sentence.",
+   "output": "**Acme SaaS Co. ICP Scorecard**\n================================\n\n| Dimension            | Score / 25 | Rationale |\n|----------------------|-------------|-----------|\n| Industry Fit         | 20 / 25     | The company's sales or customer-facing industry aligns well with typical B2B SaaS buyers, but the specific vertical is unclear. |\n| Company Size Fit     | 22 / 25     | The company's mid-market size estimate (40 reps) fits the SMB-to-mid-market sweet spot, indicating a good fit. |\n| Pain Point Acuity    | 18 / 25     | The company's identified pain points (growth, sales automation, and rep productivity) are significant but not extremely urgent, indicating moderate acuity. |\n| Budget/Growth Signal | 23 / 25     | The company's Series B funding (~$12M) and rapid growth suggest a strong budget and growth signal, indicating a high willingness and ability to spend. |\n\n**Total Score:** 83 / 100\n\n**Verdict:** HOT\n\n**Recommended next action:** Schedule a discovery call to discuss how Acme SaaS Co. can leverage automation to scale efficiently and maintain sales performance.",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "╭───────────────────────────── 📋 Task Completion ─────────────────────────────╮",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  Task Completed                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  Name: Using the research summary for **Acme SaaS Co.**, score this lead     │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  against our ICP. Apply the following rubric:                                │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  | Dimension            | Max pts | Scoring Guide |                          │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  |----------------------|---------|---------------|                          │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  | Industry Fit         | 25      | How well does the industry match a       │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  typical B2B SaaS buyer? |                                                   │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  | Company Size Fit     | 25      | Does the size fit an SMB-to-mid-market   │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  sweet spot? |                                                               │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  | Pain Point Acuity    | 25      | How acute and urgent are their           │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  identified pain points? |                                                   │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  | Budget/Growth Signal | 25      | Do signals suggest willingness and       │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  ability to spend? |                                                         │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  For each dimension: state the score (e.g. '18 / 25') and one sentence of    │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  reasoning. Then compute the total and give a verdict.                       │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  **Verdict thresholds:** HOT = 75-100, WARM = 40-74, COLD = 0-39             │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  Close with a recommended next action in one sentence.                       │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  Agent: ICP Scoring Specialist                                               │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "╭────────────────────────── Tracing Preference Saved ──────────────────────────╮",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  Info: Tracing has been disabled.                                            │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  Your preference has been saved. Future Crew/Flow executions will not        │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  collect traces.                                                             │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  To enable tracing later, do any one of these:                               │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  • Set tracing=True in your Crew/Flow code                                   │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  • Set CREWAI_TRACING_ENABLED=true in your project's .env file               │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│  • Run: crewai traces enable                                                 │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "│                                                                              │",
+   "t": 4.23
+  },
+  {
+   "type": "log",
+   "text": "╰──────────────────────────────────────────────────────────────────────────────╯",
+   "t": 4.23
+  },
+  {
+   "type": "complete",
+   "output": "**Acme SaaS Co. ICP Scorecard**\n================================\n\n| Dimension            | Score / 25 | Rationale |\n|----------------------|-------------|-----------|\n| Industry Fit         | 20 / 25     | The company's sales or customer-facing industry aligns well with typical B2B SaaS buyers, but the specific vertical is unclear. |\n| Company Size Fit     | 22 / 25     | The company's mid-market size estimate (40 reps) fits the SMB-to-mid-market sweet spot, indicating a good fit. |\n| Pain Point Acuity    | 18 / 25     | The company's identified pain points (growth, sales automation, and rep productivity) are significant but not extremely urgent, indicating moderate acuity. |\n| Budget/Growth Signal | 23 / 25     | The company's Series B funding (~$12M) and rapid growth suggest a strong budget and growth signal, indicating a high willingness and ability to spend. |\n\n**Total Score:** 83 / 100\n\n**Verdict:** HOT\n\n**Recommended next action:** Schedule a discovery call to discuss how Acme SaaS Co. can leverage automation to scale efficiently and maintain sales performance.",
+   "cached": false,
+   "t": 4.23
+  }
+ ]
+}
