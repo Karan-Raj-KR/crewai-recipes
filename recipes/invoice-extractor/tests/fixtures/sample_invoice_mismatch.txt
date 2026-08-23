@@ -1,0 +1,11 @@
+INVOICE #INV-MISMATCH-404
+Vendor: Mismatched Services Inc
+Date: 2026-08-10
+
+ITEMS:
+1. Widget A - 2 x $50.00 = $100.00
+2. Widget B - 1 x $200.00 = $200.00
+
+SUBTOTAL: $300.00
+TAX: $30.00
+GRAND TOTAL: $500.00

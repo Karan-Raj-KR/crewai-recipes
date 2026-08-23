@@ -1,0 +1,19 @@
+INVOICE #INV-2026-0891
+Vendor: Apex Cloud Technologies LLC
+Date: 2026-08-15
+Due Date: 2026-09-15
+
+BILL TO:
+Acme Enterprise Inc
+100 Innovation Way, Suite 400
+San Francisco, CA 94105
+
+DESCRIPTION                         QTY    UNIT PRICE     TOTAL
+---------------------------------------------------------------
+Cloud Server Hosting (Monthly)       2      $450.00      $900.00
+Database Optimization Consultation  5      $150.00      $750.00
+SSL Certificate Security Add-on      1       $50.00       $50.00
+
+SUBTOTAL: $1700.00
+TAX (8%): $136.00
+GRAND TOTAL: $1836.00

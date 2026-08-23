@@ -111,6 +111,52 @@ jobs:
         working-directory: recipes/${{ matrix.recipe }}
         run: pytest -v
 
+  import-check-invoice-extractor:
+    name: Import Check — invoice-extractor
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install this recipe's dependencies
+        run: pip install -r recipes/invoice-extractor/requirements.txt
+
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock
+
+      - name: Check imports + LLM wiring (no API call)
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/invoice-extractor
+          python -c "
+          from tasks import build_tasks
+          from crew import build_crew
+          from llm import get_llm, MAX_RETRIES
+          from parser import extract_text_from_pdf_or_image
+          llm = get_llm()
+          retries = llm._get_client_params()['max_retries']
+          assert retries == MAX_RETRIES, f'retries not wired to client: {retries}'
+          print(f'✅ invoice-extractor: imports + LLM wiring OK ({retries} retries)')
+          "
+
+      - name: Run tests with pytest
+        env:
+          LLM_API_KEY: nvapi-test
+        run: |
+          cd recipes/invoice-extractor
+          pytest -v
+
   import-check-playground:
     name: Import Check — playground (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
