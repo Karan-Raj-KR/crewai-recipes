@@ -1,0 +1,15 @@
+diff --git a/src/utils.py b/src/utils.py
+index 1234567..89abcde 100644
+--- a/src/utils.py
++++ b/src/utils.py
+@@ -10,6 +10,12 @@ def calculate_discount(price: float, discount_percent: float) -> float:
+     if price < 0 or discount_percent < 0:
+         raise ValueError("Price and discount must be non-negative")
++    if discount_percent > 100:
++        return 0.0  # Bug: Should probably raise error or cap discount instead of zeroing price
++    
+     return price * (1 - discount_percent / 100.0)
+
++def format_currency(val):
++    # Missing docstring and type hints
++    return f"${val:.2f}"
