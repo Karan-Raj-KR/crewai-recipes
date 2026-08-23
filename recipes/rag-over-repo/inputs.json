@@ -1,0 +1,12 @@
+[
+  {
+    "name": "docs_dir",
+    "label": "Docs Directory",
+    "example": "recipes/rag-over-repo/tests/fixtures"
+  },
+  {
+    "name": "question",
+    "label": "Question",
+    "example": "How do I install the system?"
+  }
+]
