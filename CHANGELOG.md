@@ -16,6 +16,7 @@ All notable changes to this project are documented here. Format loosely follows 
 - `docs/DECISIONS.md` (why the repo is set up the way it is) and `docs/writing-a-recipe.md` (contributor walkthrough).
 
 ### Changed
+- **Playground UI redesigned into a 3-pane agent workbench**: recipe rail + session history, run configuration, and live Agent Activity / Final Output panels. CrewAI's Rich console output (box-drawing borders, ANSI codes, version-update noise) is parsed into a structured agent timeline with a pipeline stepper, hidden-noise chip, and a collapsible raw-log drawer. Dark-first Linear/Raycast-informed design tokens, refined light theme, Stop button, elapsed timer, Cmd/Ctrl+Enter to run (#172), smart autoscroll, JSON-aware output highlighting, responsive down to phones.
 - CI no longer needs editing when a recipe is added: nine hand-copied per-recipe jobs became a discovered matrix (452 → 163 lines), and `ruff` now covers `playground/`, `tools/`, and `tests/` too (#167).
 - `llm.py` is now byte-identical across all recipes and CI fails on drift (#191, #193). Recipes stay self-contained; `tools/sync_llm.py` propagates edits.
 - Repositioned the README around the gallery and documented the recipe contract explicitly.
