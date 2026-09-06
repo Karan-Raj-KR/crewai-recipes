@@ -31,6 +31,7 @@
 
             /* surfaces */
             --bg: #f6f7f9;
+            --bg-color: var(--bg); /* legacy alias (tests, shim consumers) */
             --bg-glow: radial-gradient(ellipse 80% 40% at 50% -10%, rgb(94 106 210 / 0.08), transparent 70%);
             --surface-color: #ffffff;
             --surface-2: #f0f2f6;
@@ -122,6 +123,7 @@
             :root:not([data-theme="light"]) {
                 color-scheme: dark;
                 --bg: #08090d;
+                --bg-color: var(--bg);
                 --bg-glow: radial-gradient(ellipse 80% 40% at 50% -10%, rgb(94 106 210 / 0.13), transparent 70%);
                 --surface-color: #0f1118;
                 --surface-2: #151823;
@@ -196,6 +198,7 @@
         :root[data-theme="dark"] {
             color-scheme: dark;
             --bg: #08090d;
+            --bg-color: var(--bg);
             --bg-glow: radial-gradient(ellipse 80% 40% at 50% -10%, rgb(94 106 210 / 0.13), transparent 70%);
             --surface-color: #0f1118;
             --surface-2: #151823;
@@ -418,7 +421,7 @@
 
         .icon-btn svg { width: 15px; height: 15px; }
 
-        .theme-btn {
+        .theme-toggle-btn {
             display: inline-flex;
             align-items: center;
             gap: 7px;
@@ -435,9 +438,9 @@
             transition: background 150ms cubic-bezier(0.2, 0, 0, 1), color 150ms cubic-bezier(0.2, 0, 0, 1);
         }
 
-        .theme-btn:hover { background: var(--surface-2); color: var(--text); }
+        .theme-toggle-btn:hover { background: var(--surface-2); color: var(--text); }
 
-        .theme-btn svg { width: 14px; height: 14px; }
+        .theme-toggle-btn svg { width: 14px; height: 14px; }
 
         .gh-link {
             display: inline-flex;
@@ -572,7 +575,10 @@
         }
 
         /* ═══ History rail ═══ */
-        .history-card {
+        .history-sidebar {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
             background: var(--surface-color);
             border: 1px solid var(--border);
             border-radius: var(--r-lg);
@@ -1601,7 +1607,7 @@
             }
             .recipe-item.selected { border-left-color: transparent; border-bottom-color: var(--accent); }
             .recipe-item-desc { display: none; }
-            .history-card { display: none; }
+            .history-sidebar { display: none; }
         }
 
         @media (max-width: 860px) {
@@ -1644,7 +1650,7 @@
         </div>
 
         <!-- ── Theme Toggle (#180) ── -->
-        <button class="theme-btn" id="theme-toggle-btn" title="Toggle color theme (Light / Dark)" aria-label="Toggle color theme">
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle color theme (Light / Dark)" aria-label="Toggle color theme">
             <span id="theme-toggle-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             </span>
@@ -1672,7 +1678,7 @@
         </div>
 
         <!-- ── Session History (#71) ── -->
-        <div class="rail-section history-card" id="history-sidebar">
+        <div class="history-sidebar" id="history-sidebar" aria-label="Session History">
             <div class="history-head">
                 <span class="micro-label">Recent runs</span>
                 <span class="rail-count" id="history-count">0</span>
@@ -2943,3 +2949,5 @@
             <div class="result-empty-sub">Run a recipe — the crew's final deliverable lands here, with one-click copy.</div>
         </div>`;
 </script>
+</body>
+</html>
