@@ -287,11 +287,182 @@
             max-width: 780px;
         }
 
+        .app-layout {
+            display: flex;
+            width: 100%;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            box-sizing: border-box;
+            align-items: flex-start;
+        }
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            max-width: 780px;
+        }
+
         .container {
             width: 100%;
             max-width: 800px;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        /* ── Session History Sidebar Styles (#71) ───────────────────── */
+        .history-sidebar {
+            width: 340px;
+            flex-shrink: 0;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            box-sizing: border-box;
+            position: sticky;
+            top: 1.5rem;
+            max-height: calc(100vh - 3rem);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .history-count-badge {
+            background-color: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            padding: 0.1rem 0.45rem;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .clear-history-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            width: auto;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        .clear-history-btn:hover {
+            background-color: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        .history-list {
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding-right: 0.2rem;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.83rem;
+            padding: 2rem 0.5rem;
+            line-height: 1.5;
+        }
+
+        .history-item {
+            background-color: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.85rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .history-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .history-item.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+            background-color: rgba(59, 130, 246, 0.08);
+        }
+
+        .history-item-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+        }
+
+        .history-item-recipe {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-color);
+        }
+
+        .history-item-meta {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .history-item-badge {
+            font-size: 0.68rem;
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+        }
+
+        .history-item-preview {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 900px) {
+            .app-layout {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .main-content {
+                max-width: 100%;
+            }
+            .history-sidebar {
+                width: 100%;
+                position: static;
+                max-height: none;
+            }
         }
 
         /* ── Header ─────────────────────────────────────────── */
@@ -1279,6 +1450,7 @@
                         <button class="copy-btn" id="copy-result-btn" style="display: none;" title="Copy result to clipboard">Copy</button>
                     </div>
                 </div>
+                </div>
                 <div id="result" class="result-panel">Ready. Select a recipe and click Run.</div>
             </div>
         </div>
@@ -1838,7 +2010,6 @@
         } else {
             hideCopyResultBtn();
         }
-
         if (cachedBadge) {
             cachedBadge.style.display = item.cached ? 'inline-flex' : 'none';
         }
