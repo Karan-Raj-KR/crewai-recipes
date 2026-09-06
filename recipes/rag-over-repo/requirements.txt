@@ -1,2 +1,0 @@
-crewai>=0.100.0
-pydantic>=2.0.0

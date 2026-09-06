@@ -173,8 +173,6 @@ docker run --rm --env-file recipes/lead-qualification/.env crewai-lead \
 | [support-escalation](./recipes/support-escalation/) | Tier-1 auto-resolve → escalate to human with full context summary | ✅ Stable |
 | [content-pipeline](./recipes/content-pipeline/) | Blog ideation → research → draft → SEO review — fully automated crew | ✅ Stable |
 | [invoice-extractor](./recipes/invoice-extractor/) | PDF/image invoice parsing with text & OCR fallback → structured JSON line items + audit | ✅ Stable |
-| [rag-over-repo](./recipes/rag-over-repo/) | Documentation ingestion (*.md, *.txt, *.rst) → vector search → QA with inline citations & refusal | ✅ Stable |
-| [pr-review-assistant](./recipes/pr-review-assistant/) | GitHub PR diff fetching & analysis → multi-agent code correctness & style review comment | ✅ Stable |
 
 **Status legend**
 

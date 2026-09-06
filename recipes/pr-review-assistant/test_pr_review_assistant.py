@@ -14,9 +14,9 @@ try:
 except ImportError:
     sys.modules["crewai"] = MagicMock()
 
-from crew import build_crew
-from github_client import fetch_pr_diff, validate_repo
-from models import PRReviewOutput, ReviewFinding
+from crew import build_crew  # noqa: E402
+from github_client import fetch_pr_diff, validate_repo  # noqa: E402
+from models import PRReviewOutput, ReviewFinding  # noqa: E402
 
 
 @pytest.fixture
