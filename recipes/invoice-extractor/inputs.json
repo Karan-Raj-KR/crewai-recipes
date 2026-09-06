@@ -1,3 +1,4 @@
-{
-  "invoice_text": "INVOICE #INV-9901\nVendor: Nexus Logistics Ltd\nDate: 2026-08-01\n\nItems:\n1. Freight Shipping - 1 x $500.00 = $500.00\n2. Fuel Surcharge - 1 x $50.00 = $50.00\n\nSubtotal: $550.00\nTax: $44.00\nGrand Total: $594.00"
-}
+[
+  {"name": "invoice_text", "label": "Invoice Text", "example": "INVOICE #INV-9901\nVendor: Nexus Logistics Ltd\nDate: 2026-08-01\n\nItems:\n1. Freight Shipping - 1 x $500.00 = $500.00\n2. Fuel Surcharge - 1 x $50.00 = $50.00\n\nSubtotal: $550.00\nTax: $44.00\nGrand Total: $594.00"},
+  {"name": "file_path", "label": "Invoice File Path (optional — PDF or image)", "example": "tests/fixtures/sample_invoice_digital.pdf"}
+]
