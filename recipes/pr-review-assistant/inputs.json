@@ -1,0 +1,12 @@
+[
+  {
+    "name": "repo",
+    "label": "Repository (owner/name)",
+    "example": "Karan-Raj-KR/crewai-recipes"
+  },
+  {
+    "name": "pr_number",
+    "label": "PR Number",
+    "example": "185"
+  }
+]
