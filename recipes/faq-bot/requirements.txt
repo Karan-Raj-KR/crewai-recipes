@@ -1,5 +1,5 @@
 crewai>=1.15.5
 litellm>=1.98.0
 python-dotenv>=1.2.3
-openai>=3.6.0,<4.0
+openai>=2.53.0,<3.0
 PyYAML>=6.0.3
