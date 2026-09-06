@@ -20,8 +20,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from crew import build_crew
-from parser import extract_text_from_pdf_or_image
+from crew import build_crew  # noqa: E402
+from parser import extract_text_from_pdf_or_image  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"

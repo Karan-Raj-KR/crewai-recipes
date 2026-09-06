@@ -1,4 +1,5 @@
-"""llm.py — identical in every recipe. Edit one, then run `python tools/sync_llm.py`.
+"""
+llm.py — identical in every recipe. Edit one, then run `python tools/sync_llm.py`.
 
 Central LLM configuration using OpenAI-compatible endpoints.
 Supports primary provider (LLM_API_KEY, LLM_MODEL, LLM_BASE_URL) and optional
@@ -7,6 +8,7 @@ secondary/fallback provider (LLM_FALLBACK_API_KEY, LLM_FALLBACK_MODEL, LLM_FALLB
 
 import os
 import warnings
+from typing import Optional
 
 from crewai import LLM
 
@@ -16,7 +18,7 @@ DEFAULT_MODEL = "meta/llama-3.1-8b-instruct"
 MAX_RETRIES = 3
 
 
-def get_llm(provider: str | None = None) -> LLM:
+def get_llm(provider: Optional[str] = None) -> LLM:
     """Return a CrewAI LLM configured via environment variables.
 
     Supports primary provider configuration:
@@ -41,7 +43,7 @@ def get_llm(provider: str | None = None) -> LLM:
     if provider in ("fallback", "secondary"):
         api_key = os.getenv("LLM_FALLBACK_API_KEY")
         if not api_key:
-            raise OSError(
+            raise EnvironmentError(
                 "LLM_FALLBACK_API_KEY is not set.\n"
                 "  1. Add LLM_FALLBACK_API_KEY=sk-or-... to your .env file\n"
                 "  2. Optionally set LLM_FALLBACK_MODEL and LLM_FALLBACK_BASE_URL\n"
@@ -65,7 +67,7 @@ def get_llm(provider: str | None = None) -> LLM:
             model = os.getenv("LLM_FALLBACK_MODEL", DEFAULT_MODEL)
             base_url = os.getenv("LLM_FALLBACK_BASE_URL", DEFAULT_BASE_URL)
         elif not api_key:
-            raise OSError(
+            raise EnvironmentError(
                 "LLM_API_KEY is not set.\n"
                 "  1. Copy .env.example → .env\n"
                 "  2. Add your key: LLM_API_KEY=your-key-here\n"
@@ -75,7 +77,11 @@ def get_llm(provider: str | None = None) -> LLM:
             base_url = os.getenv("LLM_BASE_URL", DEFAULT_BASE_URL)
 
     # Ensure model starts with provider prefix for LiteLLM routing
-    if not model.startswith(("openai/", "hosted_vllm/", "ollama/")):
+    if not (
+        model.startswith("openai/")
+        or model.startswith("hosted_vllm/")
+        or model.startswith("ollama/")
+    ):
         full_model = f"openai/{model}"
     else:
         full_model = model
