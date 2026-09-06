@@ -75,14 +75,15 @@ def test_github_client_not_found_handling():
             fetch_pr_diff("owner/repo", 99999)
 
 
-def test_build_crew_offline_stubbed(sample_diff: str):
-    llm_mock = MagicMock()
+def test_build_crew_offline_stubbed(sample_diff: str, monkeypatch):
+    # A MagicMock is not a valid crewai llm (pydantic rejects it), so build the
+    # crew through the real get_llm() path — constructing it makes no API call.
+    monkeypatch.setenv("LLM_API_KEY", "nvapi-test")
     crew = build_crew(
         repo="Karan-Raj-KR/crewai-recipes",
         pr_number="185",
         raw_diff=sample_diff,
         pr_title="Add PR Review Assistant Recipe",
-        llm=llm_mock,
     )
     assert crew is not None
 
