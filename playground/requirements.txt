@@ -3,7 +3,7 @@ uvicorn>=0.52.4
 # Upper bound is crewai's, not ours: every crewai 1.15.x requires
 # pydantic>=2.13.4,<2.14, so the previous `>=2.13.4` floor was
 # unsatisfiable against any crewai release and CI could not resolve it.
-pydantic>=2.11.9,<2.13
+pydantic>=2.13.5,<2.14
 python-dotenv>=1.2.3
 crewai>=1.15.5
 litellm
