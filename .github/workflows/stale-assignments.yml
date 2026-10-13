@@ -1,0 +1,105 @@
+name: Free up stalled issue assignments
+
+# Weekly: if an assignee has gone quiet on an issue (no comment from them and
+# no open PR from them linked to it) for CHECKIN_DAYS, post a friendly
+# check-in. If they still haven't replied RELEASE_DAYS after that, unassign
+# them so someone else can pick the issue up. Any comment from the assignee
+# resets the clock.
+
+on:
+  schedule:
+    - cron: "17 4 * * 1" # Mondays 04:17 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Log what would happen without commenting or unassigning"
+        type: boolean
+        default: true
+
+permissions:
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: stale-assignments
+  cancel-in-progress: false
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        env:
+          CHECKIN_DAYS: "21"
+          RELEASE_DAYS: "7"
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const DAY = 24 * 60 * 60 * 1000;
+            const now = Date.now();
+            const checkinDays = Number(process.env.CHECKIN_DAYS);
+            const releaseDays = Number(process.env.RELEASE_DAYS);
+            const dryRun = process.env.DRY_RUN === "true";
+            const marker = (login) => `<!-- stale-assignment-checkin:${login} -->`;
+            const footer = `\n\n---\n_Automated by [stale-assignments.yml](https://github.com/${owner}/${repo}/blob/main/.github/workflows/stale-assignments.yml)._`;
+
+            const issues = (await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: "open", per_page: 100,
+            })).filter((i) => !i.pull_request && i.assignees.length > 0);
+
+            for (const issue of issues) {
+              const timeline = await github.paginate(github.rest.issues.listEventsForTimeline, {
+                owner, repo, issue_number: issue.number, per_page: 100,
+              });
+
+              for (const { login } of issue.assignees) {
+                const t = (s) => new Date(s).getTime();
+                const who = (e) => (e.actor || e.user || {}).login;
+
+                // An open PR by the assignee that references this issue = actively working.
+                const hasOpenPr = timeline.some((e) =>
+                  e.event === "cross-referenced" &&
+                  e.source?.issue?.pull_request &&
+                  e.source.issue.state === "open" &&
+                  e.source.issue.user?.login === login);
+                if (hasOpenPr) continue;
+
+                const assignedAt = Math.max(0, ...timeline
+                  .filter((e) => e.event === "assigned" && e.assignee?.login === login)
+                  .map((e) => t(e.created_at)));
+                const lastComment = Math.max(0, ...timeline
+                  .filter((e) => e.event === "commented" && who(e) === login)
+                  .map((e) => t(e.created_at)));
+                const lastActivity = Math.max(assignedAt, lastComment);
+                if (!lastActivity) continue;
+
+                const checkins = timeline
+                  .filter((e) => e.event === "commented" && (e.body || "").includes(marker(login)))
+                  .map((e) => t(e.created_at))
+                  .filter((ts) => ts > lastActivity);
+                const checkinAt = checkins.length ? Math.max(...checkins) : 0;
+
+                if (checkinAt && now - checkinAt >= releaseDays * DAY) {
+                  core.info(`#${issue.number}: releasing @${login} (no reply ${releaseDays}d after check-in)`);
+                  if (dryRun) continue;
+                  await github.rest.issues.removeAssignees({ owner, repo, issue_number: issue.number, assignees: [login] });
+                  await github.rest.issues.createComment({
+                    owner, repo, issue_number: issue.number,
+                    body: `Unassigned @${login} since we haven't heard back. Thanks for your interest! ` +
+                      `You're welcome to claim it again with \`/assign\` if it's still free.\n\n` +
+                      `This issue is **open for anyone** — comment \`/assign\` to pick it up.` + footer,
+                  });
+                } else if (!checkinAt && now - lastActivity >= checkinDays * DAY) {
+                  core.info(`#${issue.number}: checking in with @${login}`);
+                  if (dryRun) continue;
+                  await github.rest.issues.createComment({
+                    owner, repo, issue_number: issue.number,
+                    body: `${marker(login)}\n👋 Hi @${login} — just checking in! Are you still working on this? ` +
+                      `A quick reply is all we need (even "still on it" or "I'm stuck on X" — happy to help). ` +
+                      `If we don't hear back within ${releaseDays} days, we'll free the issue up for someone else. ` +
+                      `If you'd rather drop it, comment \`/unassign\` — no worries at all.` + footer,
+                  });
+                }
+              }
+            }

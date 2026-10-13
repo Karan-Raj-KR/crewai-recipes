@@ -1,0 +1,112 @@
+name: Assign issue on claim comment
+
+# Contributors claim an unassigned issue by commenting `/assign` (or a plain
+# "can I work on this?"). The bot assigns them, up to 2 open assignments per
+# person, so nobody stacks unfinished issues. `/unassign` releases a claim.
+# Ordinary comments (questions, discussion) never trigger an assignment.
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+
+# Serialise per issue so two quick claims can't both see "no assignee yet".
+concurrency:
+  group: assign-on-comment-issue-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  claim:
+    runs-on: ubuntu-latest
+    # Issues only (issue_comment also fires on PRs), open, from a human.
+    if: >-
+      github.event.issue.pull_request == null &&
+      github.event.issue.state == 'open' &&
+      github.event.comment.user.type != 'Bot'
+    steps:
+      - uses: actions/github-script@v7
+        env:
+          ACTIVE_LIMIT: "2"
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue = context.payload.issue;
+            const commenter = context.payload.comment.user.login;
+            const association = context.payload.comment.author_association;
+            const text = (context.payload.comment.body || "").toLowerCase();
+            const limit = parseInt(process.env.ACTIVE_LIMIT, 10);
+            const footer =
+              `\n\n---\n_Automated by [assign-on-comment.yml](https://github.com/${owner}/${repo}/blob/main/.github/workflows/assign-on-comment.yml)._`;
+            const reply = (body) =>
+              github.rest.issues.createComment({ owner, repo, issue_number: issue.number, body: body + footer });
+            const assignees = (issue.assignees || []).map((a) => a.login);
+
+            // Release a claim.
+            if (/^\s*\/unassign\b/m.test(text)) {
+              if (assignees.includes(commenter)) {
+                await github.rest.issues.removeAssignees({ owner, repo, issue_number: issue.number, assignees: [commenter] });
+                await reply(`👍 Unassigned @${commenter}. Thanks for letting us know — this issue is open for someone else now.`);
+              }
+              return;
+            }
+
+            // Only explicit claims count. Maintainers assign by hand.
+            const claim =
+              /^\s*\/(assign|claim)\b/m.test(text) ||
+              /\b(assign me|assign\b[^.?!\n]{0,25}\bto me|i('d| would) like to (work|take|pick|contribute)|can i (work|take|pick)|may i (work|take)|i want to (work on|go for)|i('ll| will) (take|work on|pick)|let me (take|work on))\b/.test(text);
+            if (!claim || ["OWNER", "MEMBER"].includes(association)) return;
+
+            if (assignees.includes(commenter)) return; // already theirs
+            if (assignees.length > 0) {
+              await reply(
+                `Hi @${commenter} — this one is already assigned to @${assignees.join(", @")}. ` +
+                `If it goes quiet for a few weeks the bot will check in with them and free it up. ` +
+                `Meanwhile, there are more [good first issues](https://github.com/${owner}/${repo}/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+no%3Aassignee) with nobody on them.`
+              );
+              return;
+            }
+
+            const search = await github.rest.search.issuesAndPullRequests({
+              q: `repo:${owner}/${repo} is:issue is:open assignee:${commenter}`,
+              per_page: 1,
+            });
+            const active = search.data.total_count;
+
+            if (active >= limit) {
+              await reply(
+                `👋 Hi @${commenter} — thanks for offering! You already have **${active} open assignments** ` +
+                `([see them](https://github.com/${owner}/${repo}/issues?q=is%3Aopen+is%3Aissue+assignee%3A${commenter})), ` +
+                `and the limit is ${limit} so issues keep moving. Once one is merged or you \`/unassign\` from it, ` +
+                `comment \`/assign\` here again and it's yours (if it's still free).`
+              );
+              return;
+            }
+
+            try {
+              await github.rest.issues.addAssignees({ owner, repo, issue_number: issue.number, assignees: [commenter] });
+            } catch (err) {
+              core.warning(`addAssignees failed: ${err.message}`);
+            }
+            // GitHub silently ignores assignees it can't assign; re-read to confirm.
+            const { data: fresh } = await github.rest.issues.get({ owner, repo, issue_number: issue.number });
+            if (!fresh.assignees.some((a) => a.login === commenter)) {
+              await reply(
+                `Hi @${commenter} — I couldn't assign this automatically. A maintainer will assign it shortly; ` +
+                `feel free to start in the meantime.`
+              );
+              return;
+            }
+
+            await reply(
+              `🎉 It's yours, @${commenter}! (${active + 1}/${limit} open assignments)\n\n` +
+              `**Next steps**\n` +
+              `1. Fork the repo and create a branch from \`main\`.\n` +
+              `2. Make the change described above — the issue's checklist is the definition of done.\n` +
+              `3. Open a PR with \`Closes #${issue.number}\` in the description.\n\n` +
+              `**First open-source PR?** Follow the [step-by-step guide](https://github.com/${owner}/${repo}/blob/main/CONTRIBUTING.md#first-time-contributing-to-open-source-start-here). ` +
+              `Stuck? Ask right here in this thread — that's what it's for.\n\n` +
+              `If there's no activity for 3 weeks the bot will check in, and free the issue a week after that if it hears nothing. ` +
+              `If plans change, comment \`/unassign\`, no explanation needed.`
+            );

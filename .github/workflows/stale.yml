@@ -1,12 +1,15 @@
-name: Mark stale issues and pull requests
+name: Mark stale pull requests
 on:
   schedule:
     - cron: '0 0 * * *'
+  workflow_dispatch:
 
 permissions:
   issues: write
   pull-requests: write
 
+# Pull requests only. Unclaimed issues are backlog waiting for a contributor,
+# not stale. Stalled *assignments* are handled by stale-assignments.yml.
 jobs:
   stale:
     runs-on: ubuntu-latest
@@ -14,10 +17,14 @@ jobs:
       - uses: actions/stale@v11
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          days-before-stale: 45
-          days-before-close: -1
-          stale-issue-message: 'This issue has been inactive for 45 days. Please comment if you are still working on it or it will be marked as stale.'
-          stale-pr-message: 'This PR has been inactive for 45 days. Please update it or it will be marked as stale.'
-          exempt-issue-labels: 'level: advanced'
-          exempt-pr-labels: 'level: advanced'
-          exempt-all-assignees: true
+          days-before-issue-stale: -1
+          days-before-issue-close: -1
+          days-before-pr-stale: 30
+          days-before-pr-close: -1
+          stale-pr-label: 'Stale'
+          stale-pr-message: >
+            This PR hasn't had activity in 30 days. If you're still working on it, push
+            an update or leave a comment and the label comes off automatically. If you're
+            stuck, say where and a maintainer will help.
+          exempt-pr-labels: 'dependencies'
+          exempt-draft-pr: true

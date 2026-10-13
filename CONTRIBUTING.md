@@ -8,6 +8,7 @@ Please take a few minutes to read this guide before opening a PR.
 
 ## Table of Contents
 
+0. [First time contributing to open source? Start here](#first-time-contributing-to-open-source-start-here)
 1. [Code of Conduct](#code-of-conduct)
 2. [How to Add a New Recipe](#how-to-add-a-new-recipe)
    - [Quick Start: Use the Template](#quick-start-use-the-template)
@@ -17,6 +18,34 @@ Please take a few minutes to read this guide before opening a PR.
 6. [Pull Request Process](#pull-request-process)
 7. [Issue Labels](#issue-labels)
 8. [Improving Existing Recipes](#improving-existing-recipes)
+
+---
+
+## First time contributing to open source? Start here
+
+You don't need any prior open-source experience. If this is your first PR, follow these steps:
+
+1. **Pick an unassigned [good first issue](https://github.com/Karan-Raj-KR/crewai-recipes/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+no%3Aassignee).** Read the whole issue. Each one lists the files to touch and a checklist that defines "done".
+2. **Claim it** by commenting `/assign`. A bot assigns you within a minute. You can hold **2 open assignments** at a time, and `/unassign` releases one.
+3. **Fork** the repo (the "Fork" button, top-right on GitHub) and clone *your fork*:
+   ```bash
+   git clone https://github.com/<your-username>/crewai-recipes.git
+   cd crewai-recipes
+   git checkout -b fix/issue-<number>
+   ```
+4. **Make the change**, then check it locally (see [Testing](#testing)). For docs-only changes, preview the Markdown on GitHub.
+5. **Commit and push:**
+   ```bash
+   git add .
+   git commit -m "docs: short summary of the change"
+   git push -u origin fix/issue-<number>
+   ```
+6. **Open a pull request.** GitHub shows a "Compare & pull request" button after you push. Fill in the template and include `Closes #<number>`.
+7. **Watch CI.** If a check goes red, click it to see why. Most first-time failures are formatting, and `ruff format <folder>` fixes them. If you can't tell what's wrong, ask in the PR.
+8. **Respond to review.** If a maintainer asks for changes, push more commits to the same branch and the PR updates itself.
+
+**Stuck?** Comment on the issue or PR. Questions are welcome; nobody expects you to know everything.
+**Gone quiet?** If an assignment has no activity for 3 weeks, a bot checks in. If there's no reply a week later, the issue is freed for someone else. You can always claim it again.
 
 ---
 
@@ -233,34 +262,38 @@ Tip: `pip install -r requirements-dev.txt` (see **[`requirements-dev.txt`](./req
 
 ### Running tests locally
 
-**Run every recipe's test suite (mirrors CI):**
-
-``` bash
-for r in recipes/*/; do (cd "$r" && LLM_API_KEY=nvapi-test pytest -v) || break; done
-```
-
-**Run a single recipe's tests** (from within that recipe's directory):
+**Run a single recipe's tests** (from within that recipe's directory, after
+`pip install -r requirements.txt`):
 
 ```bash
 LLM_API_KEY=nvapi-test pytest -v
 ```
 
+**Run every recipe's test suite** (needs every recipe's `requirements.txt`
+installed in your environment; `_template` is a scaffold with no tests, so it's skipped):
+
+```bash
+for r in recipes/*/; do
+  [ "$r" = "recipes/_template/" ] && continue
+  (cd "$r" && LLM_API_KEY=nvapi-test pytest -q) || break
+done
+```
+
 **Run the playground tests** (these live separately, under `playground/`):
 
 ```bash
-cd playground && pytest -v
+cd playground && LLM_API_KEY=test-key pytest -v
 ```
 
-**Why `LLM_API_KEY=nvapi-test`?** Each recipe's `llm.py` reads the API key from
-the environment at import time to construct the LLM client, and import fails
-if the variable is unset — even though no network call is made at import or
-during offline tests. `nvapi-test` is a safe placeholder value for this; see
-the docstring in [`llm.py`](./recipes/<any-recipe>/llm.py) for details on how
-the key is used.
+**Why `LLM_API_KEY=nvapi-test`?** Each recipe's `get_llm()` (in `llm.py`) reads
+the key when it's called, which happens as soon as a test builds a crew. If the
+variable is unset, it raises `EnvironmentError`. Building the LLM object makes no
+network call, so any placeholder works. See the docstring in
+[`recipes/lead-qualification/llm.py`](./recipes/lead-qualification/llm.py).
 
-**CI parity:** the commands above are the same ones run in
-[`.github/workflows/ci.yml`](./.github/workflows/ci.yml). If they pass
-locally, a CI pass is a strong (though not guaranteed) signal.
+**CI parity:** CI ([`.github/workflows/ci.yml`](./.github/workflows/ci.yml)) runs
+the same `pytest` command per recipe, each in a fresh environment with only that
+recipe's requirements. A local pass is a strong (though not guaranteed) signal.
 
 ---
 

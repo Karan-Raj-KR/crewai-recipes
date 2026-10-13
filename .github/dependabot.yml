@@ -10,6 +10,15 @@ updates:
       python-deps:
         patterns: ["*"]
     open-pull-requests-limit: 3
+    labels: ["dependencies"]
+    ignore:
+      # crewai pins these ranges itself. Raising our floor past crewai's
+      # range makes requirements unresolvable (ResolutionImpossible in
+      # #212 and #220), so let crewai upgrades move them instead.
+      - dependency-name: "openai"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "pydantic"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
 
   - package-ecosystem: "github-actions"
     directory: "/"

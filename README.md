@@ -237,7 +237,13 @@ ruff check recipes/ playground/ tools/ tests/
 ruff format --check recipes/ playground/ tools/ tests/
 ```
 
-New to the project? Start with an issue labeled **[good first issue](https://github.com/Karan-Raj-KR/crewai-recipes/labels/good%20first%20issue)** — each one is scoped to be a self-contained, mergeable PR.
+### 🌱 First open-source contribution? Start here
+
+1. Pick an unassigned **[good first issue](https://github.com/Karan-Raj-KR/crewai-recipes/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+no%3Aassignee)**. Each one says which files to touch and what "done" means.
+2. Comment `/assign` on it, and a bot assigns it to you within a minute.
+3. Follow the **[8-step first-PR guide](./CONTRIBUTING.md#first-time-contributing-to-open-source-start-here)**: fork, branch, change, open a PR.
+
+Stuck at any step? Ask in the issue thread.
 
 ---
 

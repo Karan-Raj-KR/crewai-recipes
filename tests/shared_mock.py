@@ -10,7 +10,7 @@ class MockOpenAIHandler(http.server.BaseHTTPRequestHandler):
     """Mock HTTP handler simulating OpenAI chat completions API responses."""
 
     request_count = 0
-    mode = "retry_success"  # "retry_success" or "always_fail"
+    mode = "retry_success"  # "retry_success" (429 x2 then 200) or "always_fail" (503)
 
     def log_message(self, format, *args):
         pass  # Suppress HTTP server log output during test runs
@@ -40,15 +40,20 @@ class MockOpenAIHandler(http.server.BaseHTTPRequestHandler):
                 return
 
         elif MockOpenAIHandler.mode == "always_fail":
-            self.send_response(429)
+            # 503, not 429: since crewai 1.15.23 a rate-limit error is retried
+            # again by crewai's own outer loop (3 attempts), so a persistent 429
+            # yields (MAX_RETRIES + 1) * 3 requests. A server error is retried
+            # only by the SDK, which isolates the MAX_RETRIES wiring under test.
+            # The body must not say "rate limit" or crewai classifies it as one.
+            self.send_response(503)
             self.send_header("Content-Type", "application/json")
             self.send_header("Retry-After", "0")
             self.end_headers()
             response = {
                 "error": {
-                    "message": "Rate limit reached",
-                    "type": "requests",
-                    "code": "rate_limit_exceeded",
+                    "message": "Service temporarily unavailable",
+                    "type": "server_error",
+                    "code": "service_unavailable",
                 }
             }
             self.wfile.write(json.dumps(response).encode("utf-8"))
