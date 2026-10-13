@@ -2829,7 +2829,10 @@
         let missing = false;
         inputsContainer.querySelectorAll('input, textarea').forEach(el => {
             const val = el.value.trim();
-            if (!val) {
+            const label = el.parentElement ? el.parentElement.querySelector('label') : null;
+            const isOptional = label && /\(optional\b/i.test(label.textContent || '');
+
+            if (!val && !isOptional) {
                 missing = true;
                 el.classList.add('invalid-field');
 
