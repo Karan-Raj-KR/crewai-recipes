@@ -26,7 +26,7 @@ jobs:
       github.event.issue.state == 'open' &&
       github.event.comment.user.type != 'Bot'
     steps:
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v9
         env:
           ACTIVE_LIMIT: "2"
         with:
