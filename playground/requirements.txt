@@ -1,9 +1,9 @@
-fastapi>=0.141.1
-uvicorn>=0.52.4
+fastapi>=0.153.0
+uvicorn>=0.54.0
 # Upper bound is crewai's, not ours: every crewai 1.15.x requires
 # pydantic>=2.13.4,<2.14, so the previous `>=2.13.4` floor was
 # unsatisfiable against any crewai release and CI could not resolve it.
-pydantic>=2.11.9,<2.13
-python-dotenv>=1.2.3
+pydantic>=2.11.10,<2.13
+python-dotenv>=1.2.4
 crewai>=1.15.5
 litellm
