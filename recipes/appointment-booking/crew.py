@@ -16,6 +16,7 @@ def build_crew(
     meeting_type: str,
     preferred_times: str,
     notes: str = "None",
+    verbose: bool = False,
 ) -> Crew:
     """Build and return the appointment booking Crew.
 
@@ -45,5 +46,5 @@ def build_crew(
         agents=[intake_agent, availability_agent, confirmation_agent],
         tasks=tasks,
         process=Process.sequential,
-        verbose=True,
+        verbose=verbose,
     )

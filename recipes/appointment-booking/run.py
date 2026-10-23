@@ -70,6 +70,11 @@ def parse_args() -> argparse.Namespace:
         default="None",
         help="Optional additional context or special notes",
     )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable verbose CrewAI execution trace.",
+    )
     return parser.parse_args()
 
 
@@ -124,6 +129,7 @@ def main() -> None:
         meeting_type=meeting_type,
         preferred_times=preferred_times,
         notes=notes,
+        verbose=args.verbose,
     )
     result = crew.kickoff()
 

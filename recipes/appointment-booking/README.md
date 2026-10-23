@@ -81,7 +81,7 @@ python run.py --name "Priya Sharma" \
 | `--meeting-type` | ✅ Yes | — | Type of meeting requested (e.g., "Product Demo") |
 | `--preferred-times` | ✅ Yes | — | Preferred days/times stated by the requester |
 | `--notes` | No | `None` | Optional context or special requests |
-| `--help` | No | — | Show help and exit |
+| `--verbose` | No | `False` | Enable verbose CrewAI execution trace |\n| `--help` | No | — | Show help and exit |
 
 ---
 
