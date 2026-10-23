@@ -17,6 +17,11 @@ from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+try:
+    from rate_limiter import SlidingWindowRateLimiter, get_client_ip
+except ImportError:
+    from playground.rate_limiter import SlidingWindowRateLimiter, get_client_ip
+
 load_dotenv()
 
 logging.basicConfig(
@@ -71,6 +76,7 @@ class ResponseCache:
 
 
 response_cache = ResponseCache(maxsize=100)
+rate_limiter = SlidingWindowRateLimiter()
 
 
 class ThreadSafeStreamRedirector:
@@ -179,7 +185,16 @@ def list_recipes():
 
 
 @app.post("/run")
-def run_recipe(req: RunRequest):
+def run_recipe(req: RunRequest, request: Request):
+    client_ip = get_client_ip(request)
+    allowed, retry_after = rate_limiter.is_allowed(client_ip)
+    if not allowed:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Rate limit exceeded. Try again in {retry_after} seconds.",
+            headers={"Retry-After": str(retry_after)},
+        )
+
     start_time = time.time()
 
     sanitized_inputs = {
@@ -390,6 +405,15 @@ def execute_recipe_stream(
 @app.post("/run/stream")
 async def run_recipe_stream(req: RunRequest, request: Request):
     """Server-Sent Events (SSE) endpoint to stream CrewAI execution progress in real time."""
+    client_ip = get_client_ip(request)
+    allowed, retry_after = rate_limiter.is_allowed(client_ip)
+    if not allowed:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Rate limit exceeded. Try again in {retry_after} seconds.",
+            headers={"Retry-After": str(retry_after)},
+        )
+
     if not (req.no_cache or req.bypass_cache):
         cached_output = response_cache.get(req.recipe, req.inputs)
         if cached_output is not None:
@@ -447,6 +471,15 @@ async def run_recipe_stream(req: RunRequest, request: Request):
 @app.websocket("/run/ws")
 async def run_recipe_ws(websocket: WebSocket):
     """WebSocket endpoint to stream CrewAI execution progress in real time."""
+    client_ip = get_client_ip(websocket)
+    allowed, retry_after = rate_limiter.is_allowed(client_ip)
+    if not allowed:
+        await websocket.close(
+            code=1008,
+            reason=f"Rate limit exceeded. Retry after {retry_after}s.",
+        )
+        return
+
     await websocket.accept()
     loop = asyncio.get_running_loop()
     queue = asyncio.Queue()
