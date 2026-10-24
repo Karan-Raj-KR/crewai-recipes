@@ -1,0 +1,22 @@
+# Keep the Ruff revision in sync with requirements-dev.txt and .github/workflows/ci.yml.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.10
+    hooks:
+      - id: ruff
+        args: [--fix]
+        files: ^(recipes|playground)/
+      - id: ruff-format
+        files: ^(recipes|playground)/
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        # The patch fixture contains intentional whitespace to exercise diff parsing.
+        exclude: ^recipes/pr-review-assistant/tests/fixtures/sample_diff\.diff$
+      - id: end-of-file-fixer
+        # These checked-in run snapshots are generated data.
+        exclude: ^site/runs/.*\.json$
+      - id: check-yaml
+      - id: check-added-large-files

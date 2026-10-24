@@ -246,6 +246,20 @@ All dev tools (including the exact Ruff version CI uses) are also pinned in **[`
 ```bash
 pip install -r requirements-dev.txt
 ```
+
+### Pre-commit hooks (optional but recommended)
+
+The [pre-commit configuration](./.pre-commit-config.yaml) runs Ruff, whitespace,
+YAML, and large-file checks before each commit. Install it in your local checkout:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+Run `pre-commit run --all-files` to check the entire repository before opening a PR.
+The hooks are optional; the existing CI checks remain authoritative.
+
 ### Testing
 
 We use `pytest` for unit and integration tests. Run tests locally from within the recipe directory:

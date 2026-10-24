@@ -83,7 +83,7 @@ python main.py
 ============================================================
 📤  WHATSAPP REPLY
 ============================================================
-Hi Ravi! 📦 Your order ORD-78421 is Out for Delivery via BlueDart and estimated to arrive today by 6:00 PM. 
+Hi Ravi! 📦 Your order ORD-78421 is Out for Delivery via BlueDart and estimated to arrive today by 6:00 PM.
 
 Track live here: https://track.example.com/ORD-78421 🚚
 ============================================================
