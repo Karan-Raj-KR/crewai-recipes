@@ -12,6 +12,7 @@ Usage:
 import argparse
 import os
 import sys
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -21,14 +22,31 @@ from crew import build_crew  # noqa: E402
 
 
 def check_env() -> None:
-    """Preflight environment check for required API key."""
+    """Preflight environment check for required API key.
+
+    On failure, prints the absolute path of this recipe's ``.env`` file, whether
+    it exists yet, and a copy-pasteable command to create it, then exits 1.
+    """
     api_key = os.getenv("LLM_API_KEY") or os.getenv("NVIDIA_API_KEY")
     if not api_key:
-        print("❌ Error: Missing API key.", file=sys.stderr)
-        print(
-            "   Please set LLM_API_KEY or NVIDIA_API_KEY in your .env file or environment.",
-            file=sys.stderr,
+        recipe_dir = Path(__file__).resolve().parent
+        env_file = recipe_dir / ".env"
+        env_example = recipe_dir / ".env.example"
+        status = (
+            "exists, but has no key set" if env_file.exists() else "does not exist yet"
         )
+        print("❌ Missing API key.", file=sys.stderr)
+        print("   Expected LLM_API_KEY (or NVIDIA_API_KEY) in one of:", file=sys.stderr)
+        print("     • Environment variable", file=sys.stderr)
+        print(f"     • {env_file}  ← {status}", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("   Fix:", file=sys.stderr)
+        if not env_file.exists():
+            print(f"     cp {env_example} {env_file}", file=sys.stderr)
+        print(
+            "     # then edit the file and set LLM_API_KEY=nvapi-...", file=sys.stderr
+        )
+        print("", file=sys.stderr)
         print("   Get a free key at https://build.nvidia.com", file=sys.stderr)
         sys.exit(1)
 
