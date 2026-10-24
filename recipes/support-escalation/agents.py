@@ -30,6 +30,7 @@ def build_agents() -> tuple[Agent, Agent, Agent]:
         ),
         verbose=True,
         memory=False,
+        allow_delegation=False,
         llm=llm,
     )
 
@@ -48,6 +49,7 @@ def build_agents() -> tuple[Agent, Agent, Agent]:
         ),
         verbose=True,
         memory=False,
+        allow_delegation=False,
         llm=llm,
     )
 
@@ -66,6 +68,7 @@ def build_agents() -> tuple[Agent, Agent, Agent]:
         ),
         verbose=True,
         memory=False,
+        allow_delegation=False,
         llm=llm,
     )
 
