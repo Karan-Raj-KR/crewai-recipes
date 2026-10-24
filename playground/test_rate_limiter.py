@@ -20,8 +20,8 @@ if str(playground_dir) not in sys.path:
 if "crewai" not in sys.modules:
     sys.modules["crewai"] = MagicMock()
 
-from main import app, rate_limiter, response_cache
-from rate_limiter import SlidingWindowRateLimiter, get_client_ip
+from main import app, rate_limiter, response_cache  # noqa: E402
+from rate_limiter import SlidingWindowRateLimiter, get_client_ip  # noqa: E402
 
 client = TestClient(app)
 
