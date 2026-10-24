@@ -5,10 +5,20 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # Reused by scheduled-deps.yml to re-run the whole suite against the newest
+  # upstream releases (#112).
+  workflow_call:
+    inputs:
+      fresh-install:
+        description: "Disable the pip cache so installs always resolve the newest releases"
+        type: boolean
+        default: false
 
-# Cancel superseded runs on the same ref so pushes don't pile up.
+# Cancel superseded runs on the same ref so pushes don't pile up. In a called
+# workflow github.workflow is the caller's name, so a scheduled run on main
+# can't cancel (or be cancelled by) a normal push run on main.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -83,11 +93,14 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
+          cache: ${{ inputs.fresh-install && '' || 'pip' }}
           cache-dependency-path: recipes/${{ matrix.recipe }}/requirements.txt
 
       - name: Install recipe dependencies
         run: pip install -r recipes/${{ matrix.recipe }}/requirements.txt
+
+      - name: Report upstream versions
+        run: pip list 2>/dev/null | grep -i -E '^(crewai|litellm|openai) ' || true
 
       - name: Install test dependencies
         run: pip install pytest pytest-mock
@@ -131,6 +144,9 @@ jobs:
       - name: Install this recipe's dependencies
         run: pip install -r recipes/invoice-extractor/requirements.txt
 
+      - name: Report upstream versions
+        run: pip list 2>/dev/null | grep -i -E '^(crewai|litellm|openai) ' || true
+
       - name: Install test dependencies
         run: pip install pytest pytest-mock
 
@@ -171,10 +187,13 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
+          cache: ${{ inputs.fresh-install && '' || 'pip' }}
           cache-dependency-path: playground/requirements.txt
 
       - run: pip install -r playground/requirements.txt
+
+      - name: Report upstream versions
+        run: pip list 2>/dev/null | grep -i -E '^(crewai|litellm|openai) ' || true
       - run: pip install pytest pytest-mock httpx
 
       - name: Verify FastAPI app imports and starts

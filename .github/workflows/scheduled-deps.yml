@@ -1,0 +1,86 @@
+name: Scheduled Upstream Check
+
+# Re-runs the full CI suite on a timer against the newest crewai / litellm /
+# openai releases (recipe requirements only set floors), so upstream breakage
+# is caught within a week instead of whenever a PR happens to run CI (#112).
+on:
+  schedule:
+    # Mondays 06:00 UTC. Scheduled runs only fire from the default branch and
+    # GitHub may delay them under load.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      simulate_failure:
+        description: "Force a failure to exercise the issue-opening path (does not touch main)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: CI against latest upstream
+    uses: ./.github/workflows/ci.yml
+    with:
+      fresh-install: true
+
+  simulate:
+    name: Simulated failure
+    if: ${{ inputs.simulate_failure }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "simulate_failure was set; failing on purpose."
+          exit 1
+
+  # One tracking issue: the first failure opens it, later failures comment on it.
+  notify:
+    name: Open or update tracking issue
+    needs: [ci, simulate]
+    if: ${{ always() && (needs.ci.result == 'failure' || needs.simulate.result == 'failure') }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const label = "upstream-breakage";
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const simulated = "${{ needs.simulate.result }}" === "failure";
+            const body = `${simulated ? "**Simulated failure** (workflow_dispatch). " : ""}Scheduled upstream check failed: ${runUrl}\n\nCheck the "Report upstream versions" step in the failing jobs for the crewai, litellm and openai versions that were installed.`;
+
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: label });
+            } catch (e) {
+              if (e.status !== 404) throw e;
+              await github.rest.issues.createLabel({
+                ...context.repo,
+                name: label,
+                color: "d93f0b",
+                description: "Scheduled CI failed against newer upstream releases",
+              });
+            }
+
+            const { data: open } = await github.rest.issues.listForRepo({
+              ...context.repo,
+              labels: label,
+              state: "open",
+              per_page: 1,
+            });
+
+            if (open.length) {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: open[0].number,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({
+                ...context.repo,
+                title: "Scheduled upstream check is failing",
+                labels: [label],
+                body,
+              });
+            }
