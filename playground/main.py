@@ -34,6 +34,18 @@ app = FastAPI(title="CrewAI Recipes Playground")
 RECIPES_DIR = Path(__file__).parent.parent / "recipes"
 
 
+def has_provider_credentials() -> bool:
+    """Check credentials using the recipe get_llm() provider-selection rules."""
+    provider = os.getenv("LLM_PROVIDER", "primary").lower()
+    if provider in ("fallback", "secondary"):
+        return bool(os.getenv("LLM_FALLBACK_API_KEY"))
+    return bool(
+        os.getenv("LLM_API_KEY")
+        or os.getenv("NVIDIA_API_KEY")
+        or os.getenv("LLM_FALLBACK_API_KEY")
+    )
+
+
 def is_timeout_error(exc: BaseException) -> bool:
     """True if exc, or anything in its cause chain, is an LLM request timeout."""
     seen = set()
@@ -249,7 +261,7 @@ def run_recipe(req: RunRequest, request: Request):
             )
             return {"output": cached_output, "cached": True}
 
-    if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
+    if not has_provider_credentials():
         logger.error(
             f"Recipe '{req.recipe}' failed: Missing API keys (Execution time: {time.time() - start_time:.2f}s)"
         )
@@ -318,7 +330,7 @@ def execute_recipe_stream(
     recipe_name: str, inputs: dict, push_event, stop_event: threading.Event
 ):
     """Executes crew.kickoff() in a worker thread, capturing step/task callbacks and stdout logs."""
-    if not os.getenv("LLM_API_KEY") and not os.getenv("NVIDIA_API_KEY"):
+    if not has_provider_credentials():
         push_event(
             {
                 "type": "error",
