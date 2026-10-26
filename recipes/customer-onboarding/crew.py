@@ -15,6 +15,7 @@ def build_crew(
     role: str,
     use_case: str,
     team_size: str,
+    json_output: bool = False,
 ) -> Crew:
     """Build and return the customer onboarding workflow Crew.
 
@@ -24,6 +25,7 @@ def build_crew(
         role: Customer's job role or title.
         use_case: Stated primary use case or goal.
         team_size: Size of the team/organization.
+        json_output: Whether to produce a structured JSON onboarding result.
 
     Returns:
         A configured Crew instance ready to call .kickoff().
@@ -38,6 +40,7 @@ def build_crew(
         role=role,
         use_case=use_case,
         team_size=team_size,
+        json_output=json_output,
     )
 
     crew = Crew(

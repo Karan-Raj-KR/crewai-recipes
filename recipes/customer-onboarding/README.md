@@ -49,12 +49,19 @@ cp .env.example .env   # add your LLM_API_KEY
 python run.py --customer_name "Sarah Connor" --company "Cyberdyne Systems" --role "Chief Security Officer" --use_case "Threat intelligence aggregation" --team_size "50"
 ```
 
+### JSON Mode (Structured Output)
+```bash
+# Output machine-readable JSON matching the Pydantic schema (pipe to jq or downstream tools)
+python run.py --customer_name "Sarah Connor" --company "Cyberdyne Systems" --role "Chief Security Officer" --use_case "Threat intelligence aggregation" --team_size "50" --json
+```
+
 ### Options
 - `--customer_name`, `--customer-name`, `--name`: Customer's full name (default: `Alice Smith`).
 - `--company`: Company name (default: `TechCorp Solutions`).
 - `--role`: Job role or title (default: `Head of DevOps`).
 - `--use_case`, `--use-case`: Primary use case or goal (default: `Automating infrastructure provisioning`).
 - `--team_size`, `--team-size`: Team size (default: `25`).
+- `--json`: Output result in machine-readable JSON format matching the Pydantic model (`CustomerOnboardingResult`).
 
 ### Batch sample mode
 ```bash
@@ -116,6 +123,50 @@ Simply reply to this email with those details and we will get your account fully
 Best regards,
 
 The Customer Success Team
+```
+
+### 3. Machine-Readable JSON Output (`--json`)
+
+When `--json` is supplied, `run.py` suppresses decorative terminal banners and emits purely machine-readable JSON conforming to the `CustomerOnboardingResult` Pydantic model (`tasks.py`).
+
+Example command:
+```bash
+python run.py \
+  --customer_name "Sarah Connor" \
+  --company "Cyberdyne Systems" \
+  --role "Chief Security Officer" \
+  --use_case "Automating threat intelligence aggregation and incident response" \
+  --team_size "50" \
+  --json
+```
+
+Output:
+```json
+{
+  "profile": {
+    "customer_name": "Sarah Connor",
+    "company": "Cyberdyne Systems",
+    "role": "Chief Security Officer",
+    "use_case": "Automating threat intelligence aggregation and incident response",
+    "team_size": "50",
+    "status": "READY",
+    "completeness_score": "High",
+    "missing_fields": []
+  },
+  "email": {
+    "subject": "Welcome to Cyberdyne Systems — Let's Elevate Your Threat Intelligence",
+    "body": "Hi Sarah,\n\nWelcome aboard! We are thrilled to partner with Cyberdyne Systems as your team of 50 scales your threat intelligence aggregation and incident response workflows..."
+  }
+}
+```
+
+Downstream consumers (bash scripts, web services, CLI tools) can parse or pipe the output directly:
+```bash
+# Verify validity and extract subject with jq
+python run.py --json | jq .email.subject
+
+# Parse with Python in a shell pipeline
+python run.py --json | python -c 'import sys, json; data = json.load(sys.stdin); print(data["profile"]["status"])'
 ```
 
 ## Configuration
