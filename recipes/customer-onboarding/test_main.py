@@ -35,6 +35,7 @@ if importlib.util.find_spec("crewai") is None:
 
     class MockAgent:
         def __init__(self, **kwargs):
+            self.verbose = kwargs.get("verbose", True)
             for k, v in kwargs.items():
                 setattr(self, k, v)
 
@@ -48,10 +49,13 @@ if importlib.util.find_spec("crewai") is None:
         def __init__(self, agents=None, tasks=None, **kwargs):
             self.agents = agents or []
             self.tasks = tasks or []
+            self.verbose = kwargs.get("verbose", True)
             for k, v in kwargs.items():
                 setattr(self, k, v)
 
         def kickoff(self):
+            if self.verbose:
+                print("[VERBOSE] Agent reasoning trace")
             return "Mocked Onboarding Email"
 
     mock_crewai = MagicMock()
@@ -105,7 +109,8 @@ def test_crew_build_and_kickoff() -> None:
     )
     assert len(crew.agents) == 3
     assert len(crew.tasks) == 3
-    # In default mode, output_pydantic must be None
+    assert crew.verbose is True
+    assert all(agent.verbose is True for agent in crew.agents)
     assert crew.tasks[-1].output_pydantic is None
 
     with patch("crewai.Crew.kickoff", return_value="Mocked Onboarding Email"):
@@ -149,7 +154,7 @@ def test_pydantic_validation_error() -> None:
 
 
 def test_crew_build_json_output_wiring() -> None:
-    """build_crew with json_output=True wires output_pydantic to terminal composer_task."""
+    """build_crew with json_output=True wires output_pydantic to terminal composer_task and silences verbosity."""
     crew = build_crew(
         customer_name="Alice Smith",
         company="TechCorp Solutions",
@@ -159,12 +164,39 @@ def test_crew_build_json_output_wiring() -> None:
         json_output=True,
     )
     assert len(crew.tasks) == 3
-    # Collector task and Validator task do not have output_pydantic
+    assert crew.verbose is False
+    assert all(agent.verbose is False for agent in crew.agents)
     assert crew.tasks[0].output_pydantic is None
     assert crew.tasks[1].output_pydantic is None
-    # Terminal composer task has output_pydantic wired to CustomerOnboardingResult
     assert crew.tasks[2].output_pydantic is CustomerOnboardingResult
     assert "JSON" in crew.tasks[2].expected_output
+
+
+def test_crew_build_explicit_verbosity() -> None:
+    """build_crew respects explicit verbose parameter override."""
+    crew_silent = build_crew(
+        customer_name="Alice Smith",
+        company="TechCorp Solutions",
+        role="Head of DevOps",
+        use_case="CI/CD Automation",
+        team_size="25",
+        verbose=False,
+        json_output=False,
+    )
+    assert crew_silent.verbose is False
+    assert all(agent.verbose is False for agent in crew_silent.agents)
+
+    crew_verbose = build_crew(
+        customer_name="Alice Smith",
+        company="TechCorp Solutions",
+        role="Head of DevOps",
+        use_case="CI/CD Automation",
+        team_size="25",
+        verbose=True,
+        json_output=True,
+    )
+    assert crew_verbose.verbose is True
+    assert all(agent.verbose is True for agent in crew_verbose.agents)
 
 
 def test_format_json_output_with_pydantic_output() -> None:
@@ -249,6 +281,30 @@ def test_run_main_with_json_flag(capsys: pytest.CaptureFixture[str]) -> None:
     # No decorative banners in stdout
     assert "🚀" not in captured.out
     assert "ONBOARDING EMAIL OUTPUT" not in captured.out
+
+
+def test_run_main_with_json_flag_real_crew_silence(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Verify that run.py --json using actual build_crew keeps verbose=False and emits only JSON."""
+    result = sample_onboarding_result()
+    test_args = ["run.py", "--json"]
+
+    def fake_kickoff(self):
+        if self.verbose:
+            print("[VERBOSE] Agent reasoning trace")
+        return result
+
+    with (
+        patch("sys.argv", test_args),
+        patch("crewai.Crew.kickoff", new=fake_kickoff),
+    ):
+        recipe_run.main()
+
+    captured = capsys.readouterr()
+    assert "[VERBOSE]" not in captured.out
+    parsed = json.loads(captured.out)
+    assert parsed["profile"]["customer_name"] == "Alice Smith"
 
 
 def test_run_main_default_human_readable(capsys: pytest.CaptureFixture[str]) -> None:

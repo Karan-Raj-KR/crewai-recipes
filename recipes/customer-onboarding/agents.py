@@ -8,8 +8,11 @@ from crewai import Agent
 from llm import get_llm
 
 
-def build_agents() -> tuple[Agent, Agent, Agent]:
+def build_agents(verbose: bool = True) -> tuple[Agent, Agent, Agent]:
     """Build and return the customer onboarding workflow agents.
+
+    Args:
+        verbose: Whether agents emit verbose execution traces.
 
     Returns:
         A tuple of (collector_agent, validator_agent, composer_agent).
@@ -27,7 +30,7 @@ def build_agents() -> tuple[Agent, Agent, Agent]:
             "signup details, extract key business metadata, and organize inputs into "
             "standardized customer onboarding records."
         ),
-        verbose=True,
+        verbose=verbose,
         memory=False,
         llm=llm,
     )
@@ -44,7 +47,7 @@ def build_agents() -> tuple[Agent, Agent, Agent]:
             "requirements are met, highlight vague or contradictory fields, and determine "
             "if onboarding can proceed."
         ),
-        verbose=True,
+        verbose=verbose,
         memory=False,
         llm=llm,
     )
@@ -61,7 +64,7 @@ def build_agents() -> tuple[Agent, Agent, Agent]:
             "tailored next steps and resources. When data is incomplete, you send a friendly, "
             "helpful message requesting clarification."
         ),
-        verbose=True,
+        verbose=verbose,
         memory=False,
         llm=llm,
     )
