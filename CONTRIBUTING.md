@@ -241,6 +241,8 @@ ruff format recipes/my-awesome-recipe/
 
 CI will block PRs that fail Ruff checks.
 
+> **Tip**: If you have `make` installed, you can run `make help` to see quick shortcut targets including `make lint`, `make format`, and `make test`.
+
 All dev tools (including the exact Ruff version CI uses) are also pinned in **[`requirements-dev.txt`](./requirements-dev.txt)**:
 
 ```bash
