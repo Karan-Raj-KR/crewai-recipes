@@ -65,15 +65,62 @@ Cerebras offers insanely fast inference for Llama models.
   LLM_API_KEY=csk-...
   ```
 
-## OpenRouter
-OpenRouter aggregates hundreds of models, often with free tiers.
+## OpenRouter (Worked Example)
+OpenRouter aggregates hundreds of models across multiple providers behind a single OpenAI-compatible API, making it an ideal choice for testing different models or serving as an escape hatch when encountering upstream rate limits.
+
 - **Get a key**: [openrouter.ai](https://openrouter.ai)
-- **Environment**:
+- **Copy-Pasteable `.env` Configuration**:
   ```env
+  # OpenRouter Primary Provider
   LLM_BASE_URL=https://openrouter.ai/api/v1
   LLM_MODEL=meta-llama/llama-3.1-8b-instruct:free
-  LLM_API_KEY=sk-or-v1-...
+  LLM_API_KEY=sk-or-v1-YOUR_KEY_HERE
   ```
+
+> **Model IDs**: You can swap `LLM_MODEL` to any model listed on [openrouter.ai/models](https://openrouter.ai/models), such as `anthropic/claude-3.5-sonnet` or `meta-llama/llama-3.3-70b-instruct`.
+
+### One-Run Walkthrough
+Once configured in `.env`, invoke any recipe CLI without altering source code:
+
+```bash
+cd recipes/lead-qualification
+python run.py --company "Acme Corp" --description "40-person B2B SaaS building logistics routing automation"
+```
+
+Sample output:
+
+```text
+============================================================
+📋 RESULT
+============================================================
+## Lead Qualification Report: Acme Corp
+
+**ICP Fit Score:** 88 / 100
+**Tier:** Tier 1 (High Priority)
+
+### Summary & Fit Analysis
+- **Company Profile:** 40-person B2B SaaS in logistics tech.
+- **Pain Points:** High transaction volumes, manual route management bottlenecks.
+- **Recommended Action:** Fast-track outbound discovery call with logistics AE.
+============================================================
+```
+
+### Fallback Wiring
+If you prefer using NVIDIA NIM as your primary provider and OpenRouter as your secondary fallback, configure your `.env` as follows:
+
+```env
+# Primary: NVIDIA NIM
+LLM_BASE_URL=https://integrate.api.nvidia.com/v1
+LLM_MODEL=meta/llama-3.1-8b-instruct
+LLM_API_KEY=nvapi-YOUR_NVIDIA_KEY_HERE
+
+# Secondary / Fallback: OpenRouter
+LLM_FALLBACK_BASE_URL=https://openrouter.ai/api/v1
+LLM_FALLBACK_MODEL=meta-llama/llama-3.1-8b-instruct:free
+LLM_FALLBACK_API_KEY=sk-or-v1-YOUR_OPENROUTER_KEY_HERE
+```
+
+Per `llm.py` (lines 79–83), if `LLM_API_KEY` is not present, `get_llm()` automatically falls back to OpenRouter. You can also explicitly force fallback execution by exporting `LLM_PROVIDER=fallback`.
 
 ## GitHub Models
 GitHub provides a free tier for developers to test models via their marketplace.
