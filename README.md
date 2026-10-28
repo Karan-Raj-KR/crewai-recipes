@@ -175,6 +175,7 @@ docker run --rm --env-file recipes/lead-qualification/.env crewai-lead \
 | [invoice-extractor](./recipes/invoice-extractor/) | PDF/image invoice parsing with text & OCR fallback → structured JSON line items + audit | ✅ Stable |
 | [pr-review-assistant](./recipes/pr-review-assistant/) | GitHub PR diff → 4-agent review (diff analysis, code, style, summary) → structured Markdown review comment | ✅ Stable |
 | [rag-over-repo](./recipes/rag-over-repo/) | Q&A over a repo's Markdown/RST/TXT docs with TF-IDF retrieval, inline citations, and explicit refusals | ✅ Stable |
+| [customer-feedback-summariser](./recipes/customer-feedback-summariser/) | Two-agent crew (Feedback Analyst + Action Summariser) that extracts themes, classifies sentiment, and generates action items from raw customer feedback | ✅ Stable |
 
 **Status legend**
 
