@@ -15,6 +15,8 @@ def build_crew(
     role: str,
     use_case: str,
     team_size: str,
+    verbose: bool | None = None,
+    json_output: bool = False,
 ) -> Crew:
     """Build and return the customer onboarding workflow Crew.
 
@@ -24,11 +26,16 @@ def build_crew(
         role: Customer's job role or title.
         use_case: Stated primary use case or goal.
         team_size: Size of the team/organization.
+        verbose: Whether to enable verbose execution traces. Defaults to False if json_output else True.
+        json_output: Whether to produce a structured JSON onboarding result.
 
     Returns:
         A configured Crew instance ready to call .kickoff().
     """
-    collector_agent, validator_agent, composer_agent = build_agents()
+    effective_verbose = (not json_output) if verbose is None else verbose
+    collector_agent, validator_agent, composer_agent = build_agents(
+        verbose=effective_verbose
+    )
     tasks = build_tasks(
         collector_agent,
         validator_agent,
@@ -38,12 +45,13 @@ def build_crew(
         role=role,
         use_case=use_case,
         team_size=team_size,
+        json_output=json_output,
     )
 
     crew = Crew(
         agents=[collector_agent, validator_agent, composer_agent],
         tasks=tasks,
         process=Process.sequential,
-        verbose=True,
+        verbose=effective_verbose,
     )
     return crew
