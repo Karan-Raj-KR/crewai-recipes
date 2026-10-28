@@ -1,4 +1,4 @@
-fastapi>=0.153.0
+fastapi>=0.162.0
 uvicorn>=0.54.0
 # Upper bound is crewai's, not ours: every crewai 1.15.x requires
 # pydantic>=2.13.4,<2.14, so the previous `>=2.13.4` floor was
