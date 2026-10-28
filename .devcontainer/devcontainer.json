@@ -1,0 +1,27 @@
+{
+  "name": "CrewAI Recipes Dev Environment",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "editor.formatOnSave": true,
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+          }
+        }
+      },
+      "extensions": [
+        "charliermarsh.ruff",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "tamasfe.even-better-toml"
+      ]
+    }
+  },
+  "forwardPorts": [8000],
+  "postCreateCommand": "pip install pytest pytest-mock ruff==0.15.10"
+}
