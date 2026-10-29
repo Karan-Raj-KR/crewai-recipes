@@ -97,8 +97,20 @@ companies. 8-person team, pre-seed, targeting small courier businesses."
 
 ## Expected Output
 
-The block below is the **final result** from a real end-to-end run (the verbose
-per-agent trace is omitted for brevity). Exact scores vary by input and model:
+While the crew runs, a spinner shows it is still working (hidden under
+`--verbose`, where CrewAI prints its own trace). The scorecard is markdown, and
+[Rich](https://github.com/Textualize/rich) renders it in the terminal: the
+table is drawn as a real table and bold text shows as bold.
+
+When stdout is piped or redirected (`python run.py ... > out.txt`), Rich writes
+plain text with no colour or escape codes. It also honours
+[`NO_COLOR`](https://no-color.org/). `--json` output is never decorated. Rich is
+listed in `requirements.txt`; if it isn't installed, the CLI falls back to the
+plain output below.
+
+The block below is the **final result** from a real end-to-end run in that plain
+format (the verbose per-agent trace is omitted for brevity). Exact scores vary by
+input and model:
 
 ```
 $ python run.py \
