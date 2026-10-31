@@ -3,3 +3,4 @@ litellm>=1.106.4
 python-dotenv>=1.2.4
 openai>=2.54.0,<3.0
 PyYAML>=6.0.3
+rich>=13.7.1
