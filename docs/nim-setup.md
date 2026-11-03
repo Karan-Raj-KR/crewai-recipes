@@ -3,6 +3,15 @@
 A step-by-step guide to getting your development environment ready for any recipe in this library.
 
 ---
+## FAQ before you start
+
+**Do I need an NVIDIA GPU?** No — NIM runs remotely. Any laptop can use these recipes.
+
+**Do I need to pay?** No — the free tier at [build.nvidia.com](https://build.nvidia.com) gives generous monthly credits, enough to run every recipe here several times over.
+
+**Do I need a corporate account?** No — sign up with any email.
+
+**What if I already use OpenAI/Anthropic?** You can swap providers with one env var; see [providers.md](./providers.md).
 
 ## 1. Get an NVIDIA NIM API Key
 
