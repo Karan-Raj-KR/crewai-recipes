@@ -1,0 +1,7 @@
+[
+    {
+        "name": "transcript",
+        "label": "Meeting Transcript or Notes",
+        "example": "Project Atlas weekly sync. Attendees: Priya (PM), Marcus (Engineering), Elena (Design). Priya confirmed the beta launch is still targeted for 16 November. Marcus said the billing integration will be done by Wednesday 4 November, but only if the payment provider delivers sandbox credentials by Monday; they have been waiting a week and it is the biggest risk. The team decided to drop the optional invite-teammates step from the first release and ship it in v1.1. Elena will hand the updated Figma files to Marcus by Friday 30 October. Open question: who is writing the beta announcement blog post?"
+    }
+]
