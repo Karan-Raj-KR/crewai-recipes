@@ -464,5 +464,75 @@ def test_cli_json_stdin_pipeline_compatibility(
     )
 
 
+def test_customer_onboarding_crew_structure() -> None:
+    """Crew contains three agents, three tasks, and uses sequential processing."""
+    from crewai import Process
+
+    crew = build_crew(
+        customer_name="Alice Smith",
+        company="TechCorp Solutions",
+        role="Head of DevOps",
+        use_case="CI/CD Automation",
+        team_size="25",
+    )
+
+    assert len(crew.agents) == 3
+    assert len(crew.tasks) == 3
+    assert crew.process == Process.sequential
+
+
+def test_customer_onboarding_task_context_chaining() -> None:
+    """Validation and email tasks receive the correct preceding task context."""
+    crew = build_crew(
+        customer_name="Alice Smith",
+        company="TechCorp Solutions",
+        role="Head of DevOps",
+        use_case="CI/CD Automation",
+        team_size="25",
+    )
+
+    collection_task, validation_task, email_task = crew.tasks
+
+    assert validation_task.context is not None
+    assert collection_task in validation_task.context
+
+    assert email_task.context is not None
+    assert collection_task in email_task.context
+    assert validation_task in email_task.context
+
+
+def test_customer_onboarding_inputs_interpolated() -> None:
+    """All five customer inputs appear in the collection task description."""
+    values = {
+        "customer_name": "Bhavesh Patil",
+        "company": "Example Technologies",
+        "role": "Backend Engineer",
+        "use_case": "Automating API workflows",
+        "team_size": "42",
+    }
+
+    crew = build_crew(**values)
+    description = crew.tasks[0].description
+
+    for value in values.values():
+        assert value in description
+
+
+def test_customer_onboarding_agents_disable_delegation() -> None:
+    """All customer onboarding agents have delegation disabled."""
+    crew = build_crew(
+        customer_name="Alice Smith",
+        company="TechCorp Solutions",
+        role="Head of DevOps",
+        use_case="CI/CD Automation",
+        team_size="25",
+    )
+
+    for agent in crew.agents:
+        assert agent.allow_delegation is False, (
+            f"Agent {agent.role} should have allow_delegation=False"
+        )
+
+
 if __name__ == "__main__":
     pytest.main(["-v", __file__])
