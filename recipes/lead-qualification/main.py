@@ -15,6 +15,14 @@ load_dotenv()  # Load LLM_API_KEY from .env if present
 
 from crew import build_crew  # noqa: E402 (import after load_dotenv)
 
+# Rich renders the markdown report and a spinner; plain print() without it.
+try:
+    from rich.console import Console
+    from rich.markdown import Markdown
+    from rich.rule import Rule
+except ImportError:
+    Console = None
+
 
 # ─── Sample Lead — edit this to test your own leads ───────────────────────────
 SAMPLE_LEAD: dict[str, str] = {
@@ -43,13 +51,25 @@ def main() -> None:
         company=SAMPLE_LEAD["company"],
         description=SAMPLE_LEAD["notes"],
     )
-    result = crew.kickoff()
 
-    print("\n" + "═" * 60)
-    print("📋  QUALIFICATION REPORT")
-    print("═" * 60)
-    print(result)
-    print("═" * 60 + "\n")
+    if Console is None:
+        result = crew.kickoff()
+        print("\n" + "═" * 60)
+        print("📋  QUALIFICATION REPORT")
+        print("═" * 60)
+        print(result)
+        print("═" * 60 + "\n")
+        return
+
+    console = Console()
+    with console.status("Qualifying lead — this can take up to a minute…"):
+        result = crew.kickoff()
+
+    console.print()
+    console.print(Rule("📋  QUALIFICATION REPORT"))
+    console.print(Markdown(str(result)))
+    console.print(Rule())
+    console.print()
 
 
 if __name__ == "__main__":

@@ -14,6 +14,15 @@ import json
 import os
 import sys
 
+# Rich renders the markdown result and a spinner. It is optional: without it
+# the CLI falls back to plain print() output.
+try:
+    from rich.console import Console
+    from rich.markdown import Markdown
+    from rich.rule import Rule
+except ImportError:
+    Console = None
+
 # Reconfigure streams to support UTF-8 (for emojis) on Windows
 # Input bounds at the CLI boundary (before any LLM call).
 MIN_DESCRIPTION_CHARS = 40
@@ -159,6 +168,10 @@ def main() -> None:
         print("─" * 60)
         print()
 
+    # Rich only decorates human-readable output; --json stdout stays plain.
+    # When stdout is piped, Rich drops colours and escape codes on its own.
+    console = Console() if Console is not None and not args.json else None
+
     try:
         crew = build_crew(
             company=company,
@@ -166,10 +179,21 @@ def main() -> None:
             verbose=args.verbose,
             json_output=args.json,
         )
-        result = crew.kickoff()
+        # Skip the spinner under --verbose so it doesn't fight CrewAI's trace.
+        if console is not None and not args.verbose:
+            with console.status("Qualifying lead — this can take up to a minute…"):
+                result = crew.kickoff()
+        else:
+            result = crew.kickoff()
 
         if args.json:
             print(json.dumps({"company": company, "raw_output": str(result)}))
+        elif console is not None:
+            console.print()
+            console.print(Rule("📊  QUALIFICATION RESULT"))
+            console.print(Markdown(str(result)))
+            console.print(Rule())
+            console.print()
         else:
             print()
             print("═" * 60)

@@ -131,9 +131,19 @@ python run.py --question "Custom FAQ question"
 
 ## Expected Output
 
-The pricing question above, showing the **final result block** (the verbose
-per-agent trace is omitted). Captured from a real call to NVIDIA NIM
-`meta/llama-3.1-8b-instruct` on 2026-07-08:
+While the crew runs, a spinner shows it is still working (hidden under
+`--verbose`, where CrewAI prints its own trace). The reply is rendered as
+markdown by [Rich](https://github.com/Textualize/rich), so any bold text or
+lists show up formatted instead of as raw `**` and `-`.
+
+When stdout is piped or redirected (`python run.py ... > out.txt`), Rich writes
+plain text with no colour or escape codes. It also honours
+[`NO_COLOR`](https://no-color.org/). Rich is listed in `requirements.txt`; if it
+isn't installed, the CLI falls back to the plain output below.
+
+The pricing question above, showing the **final result block** in that plain
+format (the verbose per-agent trace is omitted). Captured from a real call to
+NVIDIA NIM `meta/llama-3.1-8b-instruct` on 2026-07-08:
 
 ```
 🤖  Orbitly FAQ Bot — Starting

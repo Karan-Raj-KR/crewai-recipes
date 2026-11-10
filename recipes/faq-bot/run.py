@@ -14,6 +14,15 @@ import argparse
 import os
 import sys
 
+# Rich renders the markdown reply and a spinner. It is optional: without it
+# the CLI falls back to plain print() output.
+try:
+    from rich.console import Console
+    from rich.markdown import Markdown
+    from rich.rule import Rule
+except ImportError:
+    Console = None
+
 # Reconfigure streams to support UTF-8 (for emojis) on Windows
 if sys.platform.startswith("win"):
     try:
@@ -98,6 +107,24 @@ def main() -> None:
     print()
 
     crew = build_crew(question=question, customer_name=name, verbose=args.verbose)
+
+    # When stdout is piped, Rich drops colours and escape codes on its own.
+    if Console is not None:
+        console = Console()
+        # Skip the spinner under --verbose so it doesn't fight CrewAI's trace.
+        if args.verbose:
+            result = crew.kickoff()
+        else:
+            with console.status("Answering question…"):
+                result = crew.kickoff()
+
+        console.print()
+        console.print(Rule("💬  SUPPORT REPLY"))
+        console.print(Markdown(str(result)))
+        console.print(Rule())
+        console.print()
+        return
+
     result = crew.kickoff()
 
     print()
