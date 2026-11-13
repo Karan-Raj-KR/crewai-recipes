@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import builtins
 import importlib.util
 import json
 import logging
@@ -8,6 +9,8 @@ import os
 import sys
 import threading
 import time
+import types
+import uuid
 from collections import OrderedDict
 from pathlib import Path
 
@@ -199,6 +202,103 @@ def cleanup_recipe_modules(
             sys.modules.pop(key, None)
 
 
+_thread_local = threading.local()
+_orig_import = builtins.__import__
+
+
+def _isolated_import(name, globals=None, locals=None, fromlist=(), level=0):
+    """Intercept module imports during recipe execution to isolate recipe-local modules (#262)."""
+    recipe_dir = getattr(_thread_local, "recipe_dir", None)
+    if recipe_dir is not None and level == 0:
+        local_cache = getattr(_thread_local, "local_cache", None)
+        if local_cache is not None and name in local_cache:
+            return local_cache[name]
+
+        py_file = recipe_dir / f"{name}.py"
+        pkg_dir = recipe_dir / name
+        target_file = None
+        if py_file.is_file():
+            target_file = py_file
+        elif pkg_dir.is_dir() and (pkg_dir / "__init__.py").is_file():
+            target_file = pkg_dir / "__init__.py"
+
+        if target_file is not None:
+            req_id = getattr(_thread_local, "req_id", "default")
+            spec_name = f"_recipe_{req_id}_{name}"
+            spec = importlib.util.spec_from_file_location(spec_name, str(target_file))
+            if spec and spec.loader:
+                mod = importlib.util.module_from_spec(spec)
+                if local_cache is not None:
+                    local_cache[name] = mod
+                sys.modules[spec_name] = mod
+                try:
+                    spec.loader.exec_module(mod)
+                except Exception:
+                    if local_cache is not None:
+                        local_cache.pop(name, None)
+                    sys.modules.pop(spec_name, None)
+                    raise
+                return mod
+
+    return _orig_import(name, globals, locals, fromlist, level)
+
+
+builtins.__import__ = _isolated_import
+
+
+class isolated_recipe_context:
+    """Thread-isolated import and execution context for a recipe.
+
+    Prevents cross-recipe module contamination and cache corruption during
+    overlapping concurrent runs (#262) while preserving the sequential
+    cleanup guarantees of #63.
+    """
+
+    def __init__(self, recipe_dir: Path, recipe_name: str):
+        self.recipe_dir = recipe_dir.resolve()
+        self.recipe_name = recipe_name
+        self.req_id = f"{recipe_name}_{uuid.uuid4().hex[:8]}"
+        self.local_cache: dict[str, types.ModuleType] = {}
+        self.original_sys_path: list[str] | None = None
+        self.keys_before: set[str] | None = None
+
+    def __enter__(self):
+        self.original_sys_path = sys.path.copy()
+        self.keys_before = set(sys.modules.keys())
+        sys.path.insert(0, str(self.recipe_dir))
+        cleanup_recipe_modules(self.recipe_dir)
+
+        _thread_local.recipe_dir = self.recipe_dir
+        _thread_local.local_cache = self.local_cache
+        _thread_local.req_id = self.req_id
+        return self
+
+    def load_crew(self, crew_path: Path):
+        spec_name = f"_recipe_{self.req_id}_crew"
+        spec = importlib.util.spec_from_file_location(spec_name, str(crew_path))
+        if not spec or not spec.loader:
+            raise ImportError(f"Could not load spec for {crew_path}")
+        module = importlib.util.module_from_spec(spec)
+        self.local_cache["recipe_crew"] = module
+        self.local_cache["crew"] = module
+        sys.modules[spec_name] = module
+        spec.loader.exec_module(module)
+        return module
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        try:
+            sys.path = self.original_sys_path
+            cleanup_recipe_modules(self.recipe_dir, self.keys_before)
+            prefix = f"_recipe_{self.req_id}_"
+            for k in list(sys.modules.keys()):
+                if k.startswith(prefix):
+                    sys.modules.pop(k, None)
+        finally:
+            _thread_local.recipe_dir = None
+            _thread_local.local_cache = None
+            _thread_local.req_id = None
+
+
 @app.get("/health")
 def health() -> dict:
     """Liveness endpoint. Returns the number of discovered recipes."""
@@ -279,15 +379,8 @@ def run_recipe(req: RunRequest, request: Request):
         )
         raise HTTPException(status_code=404, detail="Recipe not found")
 
-    original_sys_path = sys.path.copy()
-    keys_before = set(sys.modules.keys())
-    sys.path.insert(0, str(recipe_dir))
-    cleanup_recipe_modules(recipe_dir)
-
-    try:
-        spec = importlib.util.spec_from_file_location("recipe_crew", crew_path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
+    with isolated_recipe_context(recipe_dir, req.recipe) as ctx:
+        module = ctx.load_crew(crew_path)
 
         if not hasattr(module, "build_crew"):
             logger.error(
@@ -321,10 +414,6 @@ def run_recipe(req: RunRequest, request: Request):
                 raise HTTPException(status_code=504, detail=timeout_message())
             raise HTTPException(status_code=500, detail=f"Execution error: {err_str}")
 
-    finally:
-        sys.path = original_sys_path
-        cleanup_recipe_modules(recipe_dir, keys_before)
-
 
 def execute_recipe_stream(
     recipe_name: str, inputs: dict, push_event, stop_event: threading.Event
@@ -348,15 +437,8 @@ def execute_recipe_stream(
         push_event({"type": "error", "error": "Recipe not found"})
         return
 
-    original_sys_path = sys.path.copy()
-    keys_before = set(sys.modules.keys())
-    sys.path.insert(0, str(recipe_dir))
-    cleanup_recipe_modules(recipe_dir)
-
-    try:
-        spec = importlib.util.spec_from_file_location("recipe_crew", crew_path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
+    with isolated_recipe_context(recipe_dir, recipe_name) as ctx:
+        module = ctx.load_crew(crew_path)
 
         if not hasattr(module, "build_crew"):
             push_event(
@@ -444,10 +526,6 @@ def execute_recipe_stream(
                 push_event({"type": "error", "error": timeout_message()})
             else:
                 push_event({"type": "error", "error": f"Execution error: {err_str}"})
-
-    finally:
-        sys.path = original_sys_path
-        cleanup_recipe_modules(recipe_dir, keys_before)
 
 
 @app.post("/run/stream")
