@@ -176,6 +176,7 @@ docker run --rm --env-file recipes/lead-qualification/.env crewai-lead \
 | [pr-review-assistant](./recipes/pr-review-assistant/) | GitHub PR diff → 4-agent review (diff analysis, code, style, summary) → structured Markdown review comment | ✅ Stable |
 | [rag-over-repo](./recipes/rag-over-repo/) | Q&A over a repo's Markdown/RST/TXT docs with TF-IDF retrieval, inline citations, and explicit refusals | ✅ Stable |
 | [customer-feedback-summariser](./recipes/customer-feedback-summariser/) | Two-agent crew (Feedback Analyst + Action Summariser) that extracts themes, classifies sentiment, and generates action items from raw customer feedback | ✅ Stable |
+| [meeting-notes-summariser](./recipes/meeting-notes-summariser/) | Two-agent crew (Extractor + Email Drafter) that turns a meeting transcript into decisions, action items with owners and due dates, risks, open questions, and a follow-up email draft | ✅ Stable |
 
 **Status legend**
 
