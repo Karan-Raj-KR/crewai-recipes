@@ -5,6 +5,39 @@ Three tasks: data collection → validation & audit → email composition.
 """
 
 from crewai import Agent, Task
+from pydantic import BaseModel, Field
+
+
+class CustomerProfile(BaseModel):
+    """Structured and audited customer profile details."""
+
+    customer_name: str = Field(description="Customer's full name")
+    company: str = Field(description="Customer's company name")
+    role: str = Field(description="Customer's job role or title")
+    use_case: str = Field(description="Primary use case or goal")
+    team_size: str = Field(description="Size of the team or organization")
+    status: str = Field(description="Onboarding status: READY or INCOMPLETE")
+    completeness_score: str = Field(
+        description="Completeness evaluation: High, Medium, or Low"
+    )
+    missing_fields: list[str] = Field(
+        default_factory=list,
+        description="List of missing, vague, or unverified fields requiring follow-up (empty if READY)",
+    )
+
+
+class OnboardingEmail(BaseModel):
+    """Drafted onboarding welcome or follow-up email."""
+
+    subject: str = Field(description="Subject line for the onboarding email")
+    body: str = Field(description="Personalized email body text")
+
+
+class CustomerOnboardingResult(BaseModel):
+    """Consolidated onboarding result containing audited profile and composed email."""
+
+    profile: CustomerProfile
+    email: OnboardingEmail
 
 
 def build_tasks(
@@ -16,6 +49,7 @@ def build_tasks(
     role: str,
     use_case: str,
     team_size: str,
+    json_output: bool = False,
 ) -> list[Task]:
     """Build the customer onboarding task pipeline list.
 
@@ -28,6 +62,7 @@ def build_tasks(
         role: Customer's job role or title.
         use_case: Stated primary use case or goal.
         team_size: Size of the team/organization.
+        json_output: Whether to produce structured JSON matching CustomerOnboardingResult.
 
     Returns:
         An ordered list of Task objects.
@@ -90,13 +125,27 @@ def build_tasks(
             "   - Draft a polite, helpful email thanking them for signing up.\n"
             "   - Clearly ask for the specific missing or vague information needed to complete onboarding.\n"
             "   - Keep the tone encouraging, professional, and supportive.\n\n"
-            "Output ONLY the complete email (Subject line and Body) — no meta explanations or markdown tags."
+            + (
+                "Provide the complete CustomerOnboardingResult structure matching the schema "
+                "with both the audited profile signals and the composed email."
+                if json_output
+                else (
+                    "Output ONLY the complete email (Subject line and Body) — "
+                    "no meta explanations or markdown tags."
+                )
+            )
         ),
         expected_output=(
-            "A ready-to-send email with:\n"
-            "Subject: <engaging subject line>\n"
-            "Body: <personalized email body with appropriate greeting and signature>"
+            "A structured JSON object conforming to the CustomerOnboardingResult schema "
+            "containing both the audited customer profile and the composed onboarding email."
+            if json_output
+            else (
+                "A ready-to-send email with:\n"
+                "Subject: <engaging subject line>\n"
+                "Body: <personalized email body with appropriate greeting and signature>"
+            )
         ),
+        output_pydantic=CustomerOnboardingResult if json_output else None,
         agent=composer_agent,
         context=[collector_task, validator_task],
     )

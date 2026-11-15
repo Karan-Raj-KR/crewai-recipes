@@ -16,15 +16,14 @@ SUPPORTED_EXTENSIONS = {".md", ".txt", ".rst"}
 
 
 def find_doc_files(docs_dir: Path) -> list[Path]:
-    """Recursively discover supported documentation files."""
+    """Discover supported files under the selected root, skipping hidden subdirs."""
     if not docs_dir.exists() or not docs_dir.is_dir():
         raise FileNotFoundError(f"Documentation directory not found: {docs_dir}")
 
     doc_files = []
-    for root, _, files in os.walk(docs_dir):
-        # Skip hidden directories like .git or .rag-cache
-        if any(part.startswith(".") for part in Path(root).parts):
-            continue
+    for root, dirs, files in os.walk(docs_dir):
+        # Prune hidden descendants, not the explicitly selected root or its parents.
+        dirs[:] = [name for name in dirs if not name.startswith(".")]
         for file_name in files:
             ext = Path(file_name).suffix.lower()
             if ext in SUPPORTED_EXTENSIONS:
