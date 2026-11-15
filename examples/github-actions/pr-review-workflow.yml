@@ -1,0 +1,53 @@
+# Example: Automated PR Code Review using the pr-review-assistant recipe
+# Copy this file to .github/workflows/pr-review.yml in your repository.
+
+name: Automated PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    name: Multi-Agent PR Review
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r recipes/pr-review-assistant/requirements.txt
+
+      - name: Extract PR diff
+        run: |
+          git diff origin/${{ github.base_ref }}...HEAD > pr_diff.txt
+          head -n 20 pr_diff.txt
+
+      - name: Run Review Assistant Crew
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_MODEL: meta/llama-3.1-8b-instruct
+        run: |
+          python recipes/pr-review-assistant/run.py \
+            --diff-path pr_diff.txt \
+            --output-path pr_review.md
+
+      - name: Post Review Comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} --body-file pr_review.md
