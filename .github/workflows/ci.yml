@@ -79,7 +79,16 @@ jobs:
           PY
 
   import-check:
-    name: Import Check — ${{ matrix.recipe }} (py${{ matrix.python-version }})
+    # Branch protection on main requires these names exactly:
+    #   Import Check — lead-qualification (3.12)
+    #   Import Check — faq-bot (3.12)
+    # They come from when each recipe was its own job and GitHub appended the
+    # matrix value as " (3.12)". Baking "py" into the name made CI report
+    # " (py3.12)" instead, so those required checks never arrived.
+    # Only those two cells drop the prefix. Every other combination — other
+    # recipes, 3.10/3.11, and the separate playground / invoice-extractor
+    # jobs — keeps the name it already emits.
+    name: Import Check — ${{ matrix.recipe }} (${{ ((matrix.recipe == 'lead-qualification' || matrix.recipe == 'faq-bot') && matrix.python-version == '3.12' && matrix.python-version) || format('py{0}', matrix.python-version) }})
     runs-on: ubuntu-latest
     needs: [lint, contract, discover]
     strategy:
