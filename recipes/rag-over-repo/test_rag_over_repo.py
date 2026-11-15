@@ -28,6 +28,58 @@ def test_find_doc_files(fixtures_dir: Path):
     assert "faq.rst" in file_names
 
 
+@pytest.mark.parametrize("location", ["docs", ".workspace/project/docs", ".docs"])
+@pytest.mark.parametrize("relative", [False, True], ids=["absolute", "relative"])
+def test_find_doc_files_under_selected_root(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    location: str,
+    relative: bool,
+) -> None:
+    """Selected roots remain readable while hidden descendants stay excluded."""
+    docs_dir = tmp_path / location
+    for name in (
+        "guide.md",
+        "notes.txt",
+        "nested/install.RST",
+        "unsupported.py",
+        ".git/internal.md",
+        ".rag-cache/snapshot.txt",
+        "nested/.private/secret.rst",
+    ):
+        path = docs_dir / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("Documentation", encoding="utf-8")
+
+    monkeypatch.chdir(tmp_path)
+    search_root = docs_dir.relative_to(tmp_path) if relative else docs_dir
+    found = find_doc_files(search_root)
+
+    assert found == sorted(found)
+    assert [path.relative_to(search_root).as_posix() for path in found] == [
+        "guide.md",
+        "nested/install.RST",
+        "notes.txt",
+    ]
+
+
+def test_retrieval_under_hidden_ancestor(tmp_path: Path) -> None:
+    """Real ingestion and cached retrieval retain docs under a hidden ancestor."""
+    docs_dir = tmp_path / ".workspace" / "docs"
+    docs_dir.mkdir(parents=True)
+    (docs_dir / "guide.md").write_text(
+        "# Installation\nInstall widgets with pip.", encoding="utf-8"
+    )
+
+    for cached in (False, True):
+        retriever = DocumentRetriever(docs_dir)
+        result = retriever.retrieve("Install widgets")
+        assert retriever.is_cached is cached
+        assert len(result.chunks) == 1
+        assert result.chunks[0].file_path == "guide.md"
+        assert "Install widgets with pip." in result.formatted_context
+
+
 def test_extract_chunks_markdown():
     content = (
         "# Main Title\n\nSome intro text.\n\n## Section One\n\nSection one content."
