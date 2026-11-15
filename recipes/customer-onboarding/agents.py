@@ -32,6 +32,7 @@ def build_agents(verbose: bool = True) -> tuple[Agent, Agent, Agent]:
         ),
         verbose=verbose,
         memory=False,
+        allow_delegation=False,
         llm=llm,
     )
 
@@ -49,6 +50,7 @@ def build_agents(verbose: bool = True) -> tuple[Agent, Agent, Agent]:
         ),
         verbose=verbose,
         memory=False,
+        allow_delegation=False,
         llm=llm,
     )
 
@@ -66,6 +68,7 @@ def build_agents(verbose: bool = True) -> tuple[Agent, Agent, Agent]:
         ),
         verbose=verbose,
         memory=False,
+        allow_delegation=False,
         llm=llm,
     )
 
