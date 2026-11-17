@@ -1,0 +1,27 @@
+[
+  {
+    "id": "standard-saas-invoice",
+    "description": "Standard B2B SaaS monthly subscription invoice with tax and line items.",
+    "inputs": {
+      "invoice_text": "INVOICE #INV-2026-9042\nVendor: CloudScale Systems Inc.\nDate: 2026-10-15\nDue Date: 2026-11-15\nBill To: Acme Corp\nItem: Kubernetes Managed Cluster - 1 Month: $3,200.00\nItem: Egress Bandwidth Overages: $240.50\nSubtotal: $3,440.50\nTax (8.25%): $283.84\nTotal Due: $3,724.34\nPayment Method: ACH Transfer"
+    },
+    "sample_output": "{\n  \"invoice_number\": \"INV-2026-9042\",\n  \"vendor\": \"CloudScale Systems Inc.\",\n  \"invoice_date\": \"2026-10-15\",\n  \"due_date\": \"2026-11-15\",\n  \"subtotal\": 3440.50,\n  \"tax\": 283.84,\n  \"total_due\": 3724.34,\n  \"line_items\": [\n    {\"description\": \"Kubernetes Managed Cluster - 1 Month\", \"amount\": 3200.00},\n    {\"description\": \"Egress Bandwidth Overages\", \"amount\": 240.50}\n  ]\n}",
+    "expected": {
+      "format": "json",
+      "required_keys": [
+        "invoice_number",
+        "vendor",
+        "subtotal",
+        "total_due"
+      ],
+      "must_include": [
+        "INV-2026-9042",
+        "CloudScale Systems Inc."
+      ],
+      "must_not_include": [
+        "ERROR",
+        "null"
+      ]
+    }
+  }
+]
