@@ -1,0 +1,69 @@
+[
+  {
+    "id": "enterprise-fintech-lead",
+    "description": "High intent enterprise FinTech prospect with 500+ employees and verified budget.",
+    "inputs": {
+      "lead_info": "VP of Engineering at 800-person FinTech firm looking to migrate 40 microservices to Kubernetes within Q1. Budget approved: $150k."
+    },
+    "sample_output": "{\n  \"lead_name\": \"VP of Engineering\",\n  \"company_size\": 800,\n  \"industry\": \"FinTech\",\n  \"qualification_score\": 95,\n  \"tier\": \"ENTERPRISE\",\n  \"fit_rationale\": \"Verified budget of $150k, Q1 timeline, and clear Kubernetes architecture fit.\",\n  \"next_action\": \"Schedule discovery demo with enterprise sales lead within 24 hours.\"\n}",
+    "expected": {
+      "format": "json",
+      "required_keys": [
+        "qualification_score",
+        "tier",
+        "fit_rationale",
+        "next_action"
+      ],
+      "must_include": [
+        "ENTERPRISE",
+        "FinTech",
+        "demo"
+      ],
+      "must_not_include": [
+        "DISQUALIFIED",
+        "TODO",
+        "undefined"
+      ],
+      "rubric": {
+        "tier_accuracy": {
+          "weight": 0.4,
+          "keywords": ["ENTERPRISE", "FinTech"]
+        },
+        "actionability": {
+          "weight": 0.3,
+          "keywords": ["demo", "schedule", "sales"]
+        },
+        "completeness": {
+          "weight": 0.3,
+          "min_words": 15
+        }
+      },
+      "passing_threshold": 0.8
+    }
+  },
+  {
+    "id": "unqualified-student-lead",
+    "description": "Student or personal hobbyist with zero budget and exploratory question.",
+    "inputs": {
+      "lead_info": "High school student doing a science fair project on LLMs, looking for free trial credits."
+    },
+    "sample_output": "{\n  \"lead_name\": \"Student Researcher\",\n  \"company_size\": 1,\n  \"industry\": \"Education\",\n  \"qualification_score\": 10,\n  \"tier\": \"DISQUALIFIED\",\n  \"fit_rationale\": \"No commercial intent or approved budget. Individual academic project.\",\n  \"next_action\": \"Route to public documentation, free tier community forum, and open-source recipes.\"\n}",
+    "expected": {
+      "format": "json",
+      "required_keys": [
+        "qualification_score",
+        "tier",
+        "fit_rationale",
+        "next_action"
+      ],
+      "must_include": [
+        "DISQUALIFIED",
+        "documentation"
+      ],
+      "must_not_include": [
+        "ENTERPRISE",
+        "HIGH_VALUE"
+      ]
+    }
+  }
+]
