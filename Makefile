@@ -28,7 +28,7 @@ check-recipe = $(if $(and $(filter 1,$(words $(1))),$(call is-safe-name,$(1)),$(
 	$(error Unknown recipe '$(1)'. Run 'make list-recipes' to see them))
 
 .DEFAULT_GOAL := help
-.PHONY: help _help-targets lint format contract sync-check test check playground \
+.PHONY: FORCE help _help-targets lint format contract sync-check test check playground \
 	install-dev install-playground test-recipe test-playground list-recipes
 
 # $(info) runs before a target's shell lines, so the recipe list lives in
@@ -64,7 +64,9 @@ check: lint test ## Run everything to do before pushing
 install-dev: ## Install dev tools (ruff, pytest) from requirements-dev.txt
 	$(PYTHON) -m pip install -r requirements-dev.txt
 
-install-%: ## Install one recipe's dependencies, e.g. make install-faq-bot
+# Pattern rules can't be .PHONY, so FORCE makes install-<recipe> always run,
+# even if a file with that name exists.
+install-%: FORCE ## Install one recipe's dependencies, e.g. make install-faq-bot
 	$(call check-recipe,$*)
 	$(PYTHON) -m pip install -r recipes/$*/requirements.txt
 
@@ -85,3 +87,5 @@ playground: ## Start the local web playground on http://127.0.0.1:8000
 list-recipes: ## List all recipes
 	$(foreach r,$(RECIPES),$(info $(r)))
 	@:
+
+FORCE:
