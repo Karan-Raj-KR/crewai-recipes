@@ -1,2 +1,2 @@
-crewai>=0.80.0
-python-dotenv>=1.0.0
+crewai>=1.15.5
+python-dotenv>=1.2.4

@@ -151,6 +151,6 @@ def test_crew_kickoff_mocked() -> None:
         raw_alert_logs="Test logs",
     )
 
-    with patch.object(crew, "kickoff", return_value=mock_output):
+    with patch.object(Crew, "kickoff", return_value=mock_output):
         result = crew.kickoff()
         assert "Postmortem" in str(result)
