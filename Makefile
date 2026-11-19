@@ -10,10 +10,18 @@
 
 PYTHON ?= python
 LINT_PATHS := recipes/ playground/ tools/ tests/
-RECIPES := $(sort $(patsubst recipes/%/crew.py,%,$(wildcard recipes/[!_]*/crew.py)))
 
-# Recipe names are checked against RECIPES inside make, and only printed with
-# $(info), so a name never reaches the shell unless it's a real recipe.
+# Recipe names end up in shell commands (cd recipes/<name> && ...), so only
+# names made of letters, digits, '-' and '_' count as recipes. Anything else
+# is dropped from RECIPES and rejected by check-recipe, all inside make.
+NAME_CHARS := a b c d e f g h i j k l m n o p q r s t u v w x y z \
+	A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 - _
+strip-chars = $(if $(2),$(call strip-chars,$(subst $(firstword $(2)),,$(1)),$(wordlist 2,$(words $(2)),$(2))),$(1))
+is-safe-name = $(if $(call strip-chars,$(1),$(NAME_CHARS)),,$(1))
+
+ALL_RECIPE_DIRS := $(patsubst recipes/%/crew.py,%,$(wildcard recipes/[!_]*/crew.py))
+RECIPES := $(sort $(foreach r,$(ALL_RECIPE_DIRS),$(call is-safe-name,$(r))))
+
 check-recipe = $(if $(and $(filter 1,$(words $(1))),$(filter $(1),$(RECIPES))),,\
 	$(error Unknown recipe '$(1)'. Run 'make list-recipes' to see them))
 
