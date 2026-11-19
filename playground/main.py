@@ -25,6 +25,11 @@ try:
 except ImportError:
     from playground.rate_limiter import SlidingWindowRateLimiter, get_client_ip
 
+try:
+    from telemetry import PlaygroundTelemetryHandler
+except ImportError:
+    from playground.telemetry import PlaygroundTelemetryHandler
+
 load_dotenv()
 
 logging.basicConfig(
@@ -399,7 +404,7 @@ def run_recipe(req: RunRequest, request: Request):
                 f"Recipe '{req.recipe}' completed successfully in {exec_time:.2f}s"
             )
             return {"output": output_str, "cached": False}
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             exec_time = time.time() - start_time
             err_str = str(e)
             logger.error(
@@ -449,6 +454,7 @@ def execute_recipe_stream(
         try:
             crew = module.build_crew(**inputs)
             crew.verbose = True
+            telemetry = PlaygroundTelemetryHandler(emit_callback=push_event)
 
             def step_cb(step):
                 if stop_event.is_set():
@@ -468,6 +474,13 @@ def execute_recipe_stream(
                         "result": str(result) if result else None,
                     }
                 )
+                telemetry.on_step(
+                    agent_name=str(agent_name),
+                    thought=str(thought) if thought else "",
+                    tool=str(tool) if tool else None,
+                    tool_input=str(tool_input) if tool_input else None,
+                    result=str(result) if result else None,
+                )
 
             def task_cb(task_output):
                 if stop_event.is_set():
@@ -484,6 +497,11 @@ def execute_recipe_stream(
                         "description": str(description),
                         "output": str(raw_output),
                     }
+                )
+                telemetry.on_task_end(
+                    task_name=str(description),
+                    agent_name=str(agent_name),
+                    output=str(raw_output),
                 )
 
             crew.step_callback = step_cb
@@ -504,6 +522,8 @@ def execute_recipe_stream(
                 result = crew.kickoff()
                 output_str = str(result)
                 response_cache.set(recipe_name, inputs, output_str)
+                if telemetry.step_counter > 0:
+                    telemetry.on_run_summary(recipe_name=recipe_name, success=True)
                 if not stop_event.is_set():
                     push_event(
                         {"type": "complete", "output": output_str, "cached": False}
@@ -511,9 +531,11 @@ def execute_recipe_stream(
             finally:
                 sys.stdout = old_stdout
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             if stop_event.is_set() or isinstance(e, InterruptedError):
                 return
+            if telemetry.step_counter > 0:
+                telemetry.on_run_summary(recipe_name=recipe_name, success=False)
             err_str = str(e)
             if "API_KEY is not set" in err_str:
                 push_event(
