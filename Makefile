@@ -22,7 +22,9 @@ is-safe-name = $(if $(call strip-chars,$(1),$(NAME_CHARS)),,$(1))
 ALL_RECIPE_DIRS := $(patsubst recipes/%/crew.py,%,$(wildcard recipes/[!_]*/crew.py))
 RECIPES := $(sort $(foreach r,$(ALL_RECIPE_DIRS),$(call is-safe-name,$(r))))
 
-check-recipe = $(if $(and $(filter 1,$(words $(1))),$(filter $(1),$(RECIPES))),,\
+# is-safe-name runs first so a '%' (which filter treats as a wildcard) never
+# gets that far, which makes the filter an exact-match lookup.
+check-recipe = $(if $(and $(filter 1,$(words $(1))),$(call is-safe-name,$(1)),$(filter $(1),$(RECIPES))),,\
 	$(error Unknown recipe '$(1)'. Run 'make list-recipes' to see them))
 
 .DEFAULT_GOAL := help
