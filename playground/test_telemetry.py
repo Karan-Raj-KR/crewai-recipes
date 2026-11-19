@@ -1,9 +1,7 @@
 """Unit tests for the playground telemetry and execution waterfall tracking engine."""
 
-import json
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock
 
 playground_dir = Path(__file__).parent.resolve()
 if str(playground_dir) not in sys.path:

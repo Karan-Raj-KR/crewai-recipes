@@ -8,8 +8,9 @@ structured telemetry events for real-time waterfall timeline inspection (#266).
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -20,13 +21,13 @@ class TelemetryEvent:
     event: str  # task_started, step_completed, tool_started, tool_completed, task_completed, run_summary
     agent: str = "Agent"
     task: str = ""
-    tool: Optional[str] = None
-    tool_input: Optional[Any] = None
+    tool: str | None = None
+    tool_input: Any | None = None
     duration_ms: float = 0.0
     status: str = "active"  # active, completed, failed, pending
-    details: Dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "type": "telemetry",
             "data": {
@@ -46,11 +47,11 @@ class TelemetryEvent:
 class PlaygroundTelemetryHandler:
     """Hooks into recipe execution to capture granular timeline metrics and waterfall traces."""
 
-    def __init__(self, emit_callback: Optional[Callable[[Dict[str, Any]], None]] = None):
+    def __init__(self, emit_callback: Callable[[dict[str, Any]], None] | None = None):
         self.emit_callback = emit_callback
         self.start_time: float = time.time()
-        self.active_tasks: Dict[str, float] = {}
-        self.events: List[TelemetryEvent] = []
+        self.active_tasks: dict[str, float] = {}
+        self.events: list[TelemetryEvent] = []
         self.step_counter: int = 0
 
     def emit(self, event: TelemetryEvent) -> None:
@@ -58,10 +59,12 @@ class PlaygroundTelemetryHandler:
         if self.emit_callback:
             try:
                 self.emit_callback(event.to_dict())
-            except Exception:
+            except Exception:  # noqa: BLE001, S110
                 pass
 
-    def on_task_start(self, task_name: str, agent_name: str, description: str = "") -> TelemetryEvent:
+    def on_task_start(
+        self, task_name: str, agent_name: str, description: str = ""
+    ) -> TelemetryEvent:
         now = time.time()
         task_key = f"{agent_name}:{task_name}"
         self.active_tasks[task_key] = now
@@ -81,9 +84,9 @@ class PlaygroundTelemetryHandler:
         self,
         agent_name: str,
         thought: str = "",
-        tool: Optional[str] = None,
-        tool_input: Optional[Any] = None,
-        result: Optional[Any] = None,
+        tool: str | None = None,
+        tool_input: Any | None = None,
+        result: Any | None = None,
         duration_ms: float = 0.0,
     ) -> TelemetryEvent:
         now = time.time()
@@ -96,7 +99,9 @@ class PlaygroundTelemetryHandler:
             tool=tool,
             tool_input=tool_input,
             duration_ms=duration_ms,
-            status="completed" if not result or "error" not in str(result).lower() else "failed",
+            status="completed"
+            if not result or "error" not in str(result).lower()
+            else "failed",
             details={
                 "step_index": self.step_counter,
                 "thought_preview": thought[:120] if thought else "",
@@ -111,7 +116,7 @@ class PlaygroundTelemetryHandler:
         task_name: str,
         agent_name: str,
         output: str = "",
-        duration_ms: Optional[float] = None,
+        duration_ms: float | None = None,
     ) -> TelemetryEvent:
         now = time.time()
         task_key = f"{agent_name}:{task_name}"
@@ -150,6 +155,6 @@ class PlaygroundTelemetryHandler:
         self.emit(ev)
         return ev
 
-    def get_waterfall_timeline(self) -> List[Dict[str, Any]]:
+    def get_waterfall_timeline(self) -> list[dict[str, Any]]:
         """Return serialized list of all events for waterfall timeline rendering."""
         return [asdict(e) for e in self.events]
