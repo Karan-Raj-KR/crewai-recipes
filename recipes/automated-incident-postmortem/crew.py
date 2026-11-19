@@ -4,9 +4,8 @@ Automated Incident Postmortem Recipe — crew.py
 Assembles the 3-agent SRE postmortem workflow Crew.
 """
 
-from crewai import Crew, Process
-
 from agents import build_agents
+from crewai import Crew, Process
 from tasks import build_tasks
 
 

@@ -20,10 +20,20 @@ try:
     import crewai  # noqa: F401
 except ImportError:
     import types
+
     mock_crewai = types.ModuleType("crewai")
 
     class MockAgent:
-        def __init__(self, role, goal, backstory, verbose=True, memory=False, allow_delegation=False, llm=None):
+        def __init__(
+            self,
+            role,
+            goal,
+            backstory,
+            verbose=True,
+            memory=False,
+            allow_delegation=False,
+            llm=None,
+        ):
             self.role = role
             self.goal = goal
             self.backstory = backstory
@@ -63,8 +73,8 @@ except ImportError:
     mock_crewai.LLM = MockLLM
     sys.modules["crewai"] = mock_crewai
 
-from crewai import Crew, Process  # noqa: E402
-from crew import build_crew  # noqa: E402
+from crew import build_crew
+from crewai import Crew, Process
 
 
 def test_crew_build() -> None:
@@ -132,7 +142,9 @@ def test_agents_do_not_delegate() -> None:
 def test_crew_kickoff_mocked() -> None:
     """Verify crew kicks off properly with mocked LLM output."""
     mock_output = MagicMock()
-    mock_output.__str__ = lambda self: "# Postmortem: Database Outage\n\n## Timeline\n- 14:00: Alert"
+    mock_output.__str__ = lambda self: (
+        "# Postmortem: Database Outage\n\n## Timeline\n- 14:00: Alert"
+    )
 
     crew = build_crew(
         incident_title="Test Outage",

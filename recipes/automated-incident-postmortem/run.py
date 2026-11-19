@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from crew import build_crew  # noqa: E402
+from crew import build_crew
 
 
 def check_env() -> None:
