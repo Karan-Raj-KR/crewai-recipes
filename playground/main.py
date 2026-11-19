@@ -404,7 +404,7 @@ def run_recipe(req: RunRequest, request: Request):
                 f"Recipe '{req.recipe}' completed successfully in {exec_time:.2f}s"
             )
             return {"output": output_str, "cached": False}
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             exec_time = time.time() - start_time
             err_str = str(e)
             logger.error(
@@ -522,7 +522,8 @@ def execute_recipe_stream(
                 result = crew.kickoff()
                 output_str = str(result)
                 response_cache.set(recipe_name, inputs, output_str)
-                telemetry.on_run_summary(recipe_name=recipe_name, success=True)
+                if telemetry.step_counter > 0:
+                    telemetry.on_run_summary(recipe_name=recipe_name, success=True)
                 if not stop_event.is_set():
                     push_event(
                         {"type": "complete", "output": output_str, "cached": False}
@@ -530,10 +531,11 @@ def execute_recipe_stream(
             finally:
                 sys.stdout = old_stdout
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             if stop_event.is_set() or isinstance(e, InterruptedError):
                 return
-            telemetry.on_run_summary(recipe_name=recipe_name, success=False)
+            if telemetry.step_counter > 0:
+                telemetry.on_run_summary(recipe_name=recipe_name, success=False)
             err_str = str(e)
             if "API_KEY is not set" in err_str:
                 push_event(
