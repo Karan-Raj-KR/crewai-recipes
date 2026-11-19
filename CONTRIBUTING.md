@@ -260,6 +260,29 @@ pre-commit install
 Run `pre-commit run --all-files` to check the entire repository before opening a PR.
 The hooks are optional; the existing CI checks remain authoritative.
 
+### Make shortcuts (optional)
+
+If you have `make` (preinstalled on Linux and macOS), the top-level
+[`Makefile`](./Makefile) wraps the commands above. Run `make` to list them:
+
+```bash
+make install-dev               # pinned dev tools from requirements-dev.txt
+make lint                      # ruff check + format check, same as CI
+make check                     # lint + recipe contract + llm.py sync check
+make install-faq-bot           # one recipe's requirements
+make test-recipe RECIPE=faq-bot
+make playground                # http://127.0.0.1:8000
+```
+
+`make lint` and `make contract` run the same commands as
+[`ci.yml`](./.github/workflows/ci.yml), so if they pass locally, those CI jobs
+should pass too. There's deliberately no target that installs every recipe into
+one environment (see "Per-recipe isolation" in [`docs/DECISIONS.md`](./docs/DECISIONS.md)).
+
+On Windows, `make` isn't installed by default. Either install it
+(for example `winget install ezwinports.make`) and run it from Git Bash, or
+use the plain commands in this guide. The Makefile is only a shortcut.
+
 ### Testing
 
 We use `pytest` for unit and integration tests. Run tests locally from within the recipe directory:
