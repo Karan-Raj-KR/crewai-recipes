@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 @dataclass
@@ -15,9 +15,9 @@ class EvaluationResult:
     passed: bool
     score: float  # Normalized score between 0.0 and 1.0
     feedback: str = ""
-    details: Dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert result to serializable dictionary."""
         return {
             "metric_name": self.metric_name,
@@ -38,7 +38,7 @@ class BaseEvaluator(ABC):
     def evaluate(
         self,
         output: str,
-        expected: Optional[Dict[str, Any]] = None,
+        expected: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> EvaluationResult:
         """Evaluate the generated recipe output against expected criteria.
@@ -51,4 +51,3 @@ class BaseEvaluator(ABC):
         Returns:
             An EvaluationResult instance.
         """
-        pass

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from evals.evaluators.base import BaseEvaluator, EvaluationResult
 
@@ -17,11 +17,11 @@ class RubricEvaluator(BaseEvaluator):
     def evaluate(
         self,
         output: str,
-        expected: Optional[Dict[str, Any]] = None,
+        expected: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> EvaluationResult:
         expected = expected or {}
-        rubric: Dict[str, Dict[str, Any]] = expected.get("rubric", {})
+        rubric: dict[str, dict[str, Any]] = expected.get("rubric", {})
 
         if not rubric:
             return EvaluationResult(
@@ -33,8 +33,8 @@ class RubricEvaluator(BaseEvaluator):
 
         total_weight = 0.0
         weighted_score = 0.0
-        criteria_scores: Dict[str, float] = {}
-        criteria_feedback: List[str] = []
+        criteria_scores: dict[str, float] = {}
+        criteria_feedback: list[str] = []
 
         word_count = len(output.split())
 
@@ -53,11 +53,17 @@ class RubricEvaluator(BaseEvaluator):
 
             keywords = spec.get("keywords", [])
             if keywords:
-                found = sum(1 for kw in keywords if re.search(r"\b" + re.escape(kw) + r"\b", output, re.IGNORECASE))
+                found = sum(
+                    1
+                    for kw in keywords
+                    if re.search(r"\b" + re.escape(kw) + r"\b", output, re.IGNORECASE)
+                )
                 kw_factor = found / len(keywords)
                 crit_score = min(crit_score, kw_factor)
                 if kw_factor < 1.0:
-                    crit_reasons.append(f"Only {found}/{len(keywords)} expected keywords found")
+                    crit_reasons.append(
+                        f"Only {found}/{len(keywords)} expected keywords found"
+                    )
 
             criteria_scores[criterion_name] = round(crit_score, 4)
             weighted_score += crit_score * weight
@@ -69,9 +75,10 @@ class RubricEvaluator(BaseEvaluator):
         threshold = float(expected.get("passing_threshold", 0.70))
         passed = final_score >= threshold
 
-        feedback = (
-            f"Rubric score: {final_score:.2%} (threshold: {threshold:.2%}). "
-            + ("; ".join(criteria_feedback) if criteria_feedback else "All criteria passed.")
+        feedback = f"Rubric score: {final_score:.2%} (threshold: {threshold:.2%}). " + (
+            "; ".join(criteria_feedback)
+            if criteria_feedback
+            else "All criteria passed."
         )
 
         return EvaluationResult(

@@ -1,9 +1,6 @@
 """Unit tests for the recipe evaluation and benchmark harness."""
 
 import json
-from pathlib import Path
-
-import pytest
 
 from evals.evaluators.keyword_eval import KeywordEvaluator
 from evals.evaluators.rubric_eval import RubricEvaluator
@@ -24,7 +21,7 @@ def test_schema_evaluator_valid_json() -> None:
 
 def test_schema_evaluator_markdown_json_block() -> None:
     evaluator = SchemaEvaluator()
-    output = "Here is the response:\n```json\n{\"lead\": \"Acme\", \"qualified\": true}\n```"
+    output = 'Here is the response:\n```json\n{"lead": "Acme", "qualified": true}\n```'
     expected = {"format": "json", "required_keys": ["lead", "qualified"]}
 
     result = evaluator.evaluate(output=output, expected=expected)
@@ -46,7 +43,10 @@ def test_schema_evaluator_missing_keys() -> None:
 def test_schema_evaluator_markdown_structure() -> None:
     evaluator = SchemaEvaluator()
     output = "# Incident Overview\n\n## Timeline\n- 14:00 Start\n\n## Action Items\n- Fix issue"
-    expected = {"format": "markdown", "required_sections": ["# Incident Overview", "## Timeline", "## Action Items"]}
+    expected = {
+        "format": "markdown",
+        "required_sections": ["# Incident Overview", "## Timeline", "## Action Items"],
+    }
 
     result = evaluator.evaluate(output=output, expected=expected)
     assert result.passed is True
@@ -107,7 +107,11 @@ def test_benchmark_reporter_outputs() -> None:
     record = BenchmarkRunRecord(
         recipe_name="test-recipe",
         case_id="case-01",
-        results=[SchemaEvaluator().evaluate(output='{"key": "val"}', expected={"format": "json"})],
+        results=[
+            SchemaEvaluator().evaluate(
+                output='{"key": "val"}', expected={"format": "json"}
+            )
+        ],
         latency_ms=14.5,
         passed=True,
     )

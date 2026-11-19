@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Any
 
 from evals.evaluators.base import EvaluationResult
 
@@ -15,7 +15,7 @@ class BenchmarkRunRecord:
 
     recipe_name: str
     case_id: str
-    results: List[EvaluationResult] = field(default_factory=list)
+    results: list[EvaluationResult] = field(default_factory=list)
     latency_ms: float = 0.0
     passed: bool = True
 
@@ -24,15 +24,21 @@ class BenchmarkReporter:
     """Collects benchmark run records and formats summary reports."""
 
     def __init__(self):
-        self.records: List[BenchmarkRunRecord] = []
+        self.records: list[BenchmarkRunRecord] = []
 
     def add_record(self, record: BenchmarkRunRecord) -> None:
         self.records.append(record)
 
-    def summary_stats(self) -> Dict[str, Any]:
+    def summary_stats(self) -> dict[str, Any]:
         total_runs = len(self.records)
         if total_runs == 0:
-            return {"total": 0, "passed": 0, "failed": 0, "pass_rate": 0.0, "avg_latency_ms": 0.0}
+            return {
+                "total": 0,
+                "passed": 0,
+                "failed": 0,
+                "pass_rate": 0.0,
+                "avg_latency_ms": 0.0,
+            }
 
         passed_runs = sum(1 for r in self.records if r.passed)
         avg_latency = sum(r.latency_ms for r in self.records) / total_runs
@@ -64,7 +70,9 @@ class BenchmarkReporter:
 
         for r in self.records:
             status_badge = "✅ PASS" if r.passed else "❌ FAIL"
-            scores_str = ", ".join(f"{res.metric_name}: {res.score:.2f}" for res in r.results)
+            scores_str = ", ".join(
+                f"{res.metric_name}: {res.score:.2f}" for res in r.results
+            )
             feedback_str = " | ".join(res.feedback for res in r.results if res.feedback)
             feedback_str = feedback_str.replace("\n", " ")[:100]
             lines.append(

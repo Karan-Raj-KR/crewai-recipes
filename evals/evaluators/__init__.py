@@ -8,7 +8,7 @@ from evals.evaluators.schema_eval import SchemaEvaluator
 __all__ = [
     "BaseEvaluator",
     "EvaluationResult",
-    "SchemaEvaluator",
     "KeywordEvaluator",
     "RubricEvaluator",
+    "SchemaEvaluator",
 ]

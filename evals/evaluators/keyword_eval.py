@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from evals.evaluators.base import BaseEvaluator, EvaluationResult
 
@@ -18,19 +18,21 @@ class KeywordEvaluator(BaseEvaluator):
     def _matches_keyword(keyword: str, text: str) -> bool:
         """Match keyword with word boundaries if alphanumeric, else case-insensitive substring."""
         if re.match(r"^\w+$", keyword):
-            return bool(re.search(r"\b" + re.escape(keyword) + r"\b", text, re.IGNORECASE))
+            return bool(
+                re.search(r"\b" + re.escape(keyword) + r"\b", text, re.IGNORECASE)
+            )
         return keyword.lower() in text.lower()
 
     def evaluate(
         self,
         output: str,
-        expected: Optional[Dict[str, Any]] = None,
+        expected: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> EvaluationResult:
         expected = expected or {}
-        must_include: List[str] = expected.get("must_include", [])
-        must_not_include: List[str] = expected.get("must_not_include", [])
-        regex_patterns: List[str] = expected.get("regex_patterns", [])
+        must_include: list[str] = expected.get("must_include", [])
+        must_not_include: list[str] = expected.get("must_not_include", [])
+        regex_patterns: list[str] = expected.get("regex_patterns", [])
 
         missing_required = []
         for kw in must_include:
@@ -56,7 +58,9 @@ class KeywordEvaluator(BaseEvaluator):
                 feedback="No keyword assertions specified.",
             )
 
-        failed_checks = len(missing_required) + len(present_forbidden) + len(missing_regex)
+        failed_checks = (
+            len(missing_required) + len(present_forbidden) + len(missing_regex)
+        )
         score = max(0.0, (total_checks - failed_checks) / total_checks)
         passed = failed_checks == 0
 
@@ -68,7 +72,11 @@ class KeywordEvaluator(BaseEvaluator):
         if missing_regex:
             feedback_parts.append(f"Unmatched regex patterns: {missing_regex}")
 
-        feedback = "; ".join(feedback_parts) if feedback_parts else "All keyword criteria satisfied."
+        feedback = (
+            "; ".join(feedback_parts)
+            if feedback_parts
+            else "All keyword criteria satisfied."
+        )
 
         return EvaluationResult(
             metric_name=self.metric_name,

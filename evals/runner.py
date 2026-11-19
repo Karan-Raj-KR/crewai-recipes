@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from evals.evaluators.base import BaseEvaluator
 from evals.evaluators.keyword_eval import KeywordEvaluator
@@ -19,8 +18,8 @@ from evals.reporter import BenchmarkReporter, BenchmarkRunRecord
 DATASETS_DIR = Path(__file__).resolve().parent / "datasets"
 
 
-def get_default_evaluators(metric_filter: Optional[str] = None) -> List[BaseEvaluator]:
-    evaluators: List[BaseEvaluator] = [
+def get_default_evaluators(metric_filter: str | None = None) -> list[BaseEvaluator]:
+    evaluators: list[BaseEvaluator] = [
         SchemaEvaluator(),
         KeywordEvaluator(),
         RubricEvaluator(),
@@ -32,9 +31,9 @@ def get_default_evaluators(metric_filter: Optional[str] = None) -> List[BaseEval
 
 
 def run_benchmark_case(
-    case: Dict[str, Any],
+    case: dict[str, Any],
     recipe_name: str,
-    evaluators: List[BaseEvaluator],
+    evaluators: list[BaseEvaluator],
     live: bool = False,
 ) -> BenchmarkRunRecord:
     case_id = case.get("id", "anonymous-case")
@@ -49,7 +48,9 @@ def run_benchmark_case(
             recipes_dir = Path(__file__).resolve().parent.parent / "recipes"
             recipe_path = recipes_dir / recipe_name
             if not recipe_path.exists():
-                raise FileNotFoundError(f"Recipe '{recipe_name}' not found in {recipes_dir}")
+                raise FileNotFoundError(
+                    f"Recipe '{recipe_name}' not found in {recipes_dir}"
+                )
 
             sys.path.insert(0, str(recipe_path))
             from crew import build_crew  # type: ignore
@@ -58,7 +59,7 @@ def run_benchmark_case(
             crew = build_crew(**inputs)
             kickoff_res = crew.kickoff()
             output = str(kickoff_res)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             duration_ms = (time.perf_counter() - start_time) * 1000
             failed_res = SchemaEvaluator().evaluate(
                 output="",
@@ -98,15 +99,15 @@ def run_benchmark_case(
 
 
 def run_evaluations(
-    recipe_name: Optional[str] = None,
-    dataset_path: Optional[Path] = None,
-    metric_filter: Optional[str] = None,
+    recipe_name: str | None = None,
+    dataset_path: Path | None = None,
+    metric_filter: str | None = None,
     live: bool = False,
 ) -> BenchmarkReporter:
     reporter = BenchmarkReporter()
     evaluators = get_default_evaluators(metric_filter=metric_filter)
 
-    dataset_files: List[Path] = []
+    dataset_files: list[Path] = []
     if dataset_path:
         dataset_files = [dataset_path]
     elif recipe_name and recipe_name != "all":
@@ -114,7 +115,10 @@ def run_evaluations(
         if target.exists():
             dataset_files = [target]
         else:
-            print(f"Warning: Dataset not found for recipe '{recipe_name}' at {target}", file=sys.stderr)
+            print(
+                f"Warning: Dataset not found for recipe '{recipe_name}' at {target}",
+                file=sys.stderr,
+            )
     else:
         dataset_files = sorted(DATASETS_DIR.glob("*.json"))
 
@@ -122,7 +126,7 @@ def run_evaluations(
         current_recipe = d_path.stem
         try:
             cases = json.loads(d_path.read_text(encoding="utf-8"))
-        except Exception as exc:
+        except (json.JSONDecodeError, OSError) as exc:
             print(f"Error loading dataset {d_path}: {exc}", file=sys.stderr)
             continue
 
@@ -139,13 +143,40 @@ def run_evaluations(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="CrewAI Recipes Evaluation & Benchmark Runner")
-    parser.add_argument("--recipe", type=str, default="all", help="Recipe name to evaluate (or 'all')")
-    parser.add_argument("--all", action="store_true", help="Evaluate all recipes with available datasets")
-    parser.add_argument("--dataset", type=Path, default=None, help="Path to custom evaluation dataset JSON")
-    parser.add_argument("--metric", type=str, default=None, help="Filter metric ('schema', 'keyword', 'rubric')")
-    parser.add_argument("--live", action="store_true", help="Run live crew execution instead of offline evaluation")
-    parser.add_argument("--format", choices=["markdown", "json", "summary"], default="markdown", help="Output format")
+    parser = argparse.ArgumentParser(
+        description="CrewAI Recipes Evaluation & Benchmark Runner"
+    )
+    parser.add_argument(
+        "--recipe", type=str, default="all", help="Recipe name to evaluate (or 'all')"
+    )
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Evaluate all recipes with available datasets",
+    )
+    parser.add_argument(
+        "--dataset",
+        type=Path,
+        default=None,
+        help="Path to custom evaluation dataset JSON",
+    )
+    parser.add_argument(
+        "--metric",
+        type=str,
+        default=None,
+        help="Filter metric ('schema', 'keyword', 'rubric')",
+    )
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="Run live crew execution instead of offline evaluation",
+    )
+    parser.add_argument(
+        "--format",
+        choices=["markdown", "json", "summary"],
+        default="markdown",
+        help="Output format",
+    )
 
     args = parser.parse_args()
 
