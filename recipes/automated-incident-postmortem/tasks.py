@@ -48,6 +48,7 @@ def build_tasks(
             "2. Identify key operational phases: T-0 (First Anomaly), Detection (Alert Trigger), "
             "Investigation, Mitigation Action (e.g. Rollback / Restart), and Full Recovery.\n"
             "3. Highlight duration intervals between detection, response, and stabilization."
+            " Mark missing timestamps or intervals as unknown; never invent them."
         ),
         expected_output=(
             "A structured Markdown Chronological Incident Timeline with:\n"
@@ -62,10 +63,13 @@ def build_tasks(
         description=(
             "Using the reconstructed timeline and deployment details, investigate the direct technical "
             "root cause and underlying system vulnerabilities.\n\n"
+            f"Original deployment evidence:\n{deployment_info}\n\n"
+            f"Original alert logs:\n{raw_alert_logs}\n\n"
             "Investigation Requirements:\n"
             "1. Identify the direct failure trigger (e.g. unindexed query, missing connection limit, null pointer).\n"
             "2. Examine contributing factors (e.g. lack of load testing, insufficient circuit breaker, missing canary deploy).\n"
-            "3. Conduct a rigorous Five Whys root cause analysis, drilling down from user-visible symptom to organizational/architectural root."
+            "3. Conduct a Five Whys analysis only as far as the evidence supports. "
+            "Distinguish observations from hypotheses, and mark unsupported causes as unknown."
         ),
         expected_output=(
             "A Root Cause Analysis Report containing:\n"
@@ -82,6 +86,9 @@ def build_tasks(
         description=(
             f"Synthesize the chronological timeline and root cause findings for '{incident_title}' "
             "into a comprehensive, industry-standard, blameless Markdown postmortem report.\n\n"
+            f"Original impact metrics:\n{impact_info}\n\n"
+            "Use supplied figures exactly; mark unknown severity, duration, financial impact, "
+            "and owner details as unknown. Label uncertain causes as hypotheses.\n\n"
             "Postmortem Report Structure:\n"
             "1. **Title & Incident Overview**: Severity, Date, Duration, Leads/On-Call.\n"
             "2. **Executive Summary & User Impact**: Plain-language synopsis, error rates, financial impact.\n"

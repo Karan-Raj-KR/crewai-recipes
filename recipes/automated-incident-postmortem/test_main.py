@@ -75,6 +75,7 @@ except ImportError:
 
 from crew import build_crew
 from crewai import Crew, Process
+from run import check_env
 
 
 def test_crew_build() -> None:
@@ -128,6 +129,39 @@ def test_inputs_interpolated_in_tasks() -> None:
     assert logs in first_task_desc
     assert deploy in first_task_desc
     assert impact in first_task_desc
+    assert deploy in crew.tasks[1].description
+    assert logs in crew.tasks[1].description
+    assert impact in crew.tasks[2].description
+
+
+def test_missing_evidence_is_marked_unknown() -> None:
+    crew = build_crew(incident_title="Outage", raw_alert_logs="Unexplained alert")
+    assert "unknown" in crew.tasks[0].description.lower()
+    assert "unknown" in crew.tasks[1].description.lower()
+    assert "unknown" in crew.tasks[2].description.lower()
+
+
+def test_cli_accepts_fallback_only_configuration() -> None:
+    with patch.dict(os.environ, {"LLM_FALLBACK_API_KEY": "test-fallback"}, clear=True):
+        check_env()
+    with patch.dict(
+        os.environ,
+        {"LLM_PROVIDER": "fallback", "LLM_FALLBACK_API_KEY": "test-fallback"},
+        clear=True,
+    ):
+        check_env()
+
+
+def test_cli_requires_selected_provider_key() -> None:
+    with patch.dict(
+        os.environ, {"LLM_PROVIDER": "fallback", "LLM_API_KEY": "primary"}, clear=True
+    ):
+        try:
+            check_env()
+        except SystemExit as exc:
+            assert exc.code == 1
+        else:
+            raise AssertionError("fallback provider should require its own key")
 
 
 def test_agents_do_not_delegate() -> None:

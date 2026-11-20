@@ -20,14 +20,25 @@ from crew import build_crew  # noqa: E402
 
 def check_env() -> None:
     """Preflight environment check for required API key."""
-    api_key = os.getenv("LLM_API_KEY") or os.getenv("NVIDIA_API_KEY")
+    provider = os.getenv("LLM_PROVIDER", "primary").lower()
+    if provider in ("fallback", "secondary"):
+        api_key = os.getenv("LLM_FALLBACK_API_KEY")
+    else:
+        api_key = (
+            os.getenv("LLM_API_KEY")
+            or os.getenv("NVIDIA_API_KEY")
+            or os.getenv("LLM_FALLBACK_API_KEY")
+        )
     if not api_key:
         print("❌ Error: Missing API key.", file=sys.stderr)
         print(
-            "   Please set LLM_API_KEY or NVIDIA_API_KEY in your .env file or environment.",
+            "   Please set the API key for your selected provider in .env or the environment.",
             file=sys.stderr,
         )
-        print("   Get a free key at https://build.nvidia.com", file=sys.stderr)
+        print(
+            "   Use LLM_API_KEY (or NVIDIA_API_KEY) for primary, or LLM_FALLBACK_API_KEY for fallback.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
 
