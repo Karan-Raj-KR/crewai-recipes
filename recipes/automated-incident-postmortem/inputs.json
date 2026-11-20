@@ -1,0 +1,22 @@
+[
+  {
+    "name": "incident_title",
+    "label": "Incident Title",
+    "example": "Checkout Service 503 HTTP Spike during Flash Sale"
+  },
+  {
+    "name": "raw_alert_logs",
+    "label": "Raw Alert & Monitoring Logs",
+    "example": "2026-11-10T14:02:11Z [CRIT] connection_pool_exhausted db_host=pg-primary-01 pool_size=100 active=100\n2026-11-10T14:03:45Z [ERR] HTTP 503 upstream connect timeout /api/v1/checkout rate=840req/s\n2026-11-10T14:18:20Z [INFO] hotfix deployment v2.14.1 rollback initiated by oncall\n2026-11-10T14:26:00Z [INFO] pool utilization returned to 18%, error rate 0.01%"
+  },
+  {
+    "name": "recent_deployment_summary",
+    "label": "Recent Deployment / Git Diff Summary",
+    "example": "Commit a1b2c3d: Added unindexed foreign key lookup on order_items table in checkout transaction flow."
+  },
+  {
+    "name": "impact_metrics",
+    "label": "Observed Impact Metrics",
+    "example": "Duration: 24 mins. 14,200 checkout requests failed (12.4% error rate). Estimated delayed GMV: $42,000."
+  }
+]
