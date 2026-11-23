@@ -30,8 +30,8 @@ playground_dir = Path(__file__).parent.resolve()
 if str(playground_dir) not in sys.path:
     sys.path.insert(0, str(playground_dir))
 
-import main as playground
-from governance import CircuitState, circuit_registry
+import main as playground  # noqa: E402
+from governance import CircuitState, circuit_registry  # noqa: E402
 
 PRIMARY_KEY = "dummy-primary-279"
 FALLBACK_KEY = "dummy-fallback-279"

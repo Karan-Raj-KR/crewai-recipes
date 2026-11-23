@@ -27,8 +27,8 @@ playground_dir = Path(__file__).parent.resolve()
 if str(playground_dir) not in sys.path:
     sys.path.insert(0, str(playground_dir))
 
-import main as playground
-from governance import (
+import main as playground  # noqa: E402
+from governance import (  # noqa: E402
     AdaptiveBackoffPolicy,
     BudgetExceededError,
     CircuitState,
@@ -203,8 +203,10 @@ def test_adaptive_backoff_exponential_scaling_no_jitter():
 def test_adaptive_backoff_jitter_bounds():
     """Full jitter stays strictly within [0, ceiling]."""
     policy = AdaptiveBackoffPolicy(base_delay=1.0, max_delay=10.0, jitter=True)
+
     # Using deterministic mock random function
-    mock_rand = lambda low, high: high * 0.75
+    def mock_rand(low: float, high: float) -> float:
+        return high * 0.75
 
     delay0 = policy.compute_delay(attempt=0, rand_func=mock_rand)
     assert delay0 == pytest.approx(0.75, abs=0.01)
