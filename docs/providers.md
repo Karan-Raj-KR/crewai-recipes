@@ -6,7 +6,8 @@
 2. `LLM_MODEL`: The model name as expected by the provider.
 3. `LLM_API_KEY`: Your authentication key for the provider.
 
-No code changes are required.
+No code changes are required. For a scheduled run with a repository secret, see
+the [nightly GitHub Actions example](./integrations/github-action.md).
 
 ---
 

@@ -278,6 +278,7 @@ Extended guides live in [`/docs`](./docs/):
 - [Glossary of CrewAI terms](./docs/glossary.md)
 - [NVIDIA NIM + CrewAI Setup Guide](./docs/nim-setup.md)
 - [Multi-provider LLM config](./docs/providers.md) — OpenAI, Anthropic, OpenRouter, and more
+- [Nightly recipe with GitHub Actions](./docs/integrations/github-action.md) — fixed input, Secrets and an output artifact
 - [Project Decisions](./docs/DECISIONS.md) — why the repo is set up the way it is
 
 ---
