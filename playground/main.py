@@ -25,6 +25,33 @@ try:
 except ImportError:
     from playground.rate_limiter import SlidingWindowRateLimiter, get_client_ip
 
+try:
+    from governance import (
+        AdaptiveBackoffPolicy,
+        BudgetExceededError,
+        CircuitBreakerOpenError,
+        TokenBudgetGuard,
+        can_failover_to_fallback,
+        extract_actual_tokens,
+        extract_retry_after,
+        is_rate_limit_error,
+        is_trippable_error,
+        resolve_provider,
+    )
+except ImportError:
+    from playground.governance import (
+        AdaptiveBackoffPolicy,
+        BudgetExceededError,
+        CircuitBreakerOpenError,
+        TokenBudgetGuard,
+        can_failover_to_fallback,
+        extract_actual_tokens,
+        extract_retry_after,
+        is_rate_limit_error,
+        is_trippable_error,
+        resolve_provider,
+    )
+
 load_dotenv()
 
 logging.basicConfig(
@@ -115,6 +142,7 @@ class ResponseCache:
 
 response_cache = ResponseCache(maxsize=100)
 rate_limiter = SlidingWindowRateLimiter()
+_backoff_sleep = time.sleep
 
 
 class ThreadSafeStreamRedirector:
@@ -233,6 +261,17 @@ def _isolated_import(name, globals=None, locals=None, fromlist=(), level=0):
                 sys.modules[spec_name] = mod
                 try:
                     spec.loader.exec_module(mod)
+                    if hasattr(mod, "get_llm"):
+                        orig_get_llm = mod.get_llm
+
+                        def _governed_get_llm(provider=None, **kwargs):
+                            target = (
+                                getattr(_thread_local, "active_provider", None)
+                                or provider
+                            )
+                            return orig_get_llm(provider=target, **kwargs)
+
+                        mod.get_llm = _governed_get_llm
                 except Exception:
                     if local_cache is not None:
                         local_cache.pop(name, None)
@@ -254,9 +293,15 @@ class isolated_recipe_context:
     cleanup guarantees of #63.
     """
 
-    def __init__(self, recipe_dir: Path, recipe_name: str):
+    def __init__(
+        self,
+        recipe_dir: Path,
+        recipe_name: str,
+        active_provider: str | None = None,
+    ):
         self.recipe_dir = recipe_dir.resolve()
         self.recipe_name = recipe_name
+        self.active_provider = active_provider
         self.req_id = f"{recipe_name}_{uuid.uuid4().hex[:8]}"
         self.local_cache: dict[str, types.ModuleType] = {}
         self.original_sys_path: list[str] | None = None
@@ -271,6 +316,7 @@ class isolated_recipe_context:
         _thread_local.recipe_dir = self.recipe_dir
         _thread_local.local_cache = self.local_cache
         _thread_local.req_id = self.req_id
+        _thread_local.active_provider = self.active_provider
         return self
 
     def load_crew(self, crew_path: Path):
@@ -297,6 +343,7 @@ class isolated_recipe_context:
             _thread_local.recipe_dir = None
             _thread_local.local_cache = None
             _thread_local.req_id = None
+            _thread_local.active_provider = None
 
 
 @app.get("/health")
@@ -369,54 +416,186 @@ def run_recipe(req: RunRequest, request: Request):
             status_code=401, detail="LLM_API_KEY is not set in the environment."
         )
 
+    try:
+        active_provider, breaker, is_fallback = resolve_provider()
+    except CircuitBreakerOpenError as err:
+        cooldown = max(1, int(err.cooldown_remaining) + 1)
+        logger.warning(
+            f"Recipe '{req.recipe}' rejected: Circuit OPEN for provider '{err.provider}'. "
+            f"Cooldown: {err.cooldown_remaining:.1f}s"
+        )
+        raise HTTPException(
+            status_code=503,
+            detail=str(err),
+            headers={"Retry-After": str(cooldown)},
+        )
+
     recipe_dir = (RECIPES_DIR / req.recipe).resolve()
     if not recipe_dir.is_relative_to(RECIPES_DIR.resolve()):
+        breaker.release_probe()
         raise HTTPException(status_code=400, detail="Invalid recipe name")
     crew_path = recipe_dir / "crew.py"
     if not recipe_dir.exists() or not crew_path.exists():
+        breaker.release_probe()
         logger.error(
             f"Recipe '{req.recipe}' failed: Not found (Execution time: {time.time() - start_time:.2f}s)"
         )
         raise HTTPException(status_code=404, detail="Recipe not found")
 
-    with isolated_recipe_context(recipe_dir, req.recipe) as ctx:
+    budget_guard = TokenBudgetGuard(run_id=f"run_{uuid.uuid4().hex[:8]}")
+
+    with isolated_recipe_context(
+        recipe_dir, req.recipe, active_provider=active_provider
+    ) as ctx:
         module = ctx.load_crew(crew_path)
 
         if not hasattr(module, "build_crew"):
+            breaker.release_probe()
             logger.error(
                 f"Recipe '{req.recipe}' failed: Could not find build_crew in crew.py (Execution time: {time.time() - start_time:.2f}s)"
             )
             raise HTTPException(
                 status_code=500, detail="Could not find build_crew in crew.py"
             )
+
+        def run_step_cb(step):
+            thought = getattr(step, "thought", "") or getattr(step, "text", "")
+            result = getattr(step, "result", None)
+            step_text = f"{thought} {result or ''}".strip()
+            budget_guard.add_step_text(step_text)
+
         try:
             crew = module.build_crew(**req.inputs)
+            if budget_guard.enabled:
+                crew.step_callback = run_step_cb
+
             result = crew.kickoff()
             output_str = str(result)
+
+            # Reconcile with actual metrics if reported by provider/crew
+            actual_tokens = extract_actual_tokens(crew, result)
+            if actual_tokens is not None:
+                budget_guard.set_final_usage(actual_tokens)
+
+            breaker.record_success()
             response_cache.set(req.recipe, req.inputs, output_str)
             exec_time = time.time() - start_time
             logger.info(
-                f"Recipe '{req.recipe}' completed successfully in {exec_time:.2f}s"
+                f"Recipe '{req.recipe}' completed successfully via '{active_provider}' in {exec_time:.2f}s"
             )
             return {"output": output_str, "cached": False}
-        except Exception as e:
+        except BudgetExceededError as e:
+            breaker.release_probe()
+            exec_time = time.time() - start_time
+            logger.warning(
+                f"Recipe '{req.recipe}' exceeded token budget in {exec_time:.2f}s: {e}"
+            )
+            raise HTTPException(status_code=429, detail=str(e))
+        except Exception as e:  # noqa: BLE001
             exec_time = time.time() - start_time
             err_str = str(e)
             logger.error(
                 f"Recipe '{req.recipe}' failed during execution in {exec_time:.2f}s. Error: {err_str}"
             )
             if "API_KEY is not set" in err_str:
+                breaker.release_probe()
                 raise HTTPException(
                     status_code=401,
                     detail="API Key is missing. Please check your .env file.",
                 )
             if is_timeout_error(e):
+                breaker.record_failure(e)
                 raise HTTPException(status_code=504, detail=timeout_message())
+
+            is_rl = is_rate_limit_error(e)
+            retry_after = extract_retry_after(e)
+
+            breaker.record_failure(e, cooldown_override=retry_after)
+
+            # In-flight failover: If primary failed with a trippable error, and fallback is available and eligible, attempt fallback ONCE
+            if not is_fallback and is_trippable_error(e) and can_failover_to_fallback():
+                try:
+                    fallback_provider, fallback_breaker, _ = resolve_provider(
+                        preferred="fallback"
+                    )
+                    logger.info(
+                        f"Recipe '{req.recipe}' in-flight failover from '{active_provider}' to '{fallback_provider}'"
+                    )
+                    _thread_local.active_provider = fallback_provider
+
+                    if is_rl:
+                        backoff = AdaptiveBackoffPolicy()
+                        delay = backoff.compute_delay(
+                            attempt=1, retry_after=retry_after
+                        )
+                        if delay > 0:
+                            _backoff_sleep(delay)
+
+                    fallback_crew = module.build_crew(**req.inputs)
+                    if budget_guard.enabled:
+                        fallback_crew.step_callback = run_step_cb
+                    fallback_result = fallback_crew.kickoff()
+                    output_str = str(fallback_result)
+
+                    actual_tokens = extract_actual_tokens(
+                        fallback_crew, fallback_result
+                    )
+                    if actual_tokens is not None:
+                        budget_guard.set_final_usage(actual_tokens)
+
+                    fallback_breaker.record_success()
+                    response_cache.set(req.recipe, req.inputs, output_str)
+                    return {"output": output_str, "cached": False}
+                except BudgetExceededError as b_err:
+                    fallback_breaker.release_probe()
+                    logger.warning(f"Fallback exceeded token budget: {b_err}")
+                    raise HTTPException(status_code=429, detail=str(b_err))
+                except Exception as fb_err:  # noqa: BLE001
+                    fb_rl = is_rate_limit_error(fb_err)
+                    fb_ra = extract_retry_after(fb_err)
+                    fallback_breaker.record_failure(fb_err, cooldown_override=fb_ra)
+                    logger.error(f"Fallback execution also failed: {fb_err}")
+                    if is_timeout_error(fb_err):
+                        raise HTTPException(status_code=504, detail=timeout_message())
+                    if fb_rl:
+                        ra_val = max(1, int(fb_ra or 5))
+                        raise HTTPException(
+                            status_code=429,
+                            detail=f"Provider rate limit exceeded: {fb_err}",
+                            headers={"Retry-After": str(ra_val)},
+                        )
+                    raise HTTPException(
+                        status_code=500, detail=f"Execution error: {fb_err}"
+                    )
+
+            if is_rl:
+                ra_val = max(1, int(retry_after or 5))
+                raise HTTPException(
+                    status_code=429,
+                    detail=f"Provider rate limit exceeded: {err_str}",
+                    headers={"Retry-After": str(ra_val)},
+                )
+
             raise HTTPException(status_code=500, detail=f"Execution error: {err_str}")
 
 
+def _is_interrupted_error(exc: BaseException) -> bool:
+    curr: BaseException | None = exc
+    seen_ids: set[int] = set()
+    while curr is not None and id(curr) not in seen_ids:
+        seen_ids.add(id(curr))
+        if isinstance(curr, InterruptedError):
+            return True
+        curr = getattr(curr, "__cause__", None) or getattr(curr, "__context__", None)
+    return False
+
+
 def execute_recipe_stream(
-    recipe_name: str, inputs: dict, push_event, stop_event: threading.Event
+    recipe_name: str,
+    inputs: dict,
+    push_event,
+    stop_event: threading.Event,
+    budget_guard: TokenBudgetGuard | None = None,
 ):
     """Executes crew.kickoff() in a worker thread, capturing step/task callbacks and stdout logs."""
     if not has_provider_credentials():
@@ -428,19 +607,40 @@ def execute_recipe_stream(
         )
         return
 
+    try:
+        active_provider, breaker, _ = resolve_provider()
+    except CircuitBreakerOpenError as err:
+        push_event(
+            {
+                "type": "error",
+                "error": str(err),
+                "code": "CIRCUIT_OPEN",
+                "retry_after": max(1, int(err.cooldown_remaining) + 1),
+            }
+        )
+        return
+
+    if budget_guard is None:
+        budget_guard = TokenBudgetGuard(run_id=f"stream_{uuid.uuid4().hex[:8]}")
+
     recipe_dir = (RECIPES_DIR / recipe_name).resolve()
     if not recipe_dir.is_relative_to(RECIPES_DIR.resolve()):
+        breaker.release_probe()
         push_event({"type": "error", "error": "Invalid recipe name"})
         return
     crew_path = recipe_dir / "crew.py"
     if not recipe_dir.exists() or not crew_path.exists():
+        breaker.release_probe()
         push_event({"type": "error", "error": "Recipe not found"})
         return
 
-    with isolated_recipe_context(recipe_dir, recipe_name) as ctx:
+    with isolated_recipe_context(
+        recipe_dir, recipe_name, active_provider=active_provider
+    ) as ctx:
         module = ctx.load_crew(crew_path)
 
         if not hasattr(module, "build_crew"):
+            breaker.release_probe()
             push_event(
                 {"type": "error", "error": "Could not find build_crew in crew.py"}
             )
@@ -458,6 +658,22 @@ def execute_recipe_stream(
                 tool = getattr(step, "tool", None)
                 tool_input = getattr(step, "tool_input", None)
                 result = getattr(step, "result", None)
+
+                # Token budget tracking & mid-flight interruption
+                if budget_guard.enabled:
+                    step_text = f"{thought} {result or ''}".strip()
+                    warn, total = budget_guard.add_step_text(step_text)
+                    if warn:
+                        push_event(
+                            {
+                                "type": "governance",
+                                "event": "token_budget_warning",
+                                "accumulated": total,
+                                "limit": budget_guard.max_tokens,
+                                "is_estimated": True,
+                            }
+                        )
+
                 push_event(
                     {
                         "type": "agent_step",
@@ -503,6 +719,13 @@ def execute_recipe_stream(
             try:
                 result = crew.kickoff()
                 output_str = str(result)
+
+                # Reconcile with actual metrics if available
+                actual_tokens = extract_actual_tokens(crew, result)
+                if actual_tokens is not None:
+                    budget_guard.set_final_usage(actual_tokens)
+
+                breaker.record_success()
                 response_cache.set(recipe_name, inputs, output_str)
                 if not stop_event.is_set():
                     push_event(
@@ -511,11 +734,16 @@ def execute_recipe_stream(
             finally:
                 sys.stdout = old_stdout
 
-        except Exception as e:
-            if stop_event.is_set() or isinstance(e, InterruptedError):
+        except BudgetExceededError as e:
+            breaker.release_probe()
+            push_event({"type": "error", "error": str(e), "code": "BUDGET_EXCEEDED"})
+        except Exception as e:  # noqa: BLE001
+            if stop_event.is_set() or _is_interrupted_error(e):
+                breaker.release_probe()
                 return
             err_str = str(e)
             if "API_KEY is not set" in err_str:
+                breaker.release_probe()
                 push_event(
                     {
                         "type": "error",
@@ -523,8 +751,21 @@ def execute_recipe_stream(
                     }
                 )
             elif is_timeout_error(e):
+                breaker.record_failure(e)
                 push_event({"type": "error", "error": timeout_message()})
+            elif is_rate_limit_error(e):
+                retry_after = extract_retry_after(e)
+                breaker.record_failure(e, cooldown_override=retry_after)
+                push_event(
+                    {
+                        "type": "error",
+                        "error": f"Provider rate limit exceeded: {err_str}",
+                        "code": "RATE_LIMIT_EXCEEDED",
+                        "retry_after": retry_after,
+                    }
+                )
             else:
+                breaker.record_failure(e)
                 push_event({"type": "error", "error": f"Execution error: {err_str}"})
 
 
@@ -561,12 +802,20 @@ async def run_recipe_stream(req: RunRequest, request: Request):
     def push_event(event):
         loop.call_soon_threadsafe(queue.put_nowait, event)
 
+    budget_guard = TokenBudgetGuard(run_id=f"stream_{uuid.uuid4().hex[:8]}")
+
     async def event_generator():
         push_event({"type": "start", "recipe": req.recipe})
 
         def worker():
             try:
-                execute_recipe_stream(req.recipe, req.inputs, push_event, stop_event)
+                execute_recipe_stream(
+                    req.recipe,
+                    req.inputs,
+                    push_event,
+                    stop_event,
+                    budget_guard=budget_guard,
+                )
             finally:
                 push_event(None)  # Sentinel to close stream
 
@@ -639,9 +888,17 @@ async def run_recipe_ws(websocket: WebSocket):
 
         push_event({"type": "start", "recipe": recipe})
 
+        budget_guard = TokenBudgetGuard(run_id=f"ws_{uuid.uuid4().hex[:8]}")
+
         def worker():
             try:
-                execute_recipe_stream(recipe, inputs, push_event, stop_event)
+                execute_recipe_stream(
+                    recipe,
+                    inputs,
+                    push_event,
+                    stop_event,
+                    budget_guard=budget_guard,
+                )
             finally:
                 push_event(None)
 
