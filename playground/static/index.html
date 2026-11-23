@@ -498,6 +498,7 @@
 
         /* ═══ Recipe rail ═══ */
         .rail-section { min-width: 0; }
+        .recipe-summary { display: none; }
 
         .rail-head {
             display: flex;
@@ -1663,6 +1664,46 @@
             .timeline-scroll { max-height: 380px; }
         }
 
+        @media (max-width: 768px) {
+            .app-shell { grid-template-columns: minmax(0, 1fr); }
+
+            .recipe-summary {
+                display: list-item;
+                padding: 10px 14px;
+                border: 1px solid var(--border);
+                border-radius: var(--r-md);
+                background: var(--surface-color);
+                color: var(--text);
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .rail-head { display: none; }
+            .rail-section[open] .recipe-summary { margin-bottom: 8px; }
+            .recipe-rail { flex-direction: column; flex-wrap: nowrap; }
+            .recipe-item { width: 100%; max-width: none; }
+            .recipe-item-name { overflow-wrap: anywhere; }
+
+            .topbar :is(button, a, select),
+            .app-shell :is(button, summary, .field-input, .field-textarea),
+            .modal :is(button, .get-key-link),
+            .switch {
+                min-width: 44px;
+                min-height: 44px;
+            }
+
+            .switch-track { inset: 13px 7px; }
+            .result-head { flex-wrap: wrap; }
+            .result-head .micro-label { white-space: nowrap; }
+
+            .result-body:not(.is-empty), .rawlog pre {
+                white-space: pre;
+                word-break: normal;
+                overflow-x: auto;
+                scrollbar-width: auto;
+            }
+        }
+
         @media (max-width: 560px) {
             body { font-size: 14px; }
             .brand-name span.dim { display: none; }
@@ -1712,7 +1753,8 @@
 
     <!-- ═══ Left rail: recipes + session history ═══ -->
     <aside class="rail-col">
-        <div class="rail-section">
+        <details class="rail-section" id="recipe-picker" open>
+            <summary class="recipe-summary">Choose a recipe</summary>
             <div class="rail-head">
                 <span class="micro-label">Recipes</span>
                 <span class="rail-count" id="recipe-count">0</span>
@@ -1720,7 +1762,7 @@
             <nav class="recipe-rail" id="recipe-rail" aria-label="Select a recipe">
                 <!-- populated by JS -->
             </nav>
-        </div>
+        </details>
 
         <!-- ── Session History (#71) ── -->
         <div class="history-sidebar" id="history-sidebar" aria-label="Session History">
@@ -1803,18 +1845,18 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
                     <span id="rawlog-label">Raw log</span>
                 </summary>
-                <pre id="rawlog-pre"></pre>
+                <pre id="rawlog-pre" tabindex="0" role="region" aria-labelledby="rawlog-label"></pre>
             </details>
         </div>
 
         <div class="card card-featured result-card">
             <div class="result-head">
-                <span class="micro-label">Final Output</span>
+                <span class="micro-label" id="result-heading">Final Output</span>
                 <span class="result-badge" id="result-badge">JSON</span>
                 <span id="cached-badge" class="cached-badge">⚡ Cached</span>
                 <button class="copy-btn" id="copy-result-btn" style="display: none;" title="Copy result to clipboard">Copy</button>
             </div>
-            <div id="result" class="result-body is-empty"></div>
+            <div id="result" class="result-body is-empty" role="region" aria-labelledby="result-heading"></div>
         </div>
     </section>
 
@@ -2021,6 +2063,7 @@
     const copyBtn         = document.getElementById('copy-btn');
 
     const recipeRail      = document.getElementById('recipe-rail');
+    const recipePicker    = document.getElementById('recipe-picker');
     const recipeCount     = document.getElementById('recipe-count');
     const recipeTitle     = document.getElementById('recipe-title');
     const recipeStatus    = document.getElementById('recipe-status');
@@ -2049,6 +2092,12 @@
 
     const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform || '');
     if (kbdHint) kbdHint.textContent = isMac ? '⌘↵' : 'Ctrl+↵';
+
+    const narrowLayout = matchMedia('(max-width: 768px)');
+    recipePicker.open = !narrowLayout.matches;
+    narrowLayout.addEventListener('change', event => {
+        recipePicker.open = !event.matches;
+    });
 
     let currentAbortController = null;
     let currentRecipeId = '';
@@ -2187,6 +2236,8 @@
             }
         }
         resultPanel.classList.toggle('is-empty', !trimmed);
+        if (trimmed) resultPanel.tabIndex = 0;
+        else resultPanel.removeAttribute('tabindex');
     }
 
     function highlightJSON(escaped) {
