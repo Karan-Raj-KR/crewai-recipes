@@ -1,0 +1,23 @@
+{
+  "version": "1.0",
+  "recipe": "faq-bot",
+  "allow_unknown": false,
+  "fields": [
+    {
+      "name": "question",
+      "type": "string",
+      "required": true,
+      "min_length": 1,
+      "max_length": 2000,
+      "description": "Customer question to answer"
+    },
+    {
+      "name": "customer_name",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "max_length": 100,
+      "description": "Optional customer name"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "recipe": "appointment-booking",
+  "allow_unknown": false,
+  "fields": [
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "min_length": 1,
+      "max_length": 100,
+      "description": "Requester name"
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "required": true,
+      "min_length": 3,
+      "max_length": 150,
+      "description": "Requester email"
+    },
+    {
+      "name": "meeting_type",
+      "type": "string",
+      "required": true,
+      "min_length": 1,
+      "max_length": 100,
+      "description": "Meeting type"
+    },
+    {
+      "name": "preferred_times",
+      "type": "string",
+      "required": true,
+      "min_length": 1,
+      "max_length": 300,
+      "description": "Preferred times"
+    },
+    {
+      "name": "notes",
+      "type": "string",
+      "required": false,
+      "default": "",
+      "max_length": 1000,
+      "description": "Optional notes"
+    }
+  ]
+}

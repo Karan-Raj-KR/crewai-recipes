@@ -25,6 +25,11 @@ try:
 except ImportError:
     from playground.rate_limiter import SlidingWindowRateLimiter, get_client_ip
 
+try:
+    from contracts import load_contract_for_recipe, validate_recipe_inputs
+except ImportError:
+    from playground.contracts import load_contract_for_recipe, validate_recipe_inputs
+
 load_dotenv()
 
 logging.basicConfig(
@@ -353,6 +358,27 @@ def run_recipe(req: RunRequest, request: Request):
         f"Incoming request to run recipe '{req.recipe}' with inputs: {sanitized_inputs}"
     )
 
+    recipe_dir = (RECIPES_DIR / req.recipe).resolve()
+    if not recipe_dir.is_relative_to(RECIPES_DIR.resolve()):
+        raise HTTPException(status_code=400, detail="Invalid recipe name")
+    crew_path = recipe_dir / "crew.py"
+    if not recipe_dir.exists() or not crew_path.exists():
+        logger.error(
+            f"Recipe '{req.recipe}' failed: Not found (Execution time: {time.time() - start_time:.2f}s)"
+        )
+        raise HTTPException(status_code=404, detail="Recipe not found")
+
+    contract = load_contract_for_recipe(recipe_dir)
+    if contract:
+        validated_inputs, errors = validate_recipe_inputs(contract, req.inputs)
+        if errors:
+            logger.warning(f"Recipe '{req.recipe}' input validation failed: {errors}")
+            raise HTTPException(
+                status_code=422,
+                detail={"message": "Input validation failed", "errors": errors},
+            )
+        req.inputs = validated_inputs
+
     if not (req.no_cache or req.bypass_cache):
         cached_output = response_cache.get(req.recipe, req.inputs)
         if cached_output is not None:
@@ -368,16 +394,6 @@ def run_recipe(req: RunRequest, request: Request):
         raise HTTPException(
             status_code=401, detail="LLM_API_KEY is not set in the environment."
         )
-
-    recipe_dir = (RECIPES_DIR / req.recipe).resolve()
-    if not recipe_dir.is_relative_to(RECIPES_DIR.resolve()):
-        raise HTTPException(status_code=400, detail="Invalid recipe name")
-    crew_path = recipe_dir / "crew.py"
-    if not recipe_dir.exists() or not crew_path.exists():
-        logger.error(
-            f"Recipe '{req.recipe}' failed: Not found (Execution time: {time.time() - start_time:.2f}s)"
-        )
-        raise HTTPException(status_code=404, detail="Recipe not found")
 
     with isolated_recipe_context(recipe_dir, req.recipe) as ctx:
         module = ctx.load_crew(crew_path)
@@ -419,15 +435,6 @@ def execute_recipe_stream(
     recipe_name: str, inputs: dict, push_event, stop_event: threading.Event
 ):
     """Executes crew.kickoff() in a worker thread, capturing step/task callbacks and stdout logs."""
-    if not has_provider_credentials():
-        push_event(
-            {
-                "type": "error",
-                "error": "API Key is missing. Please check your .env file.",
-            }
-        )
-        return
-
     recipe_dir = (RECIPES_DIR / recipe_name).resolve()
     if not recipe_dir.is_relative_to(RECIPES_DIR.resolve()):
         push_event({"type": "error", "error": "Invalid recipe name"})
@@ -435,6 +442,29 @@ def execute_recipe_stream(
     crew_path = recipe_dir / "crew.py"
     if not recipe_dir.exists() or not crew_path.exists():
         push_event({"type": "error", "error": "Recipe not found"})
+        return
+
+    contract = load_contract_for_recipe(recipe_dir)
+    if contract:
+        validated_inputs, errors = validate_recipe_inputs(contract, inputs)
+        if errors:
+            push_event(
+                {
+                    "type": "error",
+                    "error": f"Input validation failed: {'; '.join(errors)}",
+                    "details": errors,
+                }
+            )
+            return
+        inputs = validated_inputs
+
+    if not has_provider_credentials():
+        push_event(
+            {
+                "type": "error",
+                "error": "API Key is missing. Please check your .env file.",
+            }
+        )
         return
 
     with isolated_recipe_context(recipe_dir, recipe_name) as ctx:
@@ -540,6 +570,20 @@ async def run_recipe_stream(req: RunRequest, request: Request):
             headers={"Retry-After": str(retry_after)},
         )
 
+    recipe_dir = (RECIPES_DIR / req.recipe).resolve()
+    if not recipe_dir.is_relative_to(RECIPES_DIR.resolve()) or not recipe_dir.exists():
+        raise HTTPException(status_code=404, detail="Recipe not found")
+
+    contract = load_contract_for_recipe(recipe_dir)
+    if contract:
+        validated_inputs, errors = validate_recipe_inputs(contract, req.inputs)
+        if errors:
+            raise HTTPException(
+                status_code=422,
+                detail={"message": "Input validation failed", "errors": errors},
+            )
+        req.inputs = validated_inputs
+
     if not (req.no_cache or req.bypass_cache):
         cached_output = response_cache.get(req.recipe, req.inputs)
         if cached_output is not None:
@@ -619,6 +663,22 @@ async def run_recipe_ws(websocket: WebSocket):
         recipe = data.get("recipe", "")
         inputs = data.get("inputs", {})
         no_cache = data.get("no_cache", False) or data.get("bypass_cache", False)
+
+        recipe_dir = (RECIPES_DIR / recipe).resolve()
+        if recipe_dir.is_relative_to(RECIPES_DIR.resolve()) and recipe_dir.exists():
+            contract = load_contract_for_recipe(recipe_dir)
+            if contract:
+                validated_inputs, errors = validate_recipe_inputs(contract, inputs)
+                if errors:
+                    await websocket.send_json(
+                        {
+                            "type": "error",
+                            "error": f"Input validation failed: {'; '.join(errors)}",
+                            "details": errors,
+                        }
+                    )
+                    return
+                inputs = validated_inputs
 
         if not no_cache:
             cached_output = response_cache.get(recipe, inputs)

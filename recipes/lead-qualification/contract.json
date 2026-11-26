@@ -1,0 +1,23 @@
+{
+  "version": "1.0",
+  "recipe": "lead-qualification",
+  "allow_unknown": false,
+  "fields": [
+    {
+      "name": "company",
+      "type": "string",
+      "required": true,
+      "min_length": 1,
+      "max_length": 200,
+      "description": "Company name"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": true,
+      "min_length": 5,
+      "max_length": 5000,
+      "description": "Company description and inbound inquiry"
+    }
+  ]
+}
